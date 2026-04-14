@@ -1,5 +1,5 @@
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
-import type { PricingInput, AppliedModifier } from "./pricing.types";
 
 export async function findCatalogEntry(code: string) {
   return db.serviceCatalog.findFirst({
@@ -35,10 +35,10 @@ export async function findActiveDistanceRate() {
 export async function createSnapshot(data: {
   serviceId: number;
   version: number;
-  inputParams: PricingInput;
+  inputParams: Prisma.InputJsonValue;
   basePrice: number;
   distanceFee: number;
-  modifiersApplied: AppliedModifier[];
+  modifiersApplied: Prisma.InputJsonValue;
   subtotalHt: number;
   tvaRate: number;
   tvaAmount: number;

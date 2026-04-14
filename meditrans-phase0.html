@@ -668,6 +668,7 @@
     <a class="nav-item" href="#engine">⚙️ محرك التسعير</a>
     <a class="nav-item" href="#models">🗄️ النماذج</a>
     <a class="nav-item" href="#rules">📏 قواعد العمل</a>
+    <a class="nav-item" href="#testing">🧪 الاختبارات</a>
     <a class="nav-item" href="#roadmap">🗺️ الخارطة</a>
   </div>
 </nav>
@@ -1452,6 +1453,100 @@
           <div class="rule-where">invoice.service.ts → فحص invoiceLine قبل الإضافة</div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ─── SECTION: Testing ─── -->
+  <section class="section" id="testing">
+    <div class="section-label">06.5 — منظومة الاختبارات</div>
+    <h2>🧪 Testing Suite — 40 اختباراً إنتاجياً</h2>
+    <p class="section-intro">
+      اختبارات تكاملية حقيقية ضد PostgreSQL. لا mocks، لا اختبارات وهمية.
+      كل اختبار يحمي قاعدة عمل محددة.
+    </p>
+
+    <!-- Stats -->
+    <div class="summary-box" style="margin-bottom:24px">
+      <div class="summary-stat"><div class="summary-num">40</div><div>اختبار كلي</div></div>
+      <div class="summary-stat"><div class="summary-num">28</div><div>اختبار pricing</div></div>
+      <div class="summary-stat"><div class="summary-num">5</div><div>اختبار invoices</div></div>
+      <div class="summary-stat"><div class="summary-num">8</div><div>اختبار payments</div></div>
+      <div class="summary-stat"><div class="summary-num">80%+</div><div>هدف التغطية</div></div>
+    </div>
+
+    <!-- Stack -->
+    <div class="card-grid card-grid-3" style="margin-bottom:24px">
+      <div class="card" style="border-color:rgba(99,210,190,0.25)">
+        <div style="font-family:var(--mono);font-size:.8rem;color:var(--teal);font-weight:700;margin-bottom:6px">⚡ Vitest</div>
+        <div style="font-size:.82rem;color:var(--text-2)">أسرع من Jest — دعم TypeScript أصلي — لا babel مطلوب</div>
+      </div>
+      <div class="card" style="border-color:rgba(96,200,245,0.25)">
+        <div style="font-family:var(--mono);font-size:.8rem;color:var(--sky);font-weight:700;margin-bottom:6px">🗄️ Real DB</div>
+        <div style="font-size:.82rem;color:var(--text-2)">ضد PostgreSQL الحقيقي — لا mocks — نفس بيئة الإنتاج</div>
+      </div>
+      <div class="card" style="border-color:rgba(240,168,71,0.25)">
+        <div style="font-family:var(--mono);font-size:.8rem;color:var(--amber);font-weight:700;margin-bottom:6px">🔒 Isolation</div>
+        <div style="font-size:.82rem;color:var(--text-2)">كل اختبار ينظف بياناته بعد الانتهاء — لا تلوث بين الاختبارات</div>
+      </div>
+    </div>
+
+    <!-- Structure -->
+    <h3 style="margin-bottom:12px">📁 هيكل ملفات الاختبار</h3>
+    <div class="code-block" style="margin-bottom:24px">
+<span class="comment">tests/</span>
+├── <span class="key">setup.ts</span>                  <span class="comment">← beforeAll/afterAll (DB connect/disconnect)</span>
+├── <span class="key">helpers/</span>
+│   └── <span class="key">factories.ts</span>          <span class="comment">← createTestUser, createBaseContext…</span>
+├── <span class="key">pricing/</span>
+│   ├── <span class="key">engine.test.ts</span>        <span class="comment">← calculatePrice() — 28 اختبار</span>
+│   └── <span class="key">snapshot.test.ts</span>      <span class="comment">← سلامة الـ snapshot — 6 اختبارات</span>
+├── <span class="key">invoices/</span>
+│   └── <span class="key">invoice.test.ts</span>       <span class="comment">← CR-07, CR-08, CR-09, CR-12</span>
+└── <span class="key">payments/</span>
+    └── <span class="key">payment.test.ts</span>       <span class="comment">← جزئي / كامل / تجاوز / CR-12</span></div>
+
+    <!-- Test Matrix -->
+    <h3 style="margin-bottom:12px">📊 مصفوفة الاختبارات الحرجة — محرك التسعير</h3>
+    <div class="table-wrap" style="margin-bottom:24px">
+      <table>
+        <thead><tr><th>#</th><th>السيناريو</th><th>المتوقع</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">01</td><td>transport simple normal</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">base=150 → total=165 MAD</td></tr>
+          <tr><td class="mono">02</td><td>transport simple urgent</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">base=250 → total=275 MAD</td></tr>
+          <tr><td class="mono">03</td><td>مسافة 10km</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">+75 MAD → subtotalHt=225 → total=247.50</td></tr>
+          <tr><td class="mono">04</td><td>NIGHT_SURCHARGE نشط</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">+100 MAD → subtotalHt=250 → total=275</td></tr>
+          <tr><td class="mono">05</td><td>VIP_SURCHARGE (غير نشط)</td><td style="color:var(--amber);font-family:var(--mono);font-size:.8rem">لا تأثير → total=165 (لم يُطبَّق)</td></tr>
+          <tr><td class="mono">06</td><td>كود كتالوج غير موجود</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">PricingCatalogNotFoundError</td></tr>
+          <tr><td class="mono">07</td><td>كتالوج بدون قاعدة تسعير</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">PricingRuleNotFoundError</td></tr>
+          <tr><td class="mono">08</td><td>تجاوز admin بسبب صالح</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">isOverridden=true, total=500</td></tr>
+          <tr><td class="mono">09</td><td>تجاوز بدون صلاحية admin</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">PricingValidationError</td></tr>
+          <tr><td class="mono">10</td><td>سبب التجاوز أقل من 10 أحرف</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">PricingValidationError</td></tr>
+          <tr><td class="mono">11</td><td>persist=true</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">snapshot في DB ، version=1، isCurrent=true</td></tr>
+          <tr><td class="mono">12</td><td>تجاوزان متتاليان</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">versions: 1→2→3، isCurrent فقط على الأحدث</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Run commands -->
+    <h3 style="margin-bottom:12px">🚀 كيف تشغّل الاختبارات</h3>
+    <div class="code-block" style="margin-bottom:16px">
+<span class="comment"># تشغيل كامل</span>
+<span class="key">npm test</span>
+
+<span class="comment"># وضع المراقبة (يعيد التشغيل عند التعديل)</span>
+<span class="key">npm run test:watch</span>
+
+<span class="comment"># تقرير التغطية (يولّد coverage/)</span>
+<span class="key">npm run test:coverage</span>
+
+<span class="comment"># اختبار وحدة محددة</span>
+<span class="key">npm run test:pricing</span>
+<span class="key">npm run test:invoices</span>
+<span class="key">npm run test:payments</span></div>
+
+    <div class="warning-box">
+      <span class="warning-icon">⚠️</span>
+      <div>الاختبارات تعمل ضد قاعدة البيانات الحقيقية — تأكد من تشغيل <code>npm run db:seed</code> أولاً.</div>
     </div>
   </section>
 
