@@ -1,101 +1,125 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+const modules = [
+  { name: "Clients",    path: "/dashboard/clients",         status: "ready" },
+  { name: "Patients",   path: "/dashboard/patients",        status: "ready" },
+  { name: "Services",   path: "/dashboard/services",        status: "ready" },
+  { name: "Tarification", path: "/dashboard/admin/pricing", status: "ready" },
+  { name: "Factures",   path: "/dashboard/invoices",        status: "ready" },
+  { name: "Paiements",  path: "/dashboard/payments",        status: "ready" },
+];
+
+const stages = [
+  { label: "01 — Fondations",          done: true  },
+  { label: "02 — Design System",       done: false },
+  { label: "03 — Clients & Patients",  done: false },
+  { label: "04 — Moteur de tarifs",    done: false },
+  { label: "05 — Services",            done: false },
+  { label: "06 — Factures",            done: false },
+  { label: "07 — Paiements",           done: false },
+  { label: "08 — Admin tarifs",        done: false },
+  { label: "09 — Auth & Dashboard",    done: false },
+];
+
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="min-h-screen bg-gray-50 font-sans">
+      {/* Header */}
+      <header className="bg-red-600 text-white px-8 py-6 flex items-center justify-between shadow-md">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">🚑 MediTrans</h1>
+          <p className="text-red-100 text-sm mt-0.5">
+            Plateforme de transport médical &amp; soins à domicile — Maroc
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/dashboard"
+          className="bg-white text-red-600 font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-red-50 transition-colors"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          Accéder au tableau de bord →
+        </Link>
+      </header>
+
+      <div className="max-w-5xl mx-auto px-6 py-10 space-y-10">
+        {/* Status Banner */}
+        <div className="bg-green-50 border border-green-200 rounded-xl px-6 py-4 flex items-center gap-4">
+          <span className="text-2xl">✅</span>
+          <div>
+            <p className="font-semibold text-green-800">Stage 01 — Fondations terminé</p>
+            <p className="text-green-700 text-sm">
+              Base de données migrée · 22 services catalogués · 26 règles tarifaires · Moteur de
+              tarification opérationnel
+            </p>
+          </div>
+        </div>
+
+        {/* Modules Grid */}
+        <section>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Modules disponibles</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {modules.map((mod) => (
+              <Link
+                key={mod.name}
+                href={mod.path}
+                className="bg-white border border-gray-200 rounded-xl p-5 hover:border-red-400 hover:shadow-sm transition-all group"
+              >
+                <p className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">
+                  {mod.name}
+                </p>
+                <span className="inline-block mt-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                  scaffold prêt
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Roadmap */}
+        <section>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Feuille de route</h2>
+          <div className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
+            {stages.map((s) => (
+              <div key={s.label} className="px-5 py-3 flex items-center gap-3">
+                <span className="text-base">{s.done ? "✅" : "🔜"}</span>
+                <span
+                  className={`text-sm font-medium ${s.done ? "text-gray-800" : "text-gray-400"}`}
+                >
+                  {s.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Tech Stack */}
+        <section>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Stack technique</h2>
+          <div className="flex flex-wrap gap-2">
+            {[
+              "Next.js 14",
+              "TypeScript strict",
+              "PostgreSQL",
+              "Prisma 5",
+              "TailwindCSS",
+              "Zod",
+              "NextAuth.js",
+              "bcryptjs",
+            ].map((tech) => (
+              <span
+                key={tech}
+                className="bg-gray-100 text-gray-700 text-xs font-medium px-3 py-1.5 rounded-full"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t border-gray-200 mt-10 py-4 text-center text-xs text-gray-400">
+        MediTrans Core · Blueprint v5.0 · Stage 01 / 09
       </footer>
-    </div>
+    </main>
   );
 }
