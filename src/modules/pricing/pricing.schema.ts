@@ -5,7 +5,6 @@ export const pricingInputSchema = z.object({
   scheduledAt: z.coerce.date(),
   isUrgent: z.boolean(),
   distanceKm: z.number().min(0),
-  isRoundTrip: z.boolean(),
   staffType: z.enum(["nurse", "doctor", "reanimator"]).optional(),
   durationHours: z.number().int().positive().optional(),
   selectedModifiers: z.array(z.string()),

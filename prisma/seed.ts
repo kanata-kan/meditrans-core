@@ -47,6 +47,9 @@ async function main() {
   // ---------------------------------------------------------------------------
   // pricing_modifiers
   // ---------------------------------------------------------------------------
+  // Remove ROUND_TRIP — each transport is an independent service (final business decision)
+  await prisma.pricingModifier.deleteMany({ where: { code: "ROUND_TRIP" } });
+
   const modifiers = [
     {
       code: "NIGHT_SURCHARGE",
@@ -55,15 +58,7 @@ async function main() {
       value: 100.0,
       isActive: true,
       notes:
-        "Supplément forfaitaire +100 MAD pour les services de nuit. Sélection manuelle par l'opérateur.",
-    },
-    {
-      code: "ROUND_TRIP",
-      nameFr: "Aller-retour",
-      type: "multiplier",
-      value: 1.8,
-      isActive: true,
-      notes: "Multiplicateur ×1.80 pour les trajets aller-retour.",
+        "Supplément forfaitaire +100 MAD. Sélection manuelle par l'opérateur — jamais automatique.",
     },
     {
       code: "VIP_SURCHARGE",

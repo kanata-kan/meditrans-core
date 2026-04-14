@@ -205,7 +205,6 @@ model Service {
   fromLocation  String        @map("from_location")
   toLocation    String        @map("to_location")
   distanceKm    Decimal       @default(0) @map("distance_km") @db.Decimal(10, 2)
-  isRoundTrip   Boolean       @default(false) @map("is_round_trip")
   staffType     StaffType?    @map("staff_type")
   durationHours Int?          @map("duration_hours")
   scheduledAt   DateTime      @map("scheduled_at")

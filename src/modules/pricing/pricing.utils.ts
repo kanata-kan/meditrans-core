@@ -1,14 +1,4 @@
-import type { SystemConfigValues } from "@/lib/config";
 import type { AppliedModifier, BreakdownLine } from "./pricing.types";
-
-export function isNightTime(date: Date, config: SystemConfigValues): boolean {
-  const hour = date.getHours();
-  const { NIGHT_START_HOUR, NIGHT_END_HOUR } = config;
-  if (NIGHT_START_HOUR > NIGHT_END_HOUR) {
-    return hour >= NIGHT_START_HOUR || hour < NIGHT_END_HOUR;
-  }
-  return hour >= NIGHT_START_HOUR && hour < NIGHT_END_HOUR;
-}
 
 export function computeSpecificity(rule: {
   isUrgent: boolean | null;

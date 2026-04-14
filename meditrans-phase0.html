@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediTrans — المرحلة 0 : الأساسيات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-base:    #07090f;
+    --bg-card:    #0e1117;
+    --bg-card2:   #131720;
+    --border:     rgba(255,255,255,0.06);
+    --border-h:   rgba(99,210,190,0.35);
+    --teal:       #63d2be;
+    --teal-dim:   rgba(99,210,190,0.12);
+    --teal-glow:  rgba(99,210,190,0.25);
+    --amber:      #f0a847;
+    --amber-dim:  rgba(240,168,71,0.12);
+    --rose:       #f06b6b;
+    --rose-dim:   rgba(240,107,107,0.12);
+    --violet:     #a78bfa;
+    --violet-dim: rgba(167,139,250,0.12);
+    --sky:        #60c8f5;
+    --sky-dim:    rgba(96,200,245,0.12);
+    --green:      #5dd88a;
+    --text-1:     #e8edf5;
+    --text-2:     #8a95a8;
+    --text-3:     #4d5668;
+    --mono:       'IBM Plex Mono', monospace;
+    --sans:       'Cairo', sans-serif;
+    --r:          12px;
+    --r-lg:       18px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg-base);
+    color: var(--text-1);
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-base); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  /* ─── GLOW BG BLOBS ─── */
+  .blob {
+    position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0;
+  }
+  .blob-1 { width: 500px; height: 500px; background: rgba(99,210,190,0.06); top: -100px; right: -100px; }
+  .blob-2 { width: 400px; height: 400px; background: rgba(96,200,245,0.05); bottom: 100px; left: -80px; }
+
+  /* ─── LAYOUT ─── */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ─── HEADER ─── */
+  header {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  .badge-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 99px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
+    border: 1px solid;
+  }
+  .badge-green  { background: rgba(93,216,138,0.1); border-color: rgba(93,216,138,0.3); color: var(--green); }
+  .badge-teal   { background: var(--teal-dim); border-color: rgba(99,210,190,0.3); color: var(--teal); }
+  .badge-sky    { background: var(--sky-dim); border-color: rgba(96,200,245,0.3); color: var(--sky); }
+  .badge-amber  { background: var(--amber-dim); border-color: rgba(240,168,71,0.3); color: var(--amber); }
+  .badge-violet { background: var(--violet-dim); border-color: rgba(167,139,250,0.3); color: var(--violet); }
+  .badge-rose   { background: var(--rose-dim); border-color: rgba(240,107,107,0.3); color: var(--rose); }
+
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
+  .dot-pulse { animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  h1 .accent { color: var(--teal); }
+  h1 .dim { color: var(--text-2); }
+
+  .header-desc {
+    font-size: 1.05rem; color: var(--text-2);
+    max-width: 540px; margin-bottom: 28px;
+  }
+
+  .meta-row {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    font-size: 0.82rem; color: var(--text-3);
+    font-family: var(--mono);
+  }
+  .meta-row span { display: flex; align-items: center; gap: 6px; }
+
+  /* ─── NAV PROGRESS ─── */
+  .phase-nav {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px);
+    background: rgba(14,17,23,0.85);
+  }
+  .phase-nav-inner {
+    max-width: 960px; margin: 0 auto; padding: 0 24px;
+    display: flex; gap: 0; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .phase-nav-inner::-webkit-scrollbar { display: none; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 16px;
+    font-size: 0.8rem; font-weight: 600;
+    color: var(--text-3);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .nav-item:hover { color: var(--text-1); border-bottom-color: var(--border); }
+  .nav-item.active { color: var(--teal); border-bottom-color: var(--teal); }
+
+  /* ─── MAIN CONTENT ─── */
+  main { padding: 56px 0; }
+
+  /* ─── SECTION ─── */
+  .section {
+    margin-bottom: 64px;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.12s; }
+  .section:nth-child(3) { animation-delay: 0.18s; }
+  .section:nth-child(4) { animation-delay: 0.24s; }
+  .section:nth-child(5) { animation-delay: 0.30s; }
+  .section:nth-child(6) { animation-delay: 0.36s; }
+  .section:nth-child(7) { animation-delay: 0.42s; }
+  .section:nth-child(8) { animation-delay: 0.48s; }
+
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--teal); text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  h2 {
+    font-size: 1.6rem; font-weight: 800;
+    margin-bottom: 8px; letter-spacing: -0.02em;
+  }
+  h3 {
+    font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 12px; color: var(--text-1);
+  }
+
+  .section-intro {
+    color: var(--text-2); font-size: 0.95rem;
+    margin-bottom: 24px; max-width: 600px;
+    border-right: 3px solid var(--teal);
+    padding-right: 14px;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--border-h); }
+
+  .card-grid { display: grid; gap: 16px; }
+  .card-grid-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  @media(max-width: 640px) {
+    .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* ─── TECH STACK CARDS ─── */
+  .tech-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 4px;
+    transition: all 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .tech-card::before {
+    content: ''; position: absolute;
+    top: 0; right: 0; left: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--c, var(--teal)), transparent);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .tech-card:hover::before { opacity: 1; }
+  .tech-card:hover { border-color: var(--border-h); transform: translateY(-2px); }
+
+  .tech-label { font-size: 0.72rem; color: var(--text-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .tech-value { font-family: var(--mono); font-size: 0.88rem; color: var(--teal); font-weight: 500; }
+  .tech-desc { font-size: 0.82rem; color: var(--text-2); margin-top: 2px; }
+
+  /* ─── TABLE ─── */
+  .table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: var(--bg-card2); }
+  th {
+    padding: 12px 18px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--text-3); text-transform: uppercase;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 12px 18px;
+    font-size: 0.88rem; color: var(--text-2);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  td.mono { font-family: var(--mono); color: var(--teal); font-size: 0.82rem; }
+  td.name { color: var(--text-1); font-weight: 600; }
+  td strong { color: var(--text-1); font-weight: 600; }
+
+  /* ─── CODE BLOCK ─── */
+  .code-block {
+    background: #090c12;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px 22px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.9;
+    overflow-x: auto;
+    position: relative;
+  }
+  .code-block .comment { color: var(--text-3); }
+  .code-block .key { color: var(--sky); }
+  .code-block .val { color: var(--teal); }
+  .code-block .step { color: var(--amber); font-weight: 600; }
+  .code-block .kw { color: var(--violet); }
+  .code-block .err { color: var(--rose); }
+  .code-block .str { color: var(--green); }
+  .code-label {
+    position: absolute; top: 10px; left: 14px;
+    font-size: 0.68rem; color: var(--text-3); letter-spacing: 0.05em;
+    background: var(--bg-card); padding: 2px 8px; border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* ─── FILE TREE ─── */
+  .filetree {
+    background: #090c12;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px 22px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 2;
+    overflow-x: auto;
+    direction: ltr;
+  }
+  .ft-dir  { color: var(--sky); font-weight: 500; }
+  .ft-file { color: var(--text-2); }
+  .ft-comment { color: var(--text-3); }
+  .ft-important { color: var(--amber); }
+
+  /* ─── STEP ENGINE ─── */
+  .engine-steps { display: flex; flex-direction: column; gap: 0; }
+  .engine-step {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .engine-step:last-child { border-bottom: none; }
+
+  .step-num {
+    min-width: 36px; height: 36px;
+    background: var(--teal-dim);
+    border: 1px solid rgba(99,210,190,0.25);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 0.8rem; font-weight: 700;
+    color: var(--teal);
+    flex-shrink: 0;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 3px; }
+  .step-fn { font-family: var(--mono); font-size: 0.78rem; color: var(--sky); background: var(--sky-dim); padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
+  .step-desc { font-size: 0.84rem; color: var(--text-2); }
+
+  /* ─── BUSINESS RULES ─── */
+  .rule-grid { display: flex; flex-direction: column; gap: 10px; }
+  .rule-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 18px;
+    transition: all 0.2s;
+  }
+  .rule-item:hover { border-color: var(--border-h); background: var(--bg-card2); }
+  .rule-code {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+    padding: 3px 8px; border-radius: 5px;
+    min-width: 54px; text-align: center;
+    background: var(--teal-dim); color: var(--teal);
+    border: 1px solid rgba(99,210,190,0.2);
+    flex-shrink: 0;
+  }
+  .rule-text { font-size: 0.88rem; color: var(--text-1); flex: 1; }
+  .rule-where { font-size: 0.75rem; color: var(--text-3); margin-top: 2px; font-family: var(--mono); }
+
+  /* ─── LAYERS ─── */
+  .layer-list { display: flex; flex-direction: column; gap: 8px; }
+  .layer-item {
+    display: flex; align-items: center; gap: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .layer-file {
+    font-family: var(--mono); font-size: 0.82rem;
+    padding: 12px 16px;
+    min-width: 140px; background: var(--bg-card2);
+    border-left: 1px solid var(--border);
+    color: var(--amber);
+  }
+  .layer-role { padding: 12px 16px; font-size: 0.85rem; color: var(--text-2); }
+  .layer-note { font-size: 0.75rem; color: var(--text-3); margin-right: auto; padding-left: 10px; font-family: var(--mono); }
+
+  /* ─── PHASE ROADMAP ─── */
+  .roadmap { display: flex; flex-direction: column; gap: 10px; }
+  .roadmap-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 18px;
+    transition: all 0.2s;
+  }
+  .roadmap-item.current {
+    border-color: rgba(99,210,190,0.3);
+    background: linear-gradient(135deg, rgba(99,210,190,0.06), transparent);
+  }
+  .roadmap-item:hover { border-color: var(--border-h); }
+  .phase-badge {
+    font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 5px; min-width: 44px; text-align: center;
+    flex-shrink: 0;
+  }
+  .phase-0  { background: rgba(93,216,138,0.15); color: var(--green); border: 1px solid rgba(93,216,138,0.25); }
+  .phase-hi { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(99,210,190,0.25); }
+  .phase-cr { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(240,107,107,0.25); }
+  .phase-md { background: var(--violet-dim); color: var(--violet); border: 1px solid rgba(167,139,250,0.25); }
+
+  .roadmap-content { flex: 1; }
+  .roadmap-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 2px; }
+  .roadmap-desc { font-size: 0.82rem; color: var(--text-2); }
+  .roadmap-priority { font-size: 0.72rem; margin-top: 4px; }
+  .pri-high { color: var(--teal); }
+  .pri-crit { color: var(--rose); }
+  .pri-med  { color: var(--violet); }
+  .pri-done { color: var(--green); }
+
+  /* ─── SEED DATA ─── */
+  .seed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width: 600px) { .seed-grid { grid-template-columns: 1fr; } }
+
+  .seed-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .seed-card:hover { border-color: var(--border-h); }
+  .seed-header {
+    padding: 10px 16px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .seed-header-title { font-size: 0.78rem; font-weight: 700; color: var(--text-1); }
+  .seed-count { font-family: var(--mono); font-size: 0.7rem; color: var(--text-3); margin-right: auto; }
+  .seed-body { padding: 12px 16px; }
+  .seed-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.82rem;
+  }
+  .seed-row:last-child { border-bottom: none; }
+  .seed-key { color: var(--text-2); }
+  .seed-val { font-family: var(--mono); color: var(--teal); font-size: 0.78rem; }
+  .seed-price { color: var(--amber); }
+
+  /* ─── SUMMARY BOX ─── */
+  .summary-box {
+    background: linear-gradient(135deg, rgba(99,210,190,0.08), rgba(96,200,245,0.05));
+    border: 1px solid rgba(99,210,190,0.2);
+    border-radius: var(--r-lg);
+    padding: 28px 32px;
+    display: flex; gap: 32px; flex-wrap: wrap;
+  }
+  .summary-stat { text-align: center; flex: 1; min-width: 90px; }
+  .summary-num {
+    font-size: 2.4rem; font-weight: 900;
+    color: var(--teal); line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary-label { font-size: 0.78rem; color: var(--text-2); margin-top: 4px; }
+
+  /* ─── WARNING BOX ─── */
+  .warning-box {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: rgba(240,168,71,0.08);
+    border: 1px solid rgba(240,168,71,0.25);
+    border-radius: var(--r);
+    padding: 14px 18px;
+    font-size: 0.85rem; color: var(--amber);
+    margin-top: 12px;
+  }
+  .warning-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+  /* ─── DIVIDER ─── */
+  .divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    text-align: center;
+    font-size: 0.8rem; color: var(--text-3);
+    position: relative; z-index: 1;
+  }
+  footer span { color: var(--teal); }
+
+  /* ─── INLINE MONO ─── */
+  code {
+    font-family: var(--mono); font-size: 0.82em;
+    background: rgba(255,255,255,0.06);
+    padding: 1px 6px; border-radius: 4px;
+    color: var(--sky);
+  }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar {
+    height: 4px; background: var(--border); border-radius: 2px;
+    overflow: hidden; margin-top: 8px;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--sky));
+    animation: fillBar 1.2s ease forwards;
+    transform-origin: right;
+  }
+  @keyframes fillBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  /* ─── TABS ─── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab {
+    padding: 7px 16px; border-radius: 8px;
+    font-size: 0.82rem; font-weight: 600;
+    border: 1px solid var(--border);
+    background: transparent; cursor: pointer;
+    color: var(--text-3); transition: all 0.2s;
+  }
+  .tab.active, .tab:hover { background: var(--teal-dim); border-color: rgba(99,210,190,0.3); color: var(--teal); }
+
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <div class="header-inner">
+    <div class="badge-row">
+      <span class="badge badge-green"><span class="dot dot-pulse"></span> مكتملة بالكامل</span>
+      <span class="badge badge-teal">Stage 00 — Foundations</span>
+      <span class="badge badge-sky">Next.js 14 · TypeScript</span>
+      <span class="badge badge-amber">أبريل 2026</span>
+    </div>
+
+    <h1>
+      <span class="accent">MediTrans</span><span class="dim"> — المرحلة 0</span><br>
+      بناء الأساسيات 🏗️
+    </h1>
+
+    <p class="header-desc">
+      المرحلة الأولى في مشروع إدارة خدمات النقل الطبي. هنا ما تم بناؤه: البنية التحتية الكاملة، قاعدة البيانات، محرك التسعير، والهيكل الكامل للمشروع.
+    </p>
+
+    <div class="meta-row">
+      <span>📅 20260414</span>
+      <span>🗂️ 7 modules</span>
+      <span>🗄️ 11 جدول</span>
+      <span>⚙️ 7 خطوات تسعير</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ NAV ═══ -->
+<nav class="phase-nav">
+  <div class="phase-nav-inner">
+    <a class="nav-item active" href="#overview">📌 النظرة العامة</a>
+    <a class="nav-item" href="#setup">🔧 الإعداد</a>
+    <a class="nav-item" href="#database">🗄️ قاعدة البيانات</a>
+    <a class="nav-item" href="#structure">📁 الهيكل</a>
+    <a class="nav-item" href="#engine">⚙️ محرك التسعير</a>
+    <a class="nav-item" href="#rules">📏 قواعد العمل</a>
+    <a class="nav-item" href="#roadmap">🗺️ الخارطة</a>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<main>
+<div class="container">
+
+  <!-- ─── SECTION 1: Overview ─── -->
+  <section class="section" id="overview">
+    <div class="section-label">01 — النظرة العامة</div>
+    <h2>ما هي المرحلة 0؟</h2>
+    <p class="section-intro">
+      مرحلة 0 تعني: "نبنيو كل الأساس" قبل ما نبداو نخدمو على الواجهة. الهدف كيكون عندنا بنية قوية ما محتاجيناش نرجعو نصلحو فيها.
+    </p>
+
+    <div class="summary-box" style="margin-bottom: 32px;">
+      <div class="summary-stat">
+        <div class="summary-num">11</div>
+        <div class="summary-label">جدول في قاعدة البيانات</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-num">7</div>
+        <div class="summary-label">modules كاملة</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-num">22</div>
+        <div class="summary-label">خدمة في الكتالوج</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-num">8</div>
+        <div class="summary-label">مراحل قادمة</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-num">26</div>
+        <div class="summary-label">قاعدة تسعير</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🎯 لماذا مرحلة 0 مهمة؟</h3>
+      <p style="color: var(--text-2); font-size: 0.92rem; line-height: 1.9;">
+        بحال منبنيوش دار على أساس متين — المرحلة 0 هي الأساس ديال كل شيء. بدونها، كل مرحلة لاحقة غادي تكون صعبة وغادي نحتاجو نرجعو نصلحو في الأشياء الأساسية باستمرار.
+        هنا حضرنا: <strong style="color: var(--teal)">قاعدة البيانات</strong> بكل الجداول والبيانات الأولية،
+        <strong style="color: var(--sky)">الهيكل الكامل</strong> لكل module،
+        <strong style="color: var(--amber)">محرك التسعير</strong> اللي هو قلب المشروع،
+        و<strong style="color: var(--violet)">قواعد العمل</strong> المطبَّقة كود.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 2: Setup ─── -->
+  <section class="section" id="setup">
+    <div class="section-label">02 — الإعداد التقني</div>
+    <h2>Stack المشروع 🔧</h2>
+    <p class="section-intro">التقنيات المختارة لبناء MediTrans — كلها معروفة عندك كـ full-stack engineer.</p>
+
+    <div class="card-grid card-grid-3" style="margin-bottom: 16px;">
+      <div class="tech-card" style="--c: var(--sky)">
+        <span class="tech-label">Framework</span>
+        <span class="tech-value">Next.js 14</span>
+        <span class="tech-desc">App Router + Server Actions</span>
+      </div>
+      <div class="tech-card" style="--c: var(--violet)">
+        <span class="tech-label">Language</span>
+        <span class="tech-value">TypeScript strict</span>
+        <span class="tech-desc">strict mode مفعَّل كاملاً</span>
+      </div>
+      <div class="tech-card" style="--c: var(--teal)">
+        <span class="tech-label">Styling</span>
+        <span class="tech-value">Tailwind CSS</span>
+        <span class="tech-desc">tokens.css + tailwind.config</span>
+      </div>
+      <div class="tech-card" style="--c: var(--amber)">
+        <span class="tech-label">Database ORM</span>
+        <span class="tech-value">Prisma</span>
+        <span class="tech-desc">PostgreSQL 15 · Port 5432</span>
+      </div>
+      <div class="tech-card" style="--c: var(--rose)">
+        <span class="tech-label">Validation</span>
+        <span class="tech-value">Zod</span>
+        <span class="tech-desc">schema لكل module</span>
+      </div>
+      <div class="tech-card" style="--c: var(--green)">
+        <span class="tech-label">Code Quality</span>
+        <span class="tech-value">ESLint + Prettier</span>
+        <span class="tech-desc">LF line endings · @/* alias</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🛠️ أوامر npm المتاحة</h3>
+      <div class="code-block" style="direction: ltr;">
+<span class="comment"># تشغيل التطوير</span>
+<span class="key">npm run dev</span>         <span class="comment">→ http://localhost:3000</span>
+
+<span class="comment"># قاعدة البيانات</span>
+<span class="key">npm run db:migrate</span>  <span class="comment">→ تطبيق migrations جديدة</span>
+<span class="key">npm run db:seed</span>     <span class="comment">→ ملء بيانات البذر</span>
+<span class="key">npm run db:studio</span>   <span class="comment">→ Prisma Studio (واجهة مرئية)</span>
+<span class="key">npm run db:reset</span>    <span class="comment">→ إعادة تعيين كاملة ⚠️</span>
+
+<span class="comment"># جودة الكود</span>
+<span class="key">npm run lint</span>        <span class="comment">→ ESLint</span>
+<span class="key">npm run format</span>      <span class="comment">→ Prettier</span></div>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 3: Database ─── -->
+  <section class="section" id="database">
+    <div class="section-label">03 — قاعدة البيانات</div>
+    <h2>PostgreSQL — 11 جدول 🗄️</h2>
+    <p class="section-intro">
+      كل قاعدة البيانات مبنية وطُبِّقت عبر migration واحدة. فيما يلي شرح لكل جدول ولماذا موجود.
+    </p>
+
+    <div class="table-wrap" style="margin-bottom: 24px;">
+      <table>
+        <thead>
+          <tr>
+            <th>الجدول</th>
+            <th>ما فيه</th>
+            <th>مثال عملي</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">users</td>
+            <td class="name">المستخدمون</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">admin و assistant — اللي يدخلو على النظام</td>
+          </tr>
+          <tr>
+            <td class="mono">clients</td>
+            <td class="name">العملاء</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">شركة تأمين، مستشفى، فرد — من يدفع الفاتورة</td>
+          </tr>
+          <tr>
+            <td class="mono">patients</td>
+            <td class="name">المرضى</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">المريض اللي تم نقله أو معالجته</td>
+          </tr>
+          <tr>
+            <td class="mono">service_catalog</td>
+            <td class="name">كتالوج الخدمات</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">"Transport urgent"، "ECG"، "Suture" — قائمة كل الخدمات الممكنة</td>
+          </tr>
+          <tr>
+            <td class="mono">pricing_rules</td>
+            <td class="name">قواعد التسعير</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">Transport simple عادي = 150، urgence = 250 درهم</td>
+          </tr>
+          <tr>
+            <td class="mono">pricing_modifiers</td>
+            <td class="name">معدِّلات الأسعار</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">إضافة الليل (+100 MAD) — اختيار يدوي فقط، لا كشف تلقائي</td>
+          </tr>
+          <tr>
+            <td class="mono">pricing_distance_rates</td>
+            <td class="name">أسعار المسافة</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">7.50 درهم لكل كيلومتر</td>
+          </tr>
+          <tr>
+            <td class="mono">services</td>
+            <td class="name">الخدمات المنفَّذة</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">سجل كل خدمة فعلية تمت (نقل، حقنة...)</td>
+          </tr>
+          <tr>
+            <td class="mono">pricing_snapshots</td>
+            <td class="name">لقطات الأسعار</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">سعر مجمَّد عند إنشاء الخدمة — لا يتغير أبداً</td>
+          </tr>
+          <tr>
+            <td class="mono">invoices + lines</td>
+            <td class="name">الفواتير وأسطرها</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">فاتورة تجمع عدة خدمات في وثيقة واحدة</td>
+          </tr>
+          <tr>
+            <td class="mono">payments</td>
+            <td class="name">المدفوعات</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">تسجيل الدفعات على كل فاتورة</td>
+          </tr>
+          <tr>
+            <td class="mono">system_config</td>
+            <td class="name">إعدادات النظام</td>
+            <td style="color: var(--text-2); font-size: 0.82rem;">TVA 10%، ساعة بداية الليل (21h)، نهايته (7h)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SEED DATA -->
+    <h3 style="margin-bottom: 16px;">🌱 بيانات البذر — ما تم ملؤه مسبقاً</h3>
+    <p style="color: var(--text-2); font-size: 0.88rem; margin-bottom: 20px;">
+      "البذر" يعني بيانات أولية جاهزة قبل ما يبدأ أي مستخدم يستعمل النظام. بحال إعداد قاعدة عمل جاهزة.
+    </p>
+
+    <div class="seed-grid">
+      <!-- System Config -->
+      <div class="seed-card">
+        <div class="seed-header">
+          <span style="color: var(--violet)">⚙️</span>
+          <span class="seed-header-title">إعدادات النظام</span>
+          <span class="seed-count">3 مدخلات</span>
+        </div>
+        <div class="seed-body">
+          <div class="seed-row">
+            <span class="seed-key">DEFAULT_TVA_RATE</span>
+            <span class="seed-val seed-price">10%</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">NIGHT_START_HOUR</span>
+            <span class="seed-val">21:00</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">NIGHT_END_HOUR</span>
+            <span class="seed-val">07:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modifiers -->
+      <div class="seed-card">
+        <div class="seed-header">
+          <span style="color: var(--amber)">✕</span>
+          <span class="seed-header-title">معدِّلات الأسعار</span>
+          <span class="seed-count">3 معدِّلات</span>
+        </div>
+        <div class="seed-body">
+          <div class="seed-row">
+            <span class="seed-key">NIGHT_SURCHARGE</span>
+            <span class="seed-val seed-price">+100 درهم (يدوي)</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">VIP_SURCHARGE</span>
+            <span class="seed-val" style="color: var(--text-3)">×1.0 (غير مفعَّل)</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">HOLIDAY_SURCHARGE</span>
+            <span class="seed-val" style="color: var(--text-3)">×1.20 (غير مفعَّل)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transport Pricing -->
+      <div class="seed-card">
+        <div class="seed-header">
+          <span style="color: var(--sky)">🚑</span>
+          <span class="seed-header-title">تسعير النقل</span>
+          <span class="seed-count">أمثلة مختارة</span>
+        </div>
+        <div class="seed-body">
+          <div class="seed-row">
+            <span class="seed-key">Transport simple (عادي)</span>
+            <span class="seed-val seed-price">150 MAD</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">Transport urgent</span>
+            <span class="seed-val seed-price">250 MAD</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">Transport médicalisé</span>
+            <span class="seed-val seed-price">800 MAD</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">Transport réanimation</span>
+            <span class="seed-val seed-price">1,200 MAD</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">Distance</span>
+            <span class="seed-val seed-price">7.50 MAD/km</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disposition Pricing -->
+      <div class="seed-card">
+        <div class="seed-header">
+          <span style="color: var(--teal)">👩‍⚕️</span>
+          <span class="seed-header-title">تسعير التوضيب الطبي</span>
+          <span class="seed-count">أمثلة مختارة</span>
+        </div>
+        <div class="seed-body">
+          <div class="seed-row">
+            <span class="seed-key">Infirmier 12h</span>
+            <span class="seed-val seed-price">500 MAD</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">Infirmier 24h</span>
+            <span class="seed-val seed-price">900 MAD</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">Médecin 24h</span>
+            <span class="seed-val seed-price">1,800 MAD</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">Réanimateur 24h</span>
+            <span class="seed-val seed-price">2,800 MAD</span>
+          </div>
+          <div class="seed-row">
+            <span class="seed-key">ECG</span>
+            <span class="seed-val seed-price">200 MAD</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <span class="warning-icon">⚠️</span>
+      <div>
+        <strong>مستخدم Admin الافتراضي:</strong>
+        <code>admin@meditrans.ma</code> / <code>Admin@MediTrans2025</code>
+        — يجب تغيير كلمة المرور فوراً عند النشر الإنتاجي!
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 4: Structure ─── -->
+  <section class="section" id="structure">
+    <div class="section-label">04 — هيكل المشروع</div>
+    <h2>Architecture الملفات 📁</h2>
+    <p class="section-intro">
+      كل شيء منظَّم في modules مستقلة. كل module فيها نفس الطبقات بنفس الترتيب.
+    </p>
+
+    <div class="card-grid card-grid-2" style="margin-bottom: 24px;">
+      <div>
+        <h3 style="margin-bottom: 12px;">🌳 هيكل <code>src/</code></h3>
+        <div class="filetree">
+<span class="ft-dir">src/</span>
+├── <span class="ft-dir">app/</span>
+│   ├── <span class="ft-file">layout.tsx</span>        <span class="ft-comment">← Root Layout</span>
+│   ├── <span class="ft-file">page.tsx</span>          <span class="ft-comment">← Roadmap</span>
+│   └── <span class="ft-dir">dashboard/</span>
+│       ├── <span class="ft-file">page.tsx</span>      <span class="ft-comment">← Dashboard</span>
+│       ├── <span class="ft-dir">services/</span>
+│       ├── <span class="ft-dir">clients/</span>
+│       ├── <span class="ft-dir">patients/</span>
+│       ├── <span class="ft-dir">invoices/</span>
+│       └── <span class="ft-dir">admin/</span>
+│
+├── <span class="ft-dir">lib/</span>
+│   ├── <span class="ft-important">db.ts</span>         <span class="ft-comment">← Prisma singleton</span>
+│   ├── <span class="ft-important">config.ts</span>     <span class="ft-comment">← system_config</span>
+│   ├── <span class="ft-file">constants.ts</span>   <span class="ft-comment">← Types + Labels</span>
+│   └── <span class="ft-file">utils.ts</span>       <span class="ft-comment">← cn/formatCurrency</span>
+│
+├── <span class="ft-dir">modules/</span>           <span class="ft-comment">← قلب المشروع</span>
+│   ├── <span class="ft-dir">users/</span>
+│   ├── <span class="ft-dir">clients/</span>
+│   ├── <span class="ft-dir">patients/</span>
+│   ├── <span class="ft-dir">services/</span>
+│   ├── <span class="ft-important">pricing/</span>      <span class="ft-comment">← ⭐ الأهم</span>
+│   ├── <span class="ft-dir">invoices/</span>
+│   └── <span class="ft-dir">payments/</span>
+│
+└── <span class="ft-dir">styles/</span>
+    └── <span class="ft-file">tokens.css</span>    <span class="ft-comment">← Design tokens</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin-bottom: 12px;">📐 طبقات كل Module</h3>
+        <p style="color: var(--text-2); font-size: 0.85rem; margin-bottom: 14px;">
+          كل module فيها نفس الطبقات بنفس الترتيب. هذا بيخلي الكود منظَّم ومتوقَّع.
+        </p>
+        <div class="layer-list">
+          <div class="layer-item">
+            <div class="layer-file">*.types.ts</div>
+            <div class="layer-role">واجهات TypeScript فقط — صفر dependencies</div>
+          </div>
+          <div class="layer-item">
+            <div class="layer-file">*.schema.ts</div>
+            <div class="layer-role">Zod schemas — التحقق من المدخلات</div>
+          </div>
+          <div class="layer-item">
+            <div class="layer-file">*.repository.ts</div>
+            <div class="layer-role">Prisma فقط — لا منطق أعمال هنا</div>
+          </div>
+          <div class="layer-item">
+            <div class="layer-file">*.service.ts</div>
+            <div class="layer-role">منطق الأعمال — يستدعي repository</div>
+          </div>
+          <div class="layer-item">
+            <div class="layer-file">*.actions.ts</div>
+            <div class="layer-role"><code>"use server"</code> — نقطة دخول الواجهة</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px;">
+          <p style="font-size: 0.82rem; color: var(--text-2); line-height: 1.8;">
+            💡 <strong style="color: var(--teal)">لماذا هذا التقسيم؟</strong><br>
+            الواجهة لا تعرف شيئاً عن Prisma. قاعدة البيانات لا تعرف شيئاً عن منطق الأعمال. كل طبقة مسؤولة عن شيء واحد فقط — Separation of Concerns.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 5: Pricing Engine ─── -->
+  <section class="section" id="engine">
+    <div class="section-label">05 — محرك التسعير</div>
+    <h2>⚙️ <code>pricing.engine.ts</code> — قلب المشروع</h2>
+    <p class="section-intro">
+      هذا هو الملف الأهم في المشروع. خوارزمية 7 خطوات ثابتة — لا سعر مشفَّر hardcoded أبداً. كل شيء يُحسَب ديناميكياً.
+    </p>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="engine-steps">
+
+        <div class="engine-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-fn">findCatalogEntry()</div>
+            <div class="step-title">التحقق من الكتالوج</div>
+            <div class="step-desc">هل الخدمة المطلوبة موجودة في كتالوج الخدمات؟ إذا لا → خطأ فوري. <strong style="color: var(--rose)">لا يمكن حساب سعر لخدمة غير مسجَّلة.</strong></div>
+          </div>
+        </div>
+
+        <div class="engine-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-fn">findPricingRules()</div>
+            <div class="step-title">إيجاد أفضل قاعدة تسعير</div>
+            <div class="step-desc">النظام يبحث عن القاعدة الأكثر تخصصاً. مثلاً: "Transport urgent لعميل VIP" أخص من "Transport urgent عادي". <strong style="color: var(--amber)">أعلى خصوصية = الأولوية.</strong></div>
+          </div>
+        </div>
+
+        <div class="engine-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-fn">findActiveDistanceRate()</div>
+            <div class="step-title">حساب رسوم المسافة</div>
+            <div class="step-desc">إذا أُدخِل عدد الكيلومترات → <code>distanceKm × 7.50 MAD</code>. يُضاف للسعر الأساسي. إذا ما أُدخِلش → صفر.</div>
+          </div>
+        </div>
+
+        <div class="engine-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-fn">findActiveModifiers()</div>
+            <div class="step-title">تطبيق المعدِّلات</div>
+            <div class="step-desc">المعدِّلات تُختار يدوياً من المشغِّل فقط. ليل؟ <strong style="color: var(--teal)">NIGHT_SURCHARGE +100 MAD</strong> — لا كشف تلقائي. كل رحلة = خدمة مستقلة، لا مضاعف ذهاب وإياب. تُطبَّق بالترتيب على الإجمالي.</div>
+          </div>
+        </div>
+
+        <div class="engine-step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-fn">applyTVA()</div>
+            <div class="step-title">حساب TVA</div>
+            <div class="step-desc"><strong style="color: var(--teal)">10%</strong> بشكل افتراضي من <code>system_config</code>. إذا الخدمة معفاة (<code>tvaExempt=true</code>) → TVA صفر.</div>
+          </div>
+        </div>
+
+        <div class="engine-step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <div class="step-fn">manualOverride()</div>
+            <div class="step-title">التجاوز اليدوي (Admin فقط)</div>
+            <div class="step-desc"><strong style="color: var(--rose)">شرطان إلزاميان:</strong> 1) المستخدم يجب أن يكون <code>admin</code>. 2) يجب كتابة سبب. لا سبب = رفض الطلب.</div>
+          </div>
+        </div>
+
+        <div class="engine-step">
+          <div class="step-num">7</div>
+          <div class="step-content">
+            <div class="step-fn">createSnapshot()</div>
+            <div class="step-title">حفظ لقطة السعر — append-only</div>
+            <div class="step-desc">السعر النهائي يُحفَظ في <code>pricing_snapshots</code> ولا يُعدَّل أبداً. حتى لو تغيَّرت قواعد التسعير لاحقاً، الخدمة المنجَزة تحتفظ بسعرها الأصلي للأبد.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Example Calculation -->
+    <h3 style="margin-bottom: 16px;">🧮 مثال حساب حقيقي</h3>
+    <div class="code-block" style="direction: ltr;">
+<span class="comment">// مثال: Transport urgent · 15km · ليلاً (مشغِّل اختار NIGHT_SURCHARGE يدوياً)</span>
+
+<span class="kw">Step 1:</span> ✅ Transport urgent موجود في الكتالوج
+
+<span class="kw">Step 2:</span> <span class="key">basePrice</span>    = <span class="val">250 MAD</span>  (قاعدة Transport urgent)
+
+<span class="kw">Step 3:</span> <span class="key">distanceFee</span>  = <span class="val">15km × 7.50</span> = <span class="val">112.50 MAD</span>
+
+<span class="kw">Step 4:</span> <span class="key">subtotal</span>     = <span class="val">(250 + 112.50)</span> = <span class="val">362.50 MAD</span>
+         NIGHT_SURCHARGE → +100 → <span class="val">462.50 MAD</span>
+         <span class="comment">// ✅ لا ROUND_TRIP — رحلة العودة = خدمة مستقلة جديدة</span>
+
+<span class="kw">Step 5:</span> <span class="key">TVA (10%)</span>    = <span class="val">46.25 MAD</span>
+         <span class="key">Total TTC</span>    = <span class="val">508.75 MAD</span>  ✅
+
+<span class="kw">Step 7:</span> 💾 snapshot ID = <span class="str">"snap_20260414_001"</span>  (محفوظ إلى الأبد)</div>
+
+    <!-- Errors -->
+    <h3 style="margin-top: 24px; margin-bottom: 12px;">🚨 الأخطاء المصنَّفة</h3>
+    <div class="card-grid card-grid-3">
+      <div class="card" style="border-color: rgba(240,107,107,0.2); background: var(--rose-dim);">
+        <div style="font-family: var(--mono); font-size: 0.78rem; color: var(--rose); margin-bottom: 6px;">PricingRuleNotFoundError</div>
+        <div style="font-size: 0.82rem; color: var(--text-2);">السعر صفر ممنوع تماماً — إذا ما لقاش قاعدة تسعير، يرفض العملية</div>
+      </div>
+      <div class="card" style="border-color: rgba(240,107,107,0.2); background: var(--rose-dim);">
+        <div style="font-family: var(--mono); font-size: 0.78rem; color: var(--rose); margin-bottom: 6px;">PricingCatalogNotFoundError</div>
+        <div style="font-size: 0.82rem; color: var(--text-2);">خدمة غير موجودة في الكتالوج — لا يمكن تسعير ما هو غير مسجَّل</div>
+      </div>
+      <div class="card" style="border-color: rgba(240,107,107,0.2); background: var(--rose-dim);">
+        <div style="font-family: var(--mono); font-size: 0.78rem; color: var(--rose); margin-bottom: 6px;">PricingValidationError</div>
+        <div style="font-size: 0.82rem; color: var(--text-2);">خطأ في المدخلات أو الصلاحيات (override بدون سبب مثلاً)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 6: Business Rules ─── -->
+  <section class="section" id="rules">
+    <div class="section-label">06 — قواعد العمل</div>
+    <h2>📏 القواعد المطبَّقة في الكود</h2>
+    <p class="section-intro">
+      هذه ليست وثيقة — هي كود مطبَّق فعلياً. كل قاعدة لها رمز ومكان محدد في المشروع.
+    </p>
+
+    <div class="rule-grid">
+      <div class="rule-item">
+        <div class="rule-code">CR-01</div>
+        <div>
+          <div class="rule-text">السعر صفر ممنوع تماماً</div>
+          <div class="rule-where">pricing.engine.ts → PricingRuleNotFoundError</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-code">CR-02</div>
+        <div>
+          <div class="rule-text">اللقطات append-only — لا حذف، لا تعديل</div>
+          <div class="rule-where">pricing.engine.ts → isCurrent=false قبل إنشاء snapshot جديد</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-code">CR-03</div>
+        <div>
+          <div class="rule-text">التجاوز اليدوي: admin فقط + سبب إلزامي</div>
+          <div class="rule-where">pricing.engine.ts + pricing.actions.ts</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-code">CR-04</div>
+        <div>
+          <div class="rule-text">كل override يُنشئ snapshot جديد — transactional</div>
+          <div class="rule-where">applyOverrideAction()</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-code">CR-05</div>
+        <div>
+          <div class="rule-text">Override يُحدِّث InvoiceLine تلقائياً</div>
+          <div class="rule-where">applyOverrideAction() — داخل نفس الـ transaction</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-code">CR-12</div>
+        <div>
+          <div class="rule-text">إلغاء فاتورة فيها مدفوعات = محظور</div>
+          <div class="rule-where">invoice.service.ts → cancelInvoice()</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-code">CR-13</div>
+        <div>
+          <div class="rule-text">الخدمة الملغاة لا تُضاف للفواتير</div>
+          <div class="rule-where">invoice.service.ts → createInvoice()</div>
+        </div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-code">CR-14</div>
+        <div>
+          <div class="rule-text">خدمة مفوتَرة مرة — لا تُفوتَر مرة ثانية</div>
+          <div class="rule-where">invoice.service.ts → فحص invoiceLine قبل الإضافة</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 7: Roadmap ─── -->
+  <section class="section" id="roadmap">
+    <div class="section-label">07 — الخارطة الكاملة</div>
+    <h2>🗺️ المراحل القادمة</h2>
+    <p class="section-intro">8 مراحل متبقية. المرحلة 0 مكتملة — الآن نبدأ البناء الفعلي.</p>
+
+    <div class="roadmap">
+      <div class="roadmap-item current">
+        <span class="phase-badge phase-0">00</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Foundations — الأساسيات ✅</div>
+          <div class="roadmap-desc">قاعدة البيانات · Architecture · Pricing Engine · Business Rules</div>
+          <div class="roadmap-priority pri-done">✅ مكتملة بالكامل — أنت هنا</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <span class="phase-badge phase-hi">02</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Design System</div>
+          <div class="roadmap-desc">Button · Input · Select · Table · Badge · Modal · Card · Sidebar · Header</div>
+          <div class="roadmap-priority pri-high">⬆ أولوية عالية</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <span class="phase-badge phase-hi">03</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Clients & Patients</div>
+          <div class="roadmap-desc">CRUD كامل مع بحث وصفحات القوائم</div>
+          <div class="roadmap-priority pri-high">⬆ أولوية عالية</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <span class="phase-badge phase-cr">04</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Pricing Engine Tests 🧪</div>
+          <div class="roadmap-desc">Unit tests للمحرك بـ Jest/Vitest — 15+ سيناريو اختبار</div>
+          <div class="roadmap-priority pri-crit">🔴 حرجة — لا يمكن التخطي</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <span class="phase-badge phase-hi">05</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Services</div>
+          <div class="roadmap-desc">ServiceForm + PricingPreview panel — إدخال الخدمات مع معاينة السعر لحظياً</div>
+          <div class="roadmap-priority pri-high">⬆ أولوية عالية</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <span class="phase-badge phase-hi">06</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Invoices</div>
+          <div class="roadmap-desc">InvoiceBuilder + تصدير PDF بـ react-pdf</div>
+          <div class="roadmap-priority pri-high">⬆ أولوية عالية</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <span class="phase-badge phase-hi">07</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Payments</div>
+          <div class="roadmap-desc">تسجيل الدفعات وتحديث حالة الفاتورة تلقائياً</div>
+          <div class="roadmap-priority pri-high">⬆ أولوية عالية</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <span class="phase-badge phase-md">08</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Admin Pricing</div>
+          <div class="roadmap-desc">إدارة pricing_rules + modifiers + system_config من الواجهة</div>
+          <div class="roadmap-priority pri-med">متوسطة الأولوية</div>
+        </div>
+      </div>
+
+      <div class="roadmap-item">
+        <span class="phase-badge phase-md">09</span>
+        <div class="roadmap-content">
+          <div class="roadmap-title">Auth & Dashboard</div>
+          <div class="roadmap-desc">NextAuth.js + KPIs + Recharts — لوحة قيادة مع إحصائيات</div>
+          <div class="roadmap-priority pri-med">متوسطة الأولوية</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="card" style="margin-top: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span style="font-size: 0.85rem; font-weight: 600;">تقدم المشروع الإجمالي</span>
+        <span style="font-family: var(--mono); font-size: 0.82rem; color: var(--teal);">11%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 11%;"></div>
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-3); margin-top: 8px;">1 مرحلة من 9 مكتملة — الأساس جاهز، البناء يبدأ</p>
+    </div>
+  </section>
+
+  <!-- ─── SECTION 8: Quick Start ─── -->
+  <section class="section">
+    <div class="section-label">08 — البداية السريعة</div>
+    <h2>🚀 كيف تستأنف العمل</h2>
+    <p class="section-intro">خطوات 6 لتشغيل المشروع من جديد.</p>
+
+    <div class="code-block" style="direction: ltr;">
+<span class="comment"># 1. استنساخ المشروع</span>
+git clone https://github.com/&lt;your-org&gt;/meditrans-core.git
+<span class="comment">   cd meditrans-core</span>
+
+<span class="comment"># 2. تثبيت التبعيات</span>
+npm install
+
+<span class="comment"># 3. إعداد متغيرات البيئة</span>
+cp .env.example .env
+<span class="comment">   # عدِّل DATABASE_URL ليشير لـ PostgreSQL الخاص بك</span>
+
+<span class="comment"># 4. تطبيق migration (إنشاء الجداول)</span>
+npm run db:migrate
+
+<span class="comment"># 5. ملء بيانات البذر (كتالوج + أسعار + admin)</span>
+npm run db:seed
+
+<span class="comment"># 6. تشغيل سيرفر التطوير</span>
+npm run dev    <span class="comment">→ http://localhost:3000</span></div>
+  </section>
+
+</div>
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="container">
+    <p>
+      <span>MediTrans</span> — توثيق المرحلة 0 · الأساسيات
+      &nbsp;·&nbsp; أبريل 2026
+      &nbsp;·&nbsp; جاهزة للمرحلة 02 <span>→ Design System</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // Active nav on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>

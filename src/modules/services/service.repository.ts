@@ -61,7 +61,6 @@ export async function createService(data: {
   fromLocation: string;
   toLocation: string;
   distanceKm: number;
-  isRoundTrip: boolean;
   staffType?: "nurse" | "doctor" | "reanimator";
   durationHours?: number;
   scheduledAt: Date;

@@ -10,7 +10,6 @@ export interface Service {
   fromLocation: string;
   toLocation: string;
   distanceKm: number;
-  isRoundTrip: boolean;
   staffType: StaffType | null;
   durationHours: number | null;
   scheduledAt: Date;
@@ -28,7 +27,6 @@ export interface CreateServiceInput {
   fromLocation: string;
   toLocation: string;
   distanceKm: number;
-  isRoundTrip: boolean;
   staffType?: StaffType;
   durationHours?: number;
   scheduledAt: string;

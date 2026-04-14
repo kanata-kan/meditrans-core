@@ -5,7 +5,6 @@ export interface PricingInput {
   scheduledAt: Date;
   isUrgent: boolean;
   distanceKm: number;
-  isRoundTrip: boolean;
   staffType?: StaffType;
   durationHours?: number;
   selectedModifiers: string[];

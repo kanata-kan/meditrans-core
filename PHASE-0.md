@@ -88,12 +88,11 @@ NIGHT_END_HOUR   = 7
 | Suture | — | 350 MAD |
 | ECG | — | 200 MAD |
 
-#### `pricing_modifiers` — 4 معدِّلات
+#### `pricing_modifiers` — 3 معدِّلات
 
 | الكود | الاسم | النوع | القيمة |
 |---|---|---|---|
-| `NIGHT_SURCHARGE` | Supplément nuit | flat_add | +100 MAD |
-| `ROUND_TRIP` | Aller-retour | multiplier | ×1.80 |
+| `NIGHT_SURCHARGE` | Supplément nuit | flat_add | +100 MAD (اختيار يدوي بالمشغّل) |
 | `VIP_SURCHARGE` | Supplément VIP | multiplier | ×1.0 (غير مفعَّل) |
 | `HOLIDAY_SURCHARGE` | Jour férié | multiplier | ×1.20 (غير مفعَّل) |
 
@@ -159,11 +158,14 @@ src/
 الخطوة 1 → findCatalogEntry()     : التحقق من وجود الخدمة في الكتالوج
 الخطوة 2 → findPricingRules()     : إيجاد أفضل قاعدة تسعير (أعلى خصوصية)
 الخطوة 3 → findActiveDistanceRate(): حساب رسوم المسافة (distanceKm × 7.50)
-الخطوة 4 → findActiveModifiers()  : تطبيق المعدِّلات المختارة
+الخطوة 4 → findActiveModifiers()  : تطبيق المعدِّلات المختارة يدوياً
+                                    (NIGHT_SURCHARGE: +100 MAD — اختيار يدوي دائماً)
 الخطوة 5 → TVA                    : 10% (أو 0 إذا catalog.tvaExempt=true)
 الخطوة 6 → manualOverride         : تجاوز يدوي (admin فقط، سبب إلزامي)
 الخطوة 7 → createSnapshot()       : حفظ لقطة سعر مرقَّمة غير قابلة للتغيير
 ```
+
+> **قواعد اللية:** لا يوجد كشف تلقائي لساعات الليل في محرك التسعير. الليل = اختيار يدوي بالمشغّل عبر `NIGHT_SURCHARGE`. قيم `NIGHT_START_HOUR` و`NIGHT_END_HOUR` محفوظة في `system_config` للمعلومات فقط.
 
 **الأخطاء المصنَّفة:**
 ```typescript
@@ -171,6 +173,11 @@ PricingRuleNotFoundError    // ← السعر صفر ممنوع
 PricingCatalogNotFoundError // ← كتالوج غير موجود
 PricingValidationError      // ← خطأ في المدخلات أو الصلاحيات
 ```
+
+**القرارات النهائية للأعمال:**
+- ❌ لا `isRoundTrip` — كل رحلة خدمة مستقلة: 500 + 500 = 1000 MAD
+- ❌ لا كشف تلقائي للية — `NIGHT_SURCHARGE` اختيار يدوي دائماً
+- ✅ TVA 10% ثابتة — قابلة للتعديل عبر `system_config.DEFAULT_TVA_RATE`
 
 **نتيجة الحساب `PricingResult`:**
 ```typescript

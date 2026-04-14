@@ -8,7 +8,6 @@ export const createServiceSchema = z.object({
   fromLocation: z.string().min(2).max(500),
   toLocation: z.string().min(2).max(500),
   distanceKm: z.coerce.number().min(0),
-  isRoundTrip: z.coerce.boolean(),
   staffType: z.enum(["nurse", "doctor", "reanimator"]).optional(),
   durationHours: z.coerce.number().int().positive().optional(),
   scheduledAt: z.string().datetime(),
