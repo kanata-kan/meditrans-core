@@ -1,0 +1,7 @@
+/* MediTrans Design Tokens — all values managed via tailwind.config.ts */
+/* This file is reserved for CSS custom properties that cannot be expressed as Tailwind tokens */
+
+:root {
+  --font-inter: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}

@@ -1,0 +1,331 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  admin
+  assistant
+}
+
+enum ServiceStatus {
+  pending
+  in_progress
+  completed
+  cancelled
+}
+
+enum UrgencyLevel {
+  normal
+  urgent
+}
+
+enum StaffType {
+  nurse
+  doctor
+  reanimator
+}
+
+enum InvoiceStatus {
+  unpaid
+  partial
+  paid
+  cancelled
+}
+
+enum PaymentMethod {
+  cash
+  card
+  transfer
+  cheque
+}
+
+enum ClientType {
+  individual
+  company
+  insurer
+}
+
+// ---------------------------------------------------------------------------
+// Core configuration
+// ---------------------------------------------------------------------------
+
+model SystemConfig {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+  updatedBy Int?
+
+  @@map("system_config")
+}
+
+// ---------------------------------------------------------------------------
+// Users
+// ---------------------------------------------------------------------------
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  role         UserRole  @default(assistant)
+  name         String
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  servicesCreated   Service[]        @relation("ServiceCreatedBy")
+  invoicesCreated   Invoice[]        @relation("InvoiceCreatedBy")
+  paymentsCreated   Payment[]        @relation("PaymentCreatedBy")
+  overridesApplied  PricingSnapshot[] @relation("SnapshotOverrideBy")
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// Clients & Patients
+// ---------------------------------------------------------------------------
+
+model Client {
+  id        Int        @id @default(autoincrement())
+  name      String
+  type      ClientType
+  phone     String
+  email     String?
+  address   String
+  notes     String?
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  patients Patient[]
+  services Service[]
+  invoices Invoice[]
+
+  @@map("clients")
+}
+
+model Patient {
+  id           Int      @id @default(autoincrement())
+  clientId     Int      @map("client_id")
+  fullName     String   @map("full_name")
+  dateOfBirth  DateTime @map("date_of_birth") @db.Date
+  phone        String
+  address      String
+  medicalNotes String?  @map("medical_notes")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  client   Client    @relation(fields: [clientId], references: [id])
+  services Service[]
+
+  @@index([clientId])
+  @@map("patients")
+}
+
+// ---------------------------------------------------------------------------
+// Service catalog & pricing configuration
+// ---------------------------------------------------------------------------
+
+model ServiceCatalog {
+  code              String   @id
+  nameFr            String   @map("name_fr")
+  category          String
+  description       String?
+  requiresDistance  Boolean  @default(false) @map("requires_distance")
+  requiresStaffType Boolean  @default(false) @map("requires_staff_type")
+  tvaExempt         Boolean  @default(false) @map("tva_exempt")
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  pricingRules PricingRule[]
+  services     Service[]
+
+  @@map("service_catalog")
+}
+
+model PricingRule {
+  id            Int            @id @default(autoincrement())
+  catalogCode   String         @map("catalog_code")
+  isUrgent      Boolean?       @map("is_urgent")
+  staffType     String?        @map("staff_type")
+  durationHours Int?           @map("duration_hours")
+  basePrice     Decimal        @map("base_price") @db.Decimal(10, 2)
+  currency      String         @default("MAD")
+  validFrom     DateTime       @default(now()) @map("valid_from")
+  validUntil    DateTime?      @map("valid_until")
+  notes         String?
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  catalog ServiceCatalog @relation(fields: [catalogCode], references: [code])
+
+  @@index([catalogCode])
+  @@index([validFrom, validUntil])
+  @@map("pricing_rules")
+}
+
+model PricingModifier {
+  code      String  @id
+  nameFr    String  @map("name_fr")
+  type      String
+  value     Decimal @db.Decimal(10, 2)
+  isActive  Boolean @default(true) @map("is_active")
+  notes     String?
+
+  @@map("pricing_modifiers")
+}
+
+model PricingDistanceRate {
+  id          Int      @id @default(autoincrement())
+  zoneName    String   @map("zone_name")
+  minKm       Decimal  @default(0) @map("min_km") @db.Decimal(10, 2)
+  maxKm       Decimal? @map("max_km") @db.Decimal(10, 2)
+  pricePerKm  Decimal  @map("price_per_km") @db.Decimal(10, 2)
+  isActive    Boolean  @default(true) @map("is_active")
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("pricing_distance_rates")
+}
+
+// ---------------------------------------------------------------------------
+// Services
+// ---------------------------------------------------------------------------
+
+model Service {
+  id            Int           @id @default(autoincrement())
+  patientId     Int           @map("patient_id")
+  clientId      Int           @map("client_id")
+  catalogCode   String        @map("catalog_code")
+  status        ServiceStatus @default(pending)
+  urgency       UrgencyLevel  @default(normal)
+  fromLocation  String        @map("from_location")
+  toLocation    String        @map("to_location")
+  distanceKm    Decimal       @default(0) @map("distance_km") @db.Decimal(10, 2)
+  isRoundTrip   Boolean       @default(false) @map("is_round_trip")
+  staffType     StaffType?    @map("staff_type")
+  durationHours Int?          @map("duration_hours")
+  scheduledAt   DateTime      @map("scheduled_at")
+  completedAt   DateTime?     @map("completed_at")
+  notes         String?
+  createdById   Int           @map("created_by_id")
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  patient     Patient          @relation(fields: [patientId], references: [id])
+  client      Client           @relation(fields: [clientId], references: [id])
+  catalog     ServiceCatalog   @relation(fields: [catalogCode], references: [code])
+  createdBy   User             @relation("ServiceCreatedBy", fields: [createdById], references: [id])
+  snapshots   PricingSnapshot[]
+  invoiceLine InvoiceLine?
+
+  @@index([clientId])
+  @@index([patientId])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("services")
+}
+
+// ---------------------------------------------------------------------------
+// Pricing snapshots (append-only, versioned)
+// ---------------------------------------------------------------------------
+
+model PricingSnapshot {
+  id                    Int      @id @default(autoincrement())
+  serviceId             Int      @map("service_id")
+  version               Int      @default(1)
+  isCurrent             Boolean  @default(true) @map("is_current")
+  calculatedAt          DateTime @default(now()) @map("calculated_at")
+  inputParams           Json     @map("input_params")
+  basePrice             Decimal  @map("base_price") @db.Decimal(10, 2)
+  distanceFee           Decimal  @default(0) @map("distance_fee") @db.Decimal(10, 2)
+  modifiersApplied      Json     @default("[]") @map("modifiers_applied")
+  subtotalHt            Decimal  @map("subtotal_ht") @db.Decimal(10, 2)
+  tvaRate               Decimal  @map("tva_rate") @db.Decimal(5, 4)
+  tvaAmount             Decimal  @map("tva_amount") @db.Decimal(10, 2)
+  totalTtc              Decimal  @map("total_ttc") @db.Decimal(10, 2)
+  matchedRuleIds        Int[]    @map("matched_rule_ids")
+  isOverridden          Boolean  @default(false) @map("is_overridden")
+  overrideReason        String?  @map("override_reason")
+  overrideById          Int?     @map("override_by_id")
+  overrideOriginalTotal Decimal? @map("override_original_total") @db.Decimal(10, 2)
+  currency              String   @default("MAD")
+
+  service     Service      @relation(fields: [serviceId], references: [id])
+  overrideBy  User?        @relation("SnapshotOverrideBy", fields: [overrideById], references: [id])
+  invoiceLine InvoiceLine?
+
+  @@unique([serviceId, version])
+  @@index([serviceId, isCurrent])
+  @@index([calculatedAt])
+  @@map("pricing_snapshots")
+}
+
+// ---------------------------------------------------------------------------
+// Invoices & lines
+// ---------------------------------------------------------------------------
+
+model Invoice {
+  id            Int           @id @default(autoincrement())
+  clientId      Int           @map("client_id")
+  invoiceNumber String        @unique @map("invoice_number")
+  status        InvoiceStatus @default(unpaid)
+  totalHt       Decimal       @map("total_ht") @db.Decimal(10, 2)
+  totalTva      Decimal       @map("total_tva") @db.Decimal(10, 2)
+  totalTtc      Decimal       @map("total_ttc") @db.Decimal(10, 2)
+  dueDate       DateTime?     @map("due_date") @db.Date
+  notes         String?
+  createdById   Int           @map("created_by_id")
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  client    Client        @relation(fields: [clientId], references: [id])
+  createdBy User          @relation("InvoiceCreatedBy", fields: [createdById], references: [id])
+  lines     InvoiceLine[]
+  payments  Payment[]
+
+  @@index([clientId])
+  @@index([status])
+  @@map("invoices")
+}
+
+model InvoiceLine {
+  id           Int     @id @default(autoincrement())
+  invoiceId    Int     @map("invoice_id")
+  serviceId    Int     @unique @map("service_id")
+  snapshotId   Int     @unique @map("snapshot_id")
+  lineLabel    String  @map("line_label")
+  lineTotalHt  Decimal @map("line_total_ht") @db.Decimal(10, 2)
+  lineTva      Decimal @map("line_tva") @db.Decimal(10, 2)
+  lineTotalTtc Decimal @map("line_total_ttc") @db.Decimal(10, 2)
+  sortOrder    Int     @default(0) @map("sort_order")
+
+  invoice  Invoice         @relation(fields: [invoiceId], references: [id])
+  service  Service         @relation(fields: [serviceId], references: [id])
+  snapshot PricingSnapshot @relation(fields: [snapshotId], references: [id])
+
+  @@map("invoice_lines")
+}
+
+// ---------------------------------------------------------------------------
+// Payments
+// ---------------------------------------------------------------------------
+
+model Payment {
+  id          Int           @id @default(autoincrement())
+  invoiceId   Int           @map("invoice_id")
+  amount      Decimal       @db.Decimal(10, 2)
+  method      PaymentMethod
+  paidAt      DateTime      @map("paid_at")
+  reference   String?
+  notes       String?
+  createdById Int           @map("created_by_id")
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  createdBy User    @relation("PaymentCreatedBy", fields: [createdById], references: [id])
+
+  @@index([invoiceId])
+  @@map("payments")
+}
