@@ -1,0 +1,144 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Pricing Engine | Section: 05 -->
+
+<div class="section">
+  <div class="section-label">05 — محرك التسعير</div>
+  <h2>⚙️ <code>pricing.engine.ts</code> — قلب المشروع</h2>
+  <p class="section-intro">
+    هذا هو الملف الأهم في المشروع. خوارزمية 7 خطوات ثابتة — لا سعر مشفَّر hardcoded أبداً. كل شيء يُحسَب ديناميكياً.
+  </p>
+
+  <div class="card" style="margin-bottom: 24px;">
+    <div class="engine-steps">
+
+      <div class="engine-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-fn">findCatalogEntry()</div>
+          <div class="step-title">التحقق من الكتالوج</div>
+          <div class="step-desc">
+            هل الخدمة المطلوبة موجودة في كتالوج الخدمات؟
+            <br>إذا لا → خطأ فوري.
+            <br><strong style="color: var(--rose)">لا يمكن حساب سعر لخدمة غير مسجَّلة.</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="engine-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-fn">findPricingRules()</div>
+          <div class="step-title">إيجاد أفضل قاعدة تسعير</div>
+          <div class="step-desc">
+            النظام يبحث عن القاعدة الأكثر تخصصاً.
+            <br>مثلاً: "النقل العاجل لعميل VIP" أخص من "النقل العاجل العادي".
+            <br><strong style="color: var(--amber)">أعلى خصوصية = الأولوية.</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="engine-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-fn">findActiveDistanceRate()</div>
+          <div class="step-title">حساب رسوم المسافة</div>
+          <div class="step-desc">
+            إذا أُدخِل عدد الكيلومترات → <code>distanceKm × 7.50 MAD</code>.
+            <br>يُضاف للسعر الأساسي.
+            <br>إذا ما أُدخِلش → صفر.
+          </div>
+        </div>
+      </div>
+
+      <div class="engine-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-fn">findActiveModifiers()</div>
+          <div class="step-title">تطبيق المعدِّلات</div>
+          <div class="step-desc">
+            المعدِّلات تُختار يدوياً من المشغِّل فقط.
+            <br>ليل؟ <strong style="color: var(--teal)">NIGHT_SURCHARGE +100 MAD</strong> — لا كشف تلقائي.
+            <br>كل رحلة = خدمة مستقلة، لا مضاعف ذهاب وإياب.
+            <br>تُطبَّق بالترتيب على الإجمالي.
+          </div>
+        </div>
+      </div>
+
+      <div class="engine-step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-fn">applyTVA()</div>
+          <div class="step-title">حساب TVA</div>
+          <div class="step-desc">
+            <strong style="color: var(--teal)">10%</strong> بشكل افتراضي من <code>system_config</code>.
+            <br>إذا الخدمة معفاة (<code>tvaExempt=true</code>) → TVA صفر.
+          </div>
+        </div>
+      </div>
+
+      <div class="engine-step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-fn">manualOverride()</div>
+          <div class="step-title">التجاوز اليدوي (Admin فقط)</div>
+          <div class="step-desc">
+            <strong style="color: var(--rose)">شرطان إلزاميان:</strong>
+            <br>1) المستخدم يجب أن يكون <code>admin</code>.
+            <br>2) يجب كتابة سبب.
+            <br>لا سبب = رفض الطلب.
+          </div>
+        </div>
+      </div>
+
+      <div class="engine-step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-fn">createSnapshot()</div>
+          <div class="step-title">حفظ لقطة السعر — append-only</div>
+          <div class="step-desc">
+            السعر النهائي يُحفَظ في <code>pricing_snapshots</code> ولا يُعدَّل أبداً.
+            <br>حتى لو تغيَّرت قواعد التسعير لاحقاً، الخدمة المنجَزة تحتفظ بسعرها الأصلي للأبد.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Example Calculation -->
+  <h3 style="margin-bottom: 16px;">🧮 مثال حساب حقيقي</h3>
+  <div class="code-block" style="direction: ltr;">
+<span class="comment">// مثال: Transport urgent · 15km · ليلاً (مشغِّل اختار NIGHT_SURCHARGE يدوياً)</span>
+
+<span class="kw">Step 1:</span> ✅ Transport urgent موجود في الكتالوج
+
+<span class="kw">Step 2:</span> <span class="key">basePrice</span>    = <span class="val">250 MAD</span>  (قاعدة Transport urgent)
+
+<span class="kw">Step 3:</span> <span class="key">distanceFee</span>  = <span class="val">15km × 7.50</span> = <span class="val">112.50 MAD</span>
+
+<span class="kw">Step 4:</span> <span class="key">subtotal</span>     = <span class="val">(250 + 112.50)</span> = <span class="val">362.50 MAD</span>
+         NIGHT_SURCHARGE → +100 → <span class="val">462.50 MAD</span>
+         <span class="comment">// ✅ لا ROUND_TRIP — رحلة العودة = خدمة مستقلة جديدة</span>
+
+<span class="kw">Step 5:</span> <span class="key">TVA (10%)</span>    = <span class="val">46.25 MAD</span>
+         <span class="key">Total TTC</span>    = <span class="val">508.75 MAD</span>  ✅
+
+<span class="kw">Step 7:</span> 💾 snapshot ID = <span class="str">"snap_20260414_001"</span>  (محفوظ إلى الأبد)</div>
+
+  <!-- Errors -->
+  <h3 style="margin-top: 24px; margin-bottom: 12px;">🚨 الأخطاء المصنَّفة</h3>
+  <div class="card-grid card-grid-3">
+    <div class="card" style="border-color: rgba(240,107,107,0.2); background: var(--rose-dim);">
+      <div style="font-family: var(--mono); font-size: 0.78rem; color: var(--rose); margin-bottom: 6px;">PricingRuleNotFoundError</div>
+      <div style="font-size: 0.82rem; color: var(--text-2);">السعر صفر ممنوع تماماً — إذا ما لقاش قاعدة تسعير، يرفض العملية</div>
+    </div>
+    <div class="card" style="border-color: rgba(240,107,107,0.2); background: var(--rose-dim);">
+      <div style="font-family: var(--mono); font-size: 0.78rem; color: var(--rose); margin-bottom: 6px;">PricingCatalogNotFoundError</div>
+      <div style="font-size: 0.82rem; color: var(--text-2);">خدمة غير موجودة في الكتالوج — لا يمكن تسعير ما هو غير مسجَّل</div>
+    </div>
+    <div class="card" style="border-color: rgba(240,107,107,0.2); background: var(--rose-dim);">
+      <div style="font-family: var(--mono); font-size: 0.78rem; color: var(--rose); margin-bottom: 6px;">PricingValidationError</div>
+      <div style="font-size: 0.82rem; color: var(--text-2);">خطأ في المدخلات أو الصلاحيات (override بدون سبب مثلاً)</div>
+    </div>
+  </div>
+</div>

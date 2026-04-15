@@ -1,0 +1,206 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Models & Relations | Section: 03.5 -->
+
+<div class="section">
+  <div class="section-label">03.5 — نماذج البيانات والعلاقات</div>
+  <h2>🗄️ كيف ترتبط الجداول ببعض؟</h2>
+  <p class="section-intro">
+    كل جدول له مسؤولية واحدة. <code>services</code> هو القلب — كل شيء يمر عليه أو يصدر منه.
+  </p>
+
+  <!-- ER DIAGRAM -->
+  <div class="er-grid-wrap">
+    <!-- Row 1: People -->
+    <div class="er-row">
+      <div class="er-ent">
+        <div class="er-ent-hd"><span class="er-ent-name">users</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f"><span class="er-f-n">email</span><span class="er-f-t">String unique</span></div>
+          <div class="er-f"><span class="er-f-n">role</span><span class="er-f-t">admin|assistant</span></div>
+          <div class="er-f"><span class="er-f-n">passwordHash</span><span class="er-f-t">String</span></div>
+        </div>
+      </div>
+      <div class="er-ent">
+        <div class="er-ent-hd"><span class="er-ent-name">clients</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f"><span class="er-f-n">name</span><span class="er-f-t">String</span></div>
+          <div class="er-f"><span class="er-f-n">type</span><span class="er-f-t">individual|company|insurer</span></div>
+          <div class="er-f"><span class="er-f-n">tvaExempt</span><span class="er-f-t">Boolean</span></div>
+        </div>
+      </div>
+      <div class="er-ent">
+        <div class="er-ent-hd"><span class="er-ent-name">patients</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f"><span class="er-f-n">firstName / lastName</span><span class="er-f-t">String</span></div>
+          <div class="er-f fk"><span class="er-f-n">clientId</span><span class="er-f-t">FK→clients</span></div>
+        </div>
+      </div>
+      <div class="er-ent cfg">
+        <div class="er-ent-hd"><span class="er-ent-name">system_config</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">key</span><span class="er-f-t">String PK</span></div>
+          <div class="er-f"><span class="er-f-n">value</span><span class="er-f-t">String</span></div>
+          <div class="er-f" style="color:var(--text-3);font-size:.6rem">DEFAULT_TVA_RATE = 0.10</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="er-arrow-row">↓ ↓ ↓</div>
+
+    <!-- Row 2: Core -->
+    <div class="er-row">
+      <div class="er-ent core" style="max-width:300px">
+        <div class="er-ent-hd">
+          <span style="font-size:.9rem">⭐</span>
+          <span class="er-ent-name">services</span>
+          <span style="font-size:.62rem;color:var(--teal);margin-right:auto;background:var(--teal-dim);padding:1px 6px;border-radius:4px">القلب</span>
+        </div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f fk"><span class="er-f-n">clientId</span><span class="er-f-t">FK→clients</span></div>
+          <div class="er-f fk"><span class="er-f-n">patientId</span><span class="er-f-t">FK→patients</span></div>
+          <div class="er-f fk"><span class="er-f-n">catalogCode</span><span class="er-f-t">FK→service_catalog</span></div>
+          <div class="er-f fk"><span class="er-f-n">createdById</span><span class="er-f-t">FK→users</span></div>
+          <div class="er-f"><span class="er-f-n">status</span><span class="er-f-t">pending|in_progress|completed|cancelled</span></div>
+          <div class="er-f"><span class="er-f-n">urgency</span><span class="er-f-t">normal|urgent</span></div>
+          <div class="er-f"><span class="er-f-n">distanceKm</span><span class="er-f-t">Decimal</span></div>
+          <div class="er-f"><span class="er-f-n">scheduledAt</span><span class="er-f-t">DateTime</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="er-arrow-row">↓ ↓ ↓</div>
+
+    <!-- Row 3: Pricing + Financial -->
+    <div class="er-row">
+      <div class="er-ent prc">
+        <div class="er-ent-hd"><span class="er-ent-name">service_catalog</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">code</span><span class="er-f-t">String PK</span></div>
+          <div class="er-f"><span class="er-f-n">nameFr</span><span class="er-f-t">String</span></div>
+          <div class="er-f"><span class="er-f-n">type</span><span class="er-f-t">transport|disposition|acte</span></div>
+          <div class="er-f"><span class="er-f-n">tvaExempt</span><span class="er-f-t">Boolean</span></div>
+        </div>
+      </div>
+      <div class="er-ent prc">
+        <div class="er-ent-hd"><span class="er-ent-name">pricing_rules</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f fk"><span class="er-f-n">catalogCode</span><span class="er-f-t">FK→catalog</span></div>
+          <div class="er-f"><span class="er-f-n">basePrice</span><span class="er-f-t">Decimal</span></div>
+          <div class="er-f"><span class="er-f-n">isUrgent</span><span class="er-f-t">Boolean?</span></div>
+        </div>
+      </div>
+      <div class="er-ent prc">
+        <div class="er-ent-hd"><span class="er-ent-name">pricing_modifiers</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f"><span class="er-f-n">code</span><span class="er-f-t">NIGHT_SURCHARGE…</span></div>
+          <div class="er-f"><span class="er-f-n">type</span><span class="er-f-t">flat_add|multiplier</span></div>
+          <div class="er-f"><span class="er-f-n">value</span><span class="er-f-t">Decimal</span></div>
+        </div>
+      </div>
+      <div class="er-ent">
+        <div class="er-ent-hd"><span class="er-ent-name">pricing_snapshots</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f fk"><span class="er-f-n">serviceId</span><span class="er-f-t">FK→services</span></div>
+          <div class="er-f"><span class="er-f-n">version</span><span class="er-f-t">Int</span></div>
+          <div class="er-f"><span class="er-f-n">totalTtc</span><span class="er-f-t">Decimal</span></div>
+          <div class="er-f"><span class="er-f-n">isCurrent</span><span class="er-f-t">Boolean</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="er-arrow-row">↓</div>
+
+    <!-- Row 4: Financial -->
+    <div class="er-row">
+      <div class="er-ent fin">
+        <div class="er-ent-hd"><span class="er-ent-name">invoice_lines</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f fk"><span class="er-f-n">invoiceId</span><span class="er-f-t">FK→invoices</span></div>
+          <div class="er-f fk"><span class="er-f-n">serviceId</span><span class="er-f-t">FK→services</span></div>
+          <div class="er-f"><span class="er-f-n">unitPrice / total</span><span class="er-f-t">Decimal</span></div>
+        </div>
+      </div>
+      <div class="er-ent fin">
+        <div class="er-ent-hd"><span class="er-ent-name">invoices</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f fk"><span class="er-f-n">clientId</span><span class="er-f-t">FK→clients</span></div>
+          <div class="er-f"><span class="er-f-n">status</span><span class="er-f-t">draft|sent|paid|cancelled</span></div>
+          <div class="er-f"><span class="er-f-n">totalTtc</span><span class="er-f-t">Decimal</span></div>
+        </div>
+      </div>
+      <div class="er-ent fin">
+        <div class="er-ent-hd"><span class="er-ent-name">payments</span></div>
+        <div class="er-ent-bd">
+          <div class="er-f pk"><span class="er-f-n">id</span><span class="er-f-t">Int PK</span></div>
+          <div class="er-f fk"><span class="er-f-n">invoiceId</span><span class="er-f-t">FK→invoices</span></div>
+          <div class="er-f"><span class="er-f-n">amount</span><span class="er-f-t">Decimal</span></div>
+          <div class="er-f"><span class="er-f-n">method</span><span class="er-f-t">cash|bank|check</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Relations Table -->
+  <h3 style="margin-bottom:14px">🔗 العلاقات بين الجداول</h3>
+  <div class="er-rels-grid">
+    <div class="er-rel"><span class="from">services</span><span class="arr">→</span><span class="to">clients</span><span class="lbl">N:1 — كل خدمة لعميل</span></div>
+    <div class="er-rel"><span class="from">services</span><span class="arr">→</span><span class="to">patients</span><span class="lbl">N:1 — كل خدمة لمريض</span></div>
+    <div class="er-rel"><span class="from">services</span><span class="arr">→</span><span class="to">users</span><span class="lbl">N:1 — أنشأها مستخدم</span></div>
+    <div class="er-rel"><span class="from">services</span><span class="arr">→</span><span class="to">service_catalog</span><span class="lbl">N:1 — نوع الخدمة</span></div>
+    <div class="er-rel"><span class="from">pricing_snapshots</span><span class="arr">→</span><span class="to">services</span><span class="lbl">N:1 — لقطة سعر append-only</span></div>
+    <div class="er-rel"><span class="from">pricing_rules</span><span class="arr">→</span><span class="to">service_catalog</span><span class="lbl">N:1 — قاعدة السعر</span></div>
+    <div class="er-rel"><span class="from">invoice_lines</span><span class="arr">→</span><span class="to">services</span><span class="lbl">1:1 — خدمة في فاتورة</span></div>
+    <div class="er-rel"><span class="from">invoice_lines</span><span class="arr">→</span><span class="to">invoices</span><span class="lbl">N:1 — أسطر الفاتورة</span></div>
+    <div class="er-rel"><span class="from">invoices</span><span class="arr">→</span><span class="to">clients</span><span class="lbl">N:1 — فاتورة لعميل</span></div>
+    <div class="er-rel"><span class="from">payments</span><span class="arr">→</span><span class="to">invoices</span><span class="lbl">N:1 — دفعات الفاتورة</span></div>
+  </div>
+
+  <!-- Modules -->
+  <h3 style="margin-top:28px;margin-bottom:14px">📦 ما تفعله كل وحدة (Module)</h3>
+  <div class="mod-grid">
+    <div class="mod-card">
+      <div class="mod-name">📦 users</div>
+      <div class="mod-desc">إدارة المستخدمين — admin و assistant. التحقق من الصلاحيات لكل عملية.</div>
+      <div class="mod-files">types · schema · repository · service · actions</div>
+    </div>
+    <div class="mod-card">
+      <div class="mod-name">📦 clients</div>
+      <div class="mod-desc">العملاء الذين يدفعون الفواتير: أفراد، شركات، أو شركات تأمين.</div>
+      <div class="mod-files">types · schema · repository · service · actions</div>
+    </div>
+    <div class="mod-card">
+      <div class="mod-name">📦 patients</div>
+      <div class="mod-desc">المرضى الذين يتلقون الخدمة — كل مريض مرتبط بعميل.</div>
+      <div class="mod-files">types · schema · repository · service · actions</div>
+    </div>
+    <div class="mod-card" style="border-color:rgba(99,210,190,0.3)">
+      <div class="mod-name" style="color:var(--teal)">⭐ pricing</div>
+      <div class="mod-desc">محرك التسعير — الأهم والأعقد. 7 خطوات، database-driven، snapshots.</div>
+      <div class="mod-files">types · schema · repository · engine · utils · actions</div>
+    </div>
+    <div class="mod-card">
+      <div class="mod-name">📦 services</div>
+      <div class="mod-desc">الخدمات المنفَّذة — يستدعي محرك التسعير عند الإنشاء.</div>
+      <div class="mod-files">types · schema · repository · service · actions</div>
+    </div>
+    <div class="mod-card">
+      <div class="mod-name">📦 invoices</div>
+      <div class="mod-desc">تجميع خدمات متعددة في فاتورة واحدة. لا إلغاء إذا وُجدت دفعات.</div>
+      <div class="mod-files">types · schema · repository · service · actions</div>
+    </div>
+    <div class="mod-card">
+      <div class="mod-name">📦 payments</div>
+      <div class="mod-desc">تسجيل الدفعات وتحديث حالة الفاتورة تلقائياً.</div>
+      <div class="mod-files">types · schema · repository · service · actions</div>
+    </div>
+  </div>
+</div>

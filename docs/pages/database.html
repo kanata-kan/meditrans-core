@@ -1,0 +1,157 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Database | Section: 03 -->
+
+<div class="section">
+  <div class="section-label">03 — قاعدة البيانات</div>
+  <h2>PostgreSQL — 11 جدول 🗄️</h2>
+  <p class="section-intro">
+    كل قاعدة البيانات مبنية وطُبِّقت عبر migration واحدة. فيما يلي شرح لكل جدول ولماذا موجود.
+  </p>
+
+  <div class="table-wrap" style="margin-bottom: 24px;">
+    <table>
+      <thead>
+        <tr><th>الجدول</th><th>ما فيه</th><th>مثال عملي</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">users</td>
+          <td class="name">المستخدمون</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">admin و assistant — اللي يدخلو على النظام</td>
+        </tr>
+        <tr>
+          <td class="mono">clients</td>
+          <td class="name">العملاء</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">شركة تأمين، مستشفى، فرد — من يدفع الفاتورة</td>
+        </tr>
+        <tr>
+          <td class="mono">patients</td>
+          <td class="name">المرضى</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">المريض اللي تم نقله أو معالجته</td>
+        </tr>
+        <tr>
+          <td class="mono">service_catalog</td>
+          <td class="name">كتالوج الخدمات</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">"Transport urgent"، "ECG"، "Suture" — قائمة كل الخدمات الممكنة</td>
+        </tr>
+        <tr>
+          <td class="mono">pricing_rules</td>
+          <td class="name">قواعد التسعير</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">Transport simple عادي = 150، urgence = 250 درهم</td>
+        </tr>
+        <tr>
+          <td class="mono">pricing_modifiers</td>
+          <td class="name">معدِّلات الأسعار</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">إضافة الليل (+100 MAD) — اختيار يدوي فقط، لا كشف تلقائي</td>
+        </tr>
+        <tr>
+          <td class="mono">pricing_distance_rates</td>
+          <td class="name">أسعار المسافة</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">7.50 درهم لكل كيلومتر</td>
+        </tr>
+        <tr>
+          <td class="mono">services</td>
+          <td class="name">الخدمات المنفَّذة</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">سجل كل خدمة فعلية تمت (نقل، حقنة...)</td>
+        </tr>
+        <tr>
+          <td class="mono">pricing_snapshots</td>
+          <td class="name">لقطات الأسعار</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">سعر مجمَّد عند إنشاء الخدمة — لا يتغير أبداً</td>
+        </tr>
+        <tr>
+          <td class="mono">invoices + lines</td>
+          <td class="name">الفواتير وأسطرها</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">فاتورة تجمع عدة خدمات في وثيقة واحدة</td>
+        </tr>
+        <tr>
+          <td class="mono">payments</td>
+          <td class="name">المدفوعات</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">تسجيل الدفعات على كل فاتورة</td>
+        </tr>
+        <tr>
+          <td class="mono">system_config</td>
+          <td class="name">إعدادات النظام</td>
+          <td style="color: var(--text-2); font-size: 0.82rem;">TVA 10%، ساعة بداية الليل (21h)، نهايته (7h)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEED DATA -->
+  <h3 style="margin-bottom: 16px;">🌱 بيانات البذر — ما تم ملؤه مسبقاً</h3>
+  <p style="color: var(--text-2); font-size: 0.88rem; margin-bottom: 20px;">
+    "البذر" يعني بيانات أولية جاهزة قبل ما يبدأ أي مستخدم يستعمل النظام. بحال إعداد قاعدة عمل جاهزة.
+  </p>
+
+  <div class="seed-grid">
+    <!-- System Config -->
+    <div class="seed-card">
+      <div class="seed-header">
+        <span style="color: var(--violet)">⚙️</span>
+        <span class="seed-header-title">إعدادات النظام</span>
+        <span class="seed-count">3 مدخلات</span>
+      </div>
+      <div class="seed-body">
+        <div class="seed-row"><span class="seed-key">DEFAULT_TVA_RATE</span><span class="seed-val seed-price">10%</span></div>
+        <div class="seed-row"><span class="seed-key">NIGHT_START_HOUR</span><span class="seed-val">21:00</span></div>
+        <div class="seed-row"><span class="seed-key">NIGHT_END_HOUR</span><span class="seed-val">07:00</span></div>
+      </div>
+    </div>
+
+    <!-- Modifiers -->
+    <div class="seed-card">
+      <div class="seed-header">
+        <span style="color: var(--amber)">✕</span>
+        <span class="seed-header-title">معدِّلات الأسعار</span>
+        <span class="seed-count">3 معدِّلات</span>
+      </div>
+      <div class="seed-body">
+        <div class="seed-row"><span class="seed-key">NIGHT_SURCHARGE</span><span class="seed-val seed-price">+100 درهم (يدوي)</span></div>
+        <div class="seed-row"><span class="seed-key">VIP_SURCHARGE</span><span class="seed-val" style="color: var(--text-3)">×1.0 (غير مفعَّل)</span></div>
+        <div class="seed-row"><span class="seed-key">HOLIDAY_SURCHARGE</span><span class="seed-val" style="color: var(--text-3)">×1.20 (غير مفعَّل)</span></div>
+      </div>
+    </div>
+
+    <!-- Transport Pricing -->
+    <div class="seed-card">
+      <div class="seed-header">
+        <span style="color: var(--sky)">🚑</span>
+        <span class="seed-header-title">تسعير النقل</span>
+        <span class="seed-count">أمثلة مختارة</span>
+      </div>
+      <div class="seed-body">
+        <div class="seed-row"><span class="seed-key">Transport simple (عادي)</span><span class="seed-val seed-price">150 MAD</span></div>
+        <div class="seed-row"><span class="seed-key">Transport urgent</span><span class="seed-val seed-price">250 MAD</span></div>
+        <div class="seed-row"><span class="seed-key">Transport médicalisé</span><span class="seed-val seed-price">800 MAD</span></div>
+        <div class="seed-row"><span class="seed-key">Transport réanimation</span><span class="seed-val seed-price">1,200 MAD</span></div>
+        <div class="seed-row"><span class="seed-key">Distance</span><span class="seed-val seed-price">7.50 MAD/km</span></div>
+      </div>
+    </div>
+
+    <!-- Disposition Pricing -->
+    <div class="seed-card">
+      <div class="seed-header">
+        <span style="color: var(--teal)">👩‍⚕️</span>
+        <span class="seed-header-title">تسعير التوضيب الطبي</span>
+        <span class="seed-count">أمثلة مختارة</span>
+      </div>
+      <div class="seed-body">
+        <div class="seed-row"><span class="seed-key">Infirmier 12h</span><span class="seed-val seed-price">500 MAD</span></div>
+        <div class="seed-row"><span class="seed-key">Infirmier 24h</span><span class="seed-val seed-price">900 MAD</span></div>
+        <div class="seed-row"><span class="seed-key">Médecin 24h</span><span class="seed-val seed-price">1,800 MAD</span></div>
+        <div class="seed-row"><span class="seed-key">Réanimateur 24h</span><span class="seed-val seed-price">2,800 MAD</span></div>
+        <div class="seed-row"><span class="seed-key">ECG</span><span class="seed-val seed-price">200 MAD</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <span class="warning-icon">⚠️</span>
+    <div>
+      <strong>مستخدم Admin الافتراضي:</strong>
+      <code>admin@meditrans.ma</code> / <code>Admin@MediTrans2025</code>
+      — يجب تغيير كلمة المرور فوراً عند النشر الإنتاجي!
+    </div>
+  </div>
+</div>

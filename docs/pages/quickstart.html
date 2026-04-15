@@ -1,0 +1,29 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Quick Start | Section: 08 -->
+
+<div class="section">
+  <div class="section-label">08 — البداية السريعة</div>
+  <h2>🚀 كيف تستأنف العمل</h2>
+  <p class="section-intro">خطوات 6 لتشغيل المشروع من جديد.</p>
+
+  <div class="code-block" style="direction: ltr;">
+<span class="comment"># 1. استنساخ المشروع</span>
+git clone https://github.com/&lt;your-org&gt;/meditrans-core.git
+<span class="comment">   cd meditrans-core</span>
+
+<span class="comment"># 2. تثبيت التبعيات</span>
+npm install
+
+<span class="comment"># 3. إعداد متغيرات البيئة</span>
+cp .env.example .env
+<span class="comment">   # عدِّل DATABASE_URL ليشير لـ PostgreSQL الخاص بك</span>
+
+<span class="comment"># 4. تطبيق migration (إنشاء الجداول)</span>
+npm run db:migrate
+
+<span class="comment"># 5. ملء بيانات البذر (كتالوج + أسعار + admin)</span>
+npm run db:seed
+
+<span class="comment"># 6. تشغيل سيرفر التطوير</span>
+npm run dev    <span class="comment">→ http://localhost:3000</span></div>
+</div>

@@ -1,0 +1,69 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Business Rules | Section: 06 -->
+
+<div class="section">
+  <div class="section-label">06 — قواعد العمل</div>
+  <h2>📏 القواعد المطبَّقة في الكود</h2>
+  <p class="section-intro">
+    هذه ليست وثيقة — هي كود مطبَّق فعلياً. كل قاعدة لها رمز ومكان محدد في المشروع.
+  </p>
+
+  <div class="rule-grid">
+    <div class="rule-item">
+      <div class="rule-code">CR-01</div>
+      <div>
+        <div class="rule-text">السعر صفر ممنوع تماماً</div>
+        <div class="rule-where">pricing.engine.ts → PricingRuleNotFoundError</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-code">CR-02</div>
+      <div>
+        <div class="rule-text">اللقطات append-only — لا حذف، لا تعديل</div>
+        <div class="rule-where">pricing.engine.ts → isCurrent=false قبل إنشاء snapshot جديد</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-code">CR-03</div>
+      <div>
+        <div class="rule-text">التجاوز اليدوي: admin فقط + سبب إلزامي</div>
+        <div class="rule-where">pricing.engine.ts + pricing.actions.ts</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-code">CR-04</div>
+      <div>
+        <div class="rule-text">كل override يُنشئ snapshot جديد — transactional</div>
+        <div class="rule-where">applyOverrideAction()</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-code">CR-05</div>
+      <div>
+        <div class="rule-text">Override يُحدِّث InvoiceLine تلقائياً</div>
+        <div class="rule-where">applyOverrideAction() — داخل نفس الـ transaction</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-code">CR-12</div>
+      <div>
+        <div class="rule-text">إلغاء فاتورة فيها مدفوعات = محظور</div>
+        <div class="rule-where">invoice.service.ts → cancelInvoice()</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-code">CR-13</div>
+      <div>
+        <div class="rule-text">الخدمة الملغاة لا تُضاف للفواتير</div>
+        <div class="rule-where">invoice.service.ts → createInvoice()</div>
+      </div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-code">CR-14</div>
+      <div>
+        <div class="rule-text">خدمة مفوتَرة مرة — لا تُفوتَر مرة ثانية</div>
+        <div class="rule-where">invoice.service.ts → فحص invoiceLine قبل الإضافة</div>
+      </div>
+    </div>
+  </div>
+</div>

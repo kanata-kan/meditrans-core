@@ -1,0 +1,89 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Structure | Section: 04 -->
+
+<div class="section">
+  <div class="section-label">04 — هيكل المشروع</div>
+  <h2>Architecture الملفات 📁</h2>
+  <p class="section-intro">
+    كل شيء منظَّم في modules مستقلة. كل module فيها نفس الطبقات بنفس الترتيب.
+  </p>
+
+  <div class="card-grid card-grid-2" style="margin-bottom: 24px;">
+    <div>
+      <h3 style="margin-bottom: 12px;">🌳 هيكل <code>src/</code></h3>
+      <div class="filetree">
+<span class="ft-dir">src/</span>
+├── <span class="ft-dir">app/</span>
+│   ├── <span class="ft-file">layout.tsx</span>        <span class="ft-comment">← Root Layout</span>
+│   ├── <span class="ft-file">page.tsx</span>          <span class="ft-comment">← Roadmap</span>
+│   └── <span class="ft-dir">dashboard/</span>
+│       ├── <span class="ft-file">page.tsx</span>      <span class="ft-comment">← Dashboard</span>
+│       ├── <span class="ft-dir">services/</span>
+│       ├── <span class="ft-dir">clients/</span>
+│       ├── <span class="ft-dir">patients/</span>
+│       ├── <span class="ft-dir">invoices/</span>
+│       └── <span class="ft-dir">admin/</span>
+│
+├── <span class="ft-dir">lib/</span>
+│   ├── <span class="ft-important">db.ts</span>         <span class="ft-comment">← Prisma singleton</span>
+│   ├── <span class="ft-important">config.ts</span>     <span class="ft-comment">← system_config</span>
+│   ├── <span class="ft-file">constants.ts</span>   <span class="ft-comment">← Types + Labels</span>
+│   └── <span class="ft-file">utils.ts</span>       <span class="ft-comment">← cn/formatCurrency</span>
+│
+├── <span class="ft-dir">modules/</span>           <span class="ft-comment">← قلب المشروع</span>
+│   ├── <span class="ft-dir">users/</span>
+│   ├── <span class="ft-dir">clients/</span>
+│   ├── <span class="ft-dir">patients/</span>
+│   ├── <span class="ft-dir">services/</span>
+│   ├── <span class="ft-important">pricing/</span>      <span class="ft-comment">← ⭐ الأهم</span>
+│   ├── <span class="ft-dir">invoices/</span>
+│   └── <span class="ft-dir">payments/</span>
+│
+└── <span class="ft-dir">styles/</span>
+    └── <span class="ft-file">tokens.css</span>    <span class="ft-comment">← Design tokens</span>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom: 12px;">📐 طبقات كل Module</h3>
+      <p style="color: var(--text-2); font-size: 0.85rem; margin-bottom: 14px;">
+        كل module فيها نفس الطبقات بنفس الترتيب. هذا بيخلي الكود منظَّم ومتوقَّع.
+      </p>
+      <div class="layer-list">
+        <div class="layer-item">
+          <div class="layer-file">*.types.ts</div>
+          <div class="layer-role">واجهات TypeScript فقط — صفر dependencies</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-file">*.schema.ts</div>
+          <div class="layer-role">Zod schemas — التحقق من المدخلات</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-file">*.repository.ts</div>
+          <div class="layer-role">Prisma فقط — لا منطق أعمال هنا</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-file">*.service.ts</div>
+          <div class="layer-role">منطق الأعمال — يستدعي repository</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-file">*.actions.ts</div>
+          <div class="layer-role"><code>"use server"</code> — نقطة دخول الواجهة</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px;">
+        <div class="prose" style="font-size:0.84rem;">
+          <p style="margin-bottom:8px">
+            💡 <strong style="color: var(--teal)">لماذا هذا التقسيم؟</strong>
+          </p>
+          <p style="margin:0">
+            الواجهة لا تعرف شيئاً عن Prisma.
+            <br>قاعدة البيانات لا تعرف شيئاً عن منطق الأعمال.
+            <br>كل طبقة مسؤولة عن شيء واحد فقط — <strong style="color:var(--sky)">Separation of Concerns</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

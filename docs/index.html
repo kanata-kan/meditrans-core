@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediTrans — التوثيق التقني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Loading bar -->
+<div class="loading-bar"></div>
+
+<!-- Background blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">MediTrans <span>Docs</span></div>
+    <div class="sidebar-version">v1.0 · أبريل 2026</div>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" class="search-input" placeholder="بحث في التوثيق...">
+  </div>
+
+  <nav class="sidebar-nav" id="sidebar-nav">
+    <!-- Nav links built by app.js -->
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sf-stat"><span>جداول</span><span class="sf-val">11</span></div>
+    <div class="sf-stat"><span>وحدات</span><span class="sf-val">7</span></div>
+    <div class="sf-stat"><span>اختبارات</span><span class="sf-val">113</span></div>
+    <div class="sf-stat"><span>تغطية التسعير</span><span class="sf-val">94.6%</span></div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN AREA ═══ -->
+<div class="main-area">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <button class="mobile-toggle" onclick="toggleMobileSidebar()">☰</button>
+    <div class="breadcrumb">
+      <span>MediTrans</span>
+      <span class="bc-sep">/</span>
+      <span class="bc-current" id="bc-current">النظرة العامة</span>
+    </div>
+  </div>
+
+  <!-- Page content container -->
+  <div id="app" class="page-content fade-in"></div>
+
+  <!-- Footer -->
+  <div class="main-footer">
+    <p><span>MediTrans</span> — التوثيق التقني الكامل &nbsp;·&nbsp; أبريل 2026 &nbsp;·&nbsp; يُحدَّث مع كل مرحلة جديدة</p>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
