@@ -147,7 +147,7 @@ export async function createTestInvoice(
       invoiceNumber: `TEST-${suffix}`,
       clientId,
       createdById,
-      status: "draft",
+      status: "unpaid",
       totalHt: 0,
       totalTva: 0,
       totalTtc: 0,

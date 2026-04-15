@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MediTrans — المرحلة 0 : الأساسيات</title>
+<title>MediTrans — التوثيق التقني الكامل</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -184,9 +184,10 @@
 
   .section-intro {
     color: var(--text-2); font-size: 0.95rem;
-    margin-bottom: 24px; max-width: 600px;
+    margin-bottom: 28px; max-width: 720px;
     border-right: 3px solid var(--teal);
-    padding-right: 14px;
+    padding-right: 16px;
+    line-height: 2;
   }
 
   /* ─── CARD ─── */
@@ -262,14 +263,14 @@
     background: #090c12;
     border: 1px solid var(--border);
     border-radius: var(--r);
-    padding: 20px 22px;
+    padding: 24px 28px;
     font-family: var(--mono);
-    font-size: 0.82rem;
-    line-height: 1.9;
+    font-size: 0.8rem;
+    line-height: 2.2;
     overflow-x: auto;
     position: relative;
   }
-  .code-block .comment { color: var(--text-3); }
+  .code-block .comment { color: #64748b; }
   .code-block .key { color: var(--sky); }
   .code-block .val { color: var(--teal); }
   .code-block .step { color: var(--amber); font-weight: 600; }
@@ -288,17 +289,18 @@
     background: #090c12;
     border: 1px solid var(--border);
     border-radius: var(--r);
-    padding: 20px 22px;
+    padding: 26px 30px;
     font-family: var(--mono);
-    font-size: 0.82rem;
-    line-height: 2;
+    font-size: 0.78rem;
+    line-height: 2.6;
     overflow-x: auto;
     direction: ltr;
+    letter-spacing: 0.01em;
   }
-  .ft-dir  { color: var(--sky); font-weight: 500; }
+  .ft-dir  { color: var(--sky); font-weight: 600; }
   .ft-file { color: var(--text-2); }
-  .ft-comment { color: var(--text-3); }
-  .ft-important { color: var(--amber); }
+  .ft-comment { color: #64748b; font-size: 0.7rem; margin-left: 8px; }
+  .ft-important { color: var(--amber); font-weight: 600; }
 
   /* ─── STEP ENGINE ─── */
   .engine-steps { display: flex; flex-direction: column; gap: 0; }
@@ -575,7 +577,7 @@
   .mod-files { font-size: 0.68rem; color: var(--text-3); font-family: var(--mono); margin-top: 6px; }
 
   /* ─── MOBILE IMPROVEMENTS ─── */
-  @media(max-width: 480px) {
+  @media(max-width: 640px) {
     .summary-box { padding: 16px 12px; }
     .summary-num { font-size: 1.8rem; }
     .card { padding: 16px; }
@@ -583,6 +585,8 @@
     .step-num { min-width: 30px; height: 30px; font-size: 0.72rem; }
     .rule-item { padding: 11px 13px; }
     .roadmap-item { padding: 11px 13px; }
+    .card-grid-2 { grid-template-columns: 1fr; }
+    .filetree { font-size: 0.72rem; padding: 18px 16px; line-height: 2.3; }
   }
 
   /* ─── PROGRESS BAR ─── */
@@ -609,6 +613,47 @@
   }
   .tab.active, .tab:hover { background: var(--teal-dim); border-color: rgba(99,210,190,0.3); color: var(--teal); }
 
+  /* ─── PROSE / READABLE TEXT ─── */
+  .prose {
+    max-width: 680px;
+    line-height: 2.1;
+    font-size: 0.9rem;
+    color: var(--text-2);
+    word-break: break-word;
+  }
+  .prose strong { color: var(--text-1); }
+
+  /* ─── CARD TEXT READABILITY ─── */
+  .card-readable {
+    line-height: 2;
+    font-size: 0.88rem;
+    color: var(--text-2);
+  }
+
+  /* ─── HARDENING GRID RESPONSIVE ─── */
+  @media(max-width: 700px) {
+    .hardening-grid { grid-template-columns: 1fr !important; }
+  }
+
+  /* ─── STEP DESCRIPTION READABILITY ─── */
+  .step-desc {
+    font-size: 0.86rem;
+    color: var(--text-2);
+    line-height: 2;
+    max-width: 640px;
+  }
+
+  /* ─── TREE ANNOTATION (block-level comment below filename) ─── */
+  .ft-annotation {
+    display: block;
+    color: #64748b;
+    font-size: 0.68rem;
+    margin-top: -4px;
+    padding-left: 20px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+
 </style>
 </head>
 <body>
@@ -616,7 +661,7 @@
 <!-- ═══ STATUS BAR ═══ -->
 <div class="status-bar-top">
   <div class="sbt-inner">
-    <div class="sbt-pill"><span class="dot dot-pulse"></span> المرحلة 0 مكتملة</div>
+<div class="sbt-pill"><span class="dot dot-pulse"></span> التوثيق التقني</div>
     <div class="sbt-stats">
       <span class="sbt-item">🗄️ <span class="v">11</span> جدول</span>
       <span class="sbt-item">📦 <span class="v">7</span> وحدات</span>
@@ -635,18 +680,18 @@
   <div class="header-inner">
     <div class="badge-row">
       <span class="badge badge-green"><span class="dot dot-pulse"></span> مكتملة بالكامل</span>
-      <span class="badge badge-teal">Stage 00 — Foundations</span>
+      <span class="badge badge-teal">Technical Documentation</span>
       <span class="badge badge-sky">Next.js 14 · TypeScript</span>
       <span class="badge badge-amber">أبريل 2026</span>
     </div>
 
     <h1>
-      <span class="accent">MediTrans</span><span class="dim"> — المرحلة 0</span><br>
-      بناء الأساسيات 🏗️
+      <span class="accent">MediTrans</span><span class="dim"> — التوثيق التقني</span><br>
+      نظام إدارة النقل الطبي �
     </h1>
 
     <p class="header-desc">
-      المرحلة الأولى في مشروع إدارة خدمات النقل الطبي. هنا ما تم بناؤه: البنية التحتية الكاملة، قاعدة البيانات، محرك التسعير، والهيكل الكامل للمشروع.
+      التوثيق التقني الكامل لمشروع MediTrans — البنية التحتية، قاعدة البيانات، محرك التسعير، قواعد العمل، منظومة الاختبارات، والخارطة الكاملة.
     </p>
 
     <div class="meta-row">
@@ -710,13 +755,19 @@
 
     <div class="card">
       <h3>🎯 لماذا مرحلة 0 مهمة؟</h3>
-      <p style="color: var(--text-2); font-size: 0.92rem; line-height: 1.9;">
-        بحال منبنيوش دار على أساس متين — المرحلة 0 هي الأساس ديال كل شيء. بدونها، كل مرحلة لاحقة غادي تكون صعبة وغادي نحتاجو نرجعو نصلحو في الأشياء الأساسية باستمرار.
-        هنا حضرنا: <strong style="color: var(--teal)">قاعدة البيانات</strong> بكل الجداول والبيانات الأولية،
-        <strong style="color: var(--sky)">الهيكل الكامل</strong> لكل module،
-        <strong style="color: var(--amber)">محرك التسعير</strong> اللي هو قلب المشروع،
-        و<strong style="color: var(--violet)">قواعد العمل</strong> المطبَّقة كود.
-      </p>
+      <div class="prose" style="font-size:0.92rem;">
+        <p style="margin-bottom:14px;">
+          بحال منبنيوش دار على أساس متين — المرحلة 0 هي الأساس ديال كل شيء.
+          بدونها، كل مرحلة لاحقة غادي تكون صعبة وغادي نحتاجو نرجعو نصلحو في الأشياء الأساسية باستمرار.
+        </p>
+        <p>
+          هنا حضرنا:
+          <strong style="color: var(--teal)">قاعدة البيانات</strong> بكل الجداول والبيانات الأولية،
+          <strong style="color: var(--sky)">الهيكل الكامل</strong> لكل module،
+          <strong style="color: var(--amber)">محرك التسعير</strong> اللي هو قلب المشروع،
+          و<strong style="color: var(--violet)">قواعد العمل</strong> المطبَّقة كود.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -1263,11 +1314,17 @@
           </div>
         </div>
 
-        <div style="margin-top: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px;">
-          <p style="font-size: 0.82rem; color: var(--text-2); line-height: 1.8;">
-            💡 <strong style="color: var(--teal)">لماذا هذا التقسيم؟</strong><br>
-            الواجهة لا تعرف شيئاً عن Prisma. قاعدة البيانات لا تعرف شيئاً عن منطق الأعمال. كل طبقة مسؤولة عن شيء واحد فقط — Separation of Concerns.
-          </p>
+        <div style="margin-top: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px;">
+          <div class="prose" style="font-size:0.84rem;">
+            <p style="margin-bottom:8px">
+              💡 <strong style="color: var(--teal)">لماذا هذا التقسيم؟</strong>
+            </p>
+            <p style="margin:0">
+              الواجهة لا تعرف شيئاً عن Prisma.
+              <br>قاعدة البيانات لا تعرف شيئاً عن منطق الأعمال.
+              <br>كل طبقة مسؤولة عن شيء واحد فقط — <strong style="color:var(--sky)">Separation of Concerns</strong>.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -1289,7 +1346,11 @@
           <div class="step-content">
             <div class="step-fn">findCatalogEntry()</div>
             <div class="step-title">التحقق من الكتالوج</div>
-            <div class="step-desc">هل الخدمة المطلوبة موجودة في كتالوج الخدمات؟ إذا لا → خطأ فوري. <strong style="color: var(--rose)">لا يمكن حساب سعر لخدمة غير مسجَّلة.</strong></div>
+            <div class="step-desc">
+              هل الخدمة المطلوبة موجودة في كتالوج الخدمات؟
+              <br>إذا لا → خطأ فوري.
+              <br><strong style="color: var(--rose)">لا يمكن حساب سعر لخدمة غير مسجَّلة.</strong>
+            </div>
           </div>
         </div>
 
@@ -1298,7 +1359,11 @@
           <div class="step-content">
             <div class="step-fn">findPricingRules()</div>
             <div class="step-title">إيجاد أفضل قاعدة تسعير</div>
-            <div class="step-desc">النظام يبحث عن القاعدة الأكثر تخصصاً. مثلاً: "Transport urgent لعميل VIP" أخص من "Transport urgent عادي". <strong style="color: var(--amber)">أعلى خصوصية = الأولوية.</strong></div>
+            <div class="step-desc">
+              النظام يبحث عن القاعدة الأكثر تخصصاً.
+              <br>مثلاً: "النقل العاجل لعميل VIP" أخص من "النقل العاجل العادي".
+              <br><strong style="color: var(--amber)">أعلى خصوصية = الأولوية.</strong>
+            </div>
           </div>
         </div>
 
@@ -1307,7 +1372,11 @@
           <div class="step-content">
             <div class="step-fn">findActiveDistanceRate()</div>
             <div class="step-title">حساب رسوم المسافة</div>
-            <div class="step-desc">إذا أُدخِل عدد الكيلومترات → <code>distanceKm × 7.50 MAD</code>. يُضاف للسعر الأساسي. إذا ما أُدخِلش → صفر.</div>
+            <div class="step-desc">
+              إذا أُدخِل عدد الكيلومترات → <code>distanceKm × 7.50 MAD</code>.
+              <br>يُضاف للسعر الأساسي.
+              <br>إذا ما أُدخِلش → صفر.
+            </div>
           </div>
         </div>
 
@@ -1316,7 +1385,12 @@
           <div class="step-content">
             <div class="step-fn">findActiveModifiers()</div>
             <div class="step-title">تطبيق المعدِّلات</div>
-            <div class="step-desc">المعدِّلات تُختار يدوياً من المشغِّل فقط. ليل؟ <strong style="color: var(--teal)">NIGHT_SURCHARGE +100 MAD</strong> — لا كشف تلقائي. كل رحلة = خدمة مستقلة، لا مضاعف ذهاب وإياب. تُطبَّق بالترتيب على الإجمالي.</div>
+            <div class="step-desc">
+              المعدِّلات تُختار يدوياً من المشغِّل فقط.
+              <br>ليل؟ <strong style="color: var(--teal)">NIGHT_SURCHARGE +100 MAD</strong> — لا كشف تلقائي.
+              <br>كل رحلة = خدمة مستقلة، لا مضاعف ذهاب وإياب.
+              <br>تُطبَّق بالترتيب على الإجمالي.
+            </div>
           </div>
         </div>
 
@@ -1325,7 +1399,10 @@
           <div class="step-content">
             <div class="step-fn">applyTVA()</div>
             <div class="step-title">حساب TVA</div>
-            <div class="step-desc"><strong style="color: var(--teal)">10%</strong> بشكل افتراضي من <code>system_config</code>. إذا الخدمة معفاة (<code>tvaExempt=true</code>) → TVA صفر.</div>
+            <div class="step-desc">
+              <strong style="color: var(--teal)">10%</strong> بشكل افتراضي من <code>system_config</code>.
+              <br>إذا الخدمة معفاة (<code>tvaExempt=true</code>) → TVA صفر.
+            </div>
           </div>
         </div>
 
@@ -1334,7 +1411,12 @@
           <div class="step-content">
             <div class="step-fn">manualOverride()</div>
             <div class="step-title">التجاوز اليدوي (Admin فقط)</div>
-            <div class="step-desc"><strong style="color: var(--rose)">شرطان إلزاميان:</strong> 1) المستخدم يجب أن يكون <code>admin</code>. 2) يجب كتابة سبب. لا سبب = رفض الطلب.</div>
+            <div class="step-desc">
+              <strong style="color: var(--rose)">شرطان إلزاميان:</strong>
+              <br>1) المستخدم يجب أن يكون <code>admin</code>.
+              <br>2) يجب كتابة سبب.
+              <br>لا سبب = رفض الطلب.
+            </div>
           </div>
         </div>
 
@@ -1343,7 +1425,10 @@
           <div class="step-content">
             <div class="step-fn">createSnapshot()</div>
             <div class="step-title">حفظ لقطة السعر — append-only</div>
-            <div class="step-desc">السعر النهائي يُحفَظ في <code>pricing_snapshots</code> ولا يُعدَّل أبداً. حتى لو تغيَّرت قواعد التسعير لاحقاً، الخدمة المنجَزة تحتفظ بسعرها الأصلي للأبد.</div>
+            <div class="step-desc">
+              السعر النهائي يُحفَظ في <code>pricing_snapshots</code> ولا يُعدَّل أبداً.
+              <br>حتى لو تغيَّرت قواعد التسعير لاحقاً، الخدمة المنجَزة تحتفظ بسعرها الأصلي للأبد.
+            </div>
           </div>
         </div>
 
@@ -1459,54 +1544,311 @@
   <!-- ─── SECTION: Testing ─── -->
   <section class="section" id="testing">
     <div class="section-label">06.5 — منظومة الاختبارات</div>
-    <h2>🧪 Testing Suite — 40 اختباراً إنتاجياً</h2>
+    <h2>🧪 Testing Suite — 113 اختبار إنتاجي مُقوّى</h2>
     <p class="section-intro">
       اختبارات تكاملية حقيقية ضد PostgreSQL. لا mocks، لا اختبارات وهمية.
-      كل اختبار يحمي قاعدة عمل محددة.
+      كل اختبار يحمي قاعدة عمل محددة. مُعزَّزة باختبارات ضغط وتزامن وأمان.
     </p>
 
-    <!-- Stats -->
-    <div class="summary-box" style="margin-bottom:24px">
-      <div class="summary-stat"><div class="summary-num">40</div><div>اختبار كلي</div></div>
-      <div class="summary-stat"><div class="summary-num">28</div><div>اختبار pricing</div></div>
-      <div class="summary-stat"><div class="summary-num">5</div><div>اختبار invoices</div></div>
-      <div class="summary-stat"><div class="summary-num">8</div><div>اختبار payments</div></div>
-      <div class="summary-stat"><div class="summary-num">80%+</div><div>هدف التغطية</div></div>
+    <!-- ═══ Part 1: ما هي الاختبارات؟ ═══ -->
+    <h3 style="margin-top:32px;margin-bottom:12px;color:var(--sky)">📖 أولاً: ما هي الاختبارات ولماذا نحتاجها؟</h3>
+    <div class="card" style="border-color:rgba(96,200,245,0.2);margin-bottom:20px;padding:20px">
+      <div class="prose" style="font-size:.88rem;margin:0">
+        <p style="margin:0 0 6px">
+          <strong style="color:var(--text-1)">الاختبار (Test)</strong> هو كود يتحقق أن الكود الأصلي يعمل بالشكل الصحيح.
+        </p>
+        <p style="margin:0">
+          بدل ما تفتح التطبيق وتجرب يدوياً كل مرة، الاختبارات تعمل هذا تلقائياً في ثوانٍ.
+        </p>
+      </div>
+      <div style="margin-top:14px;padding:14px;background:rgba(99,210,190,0.06);border-radius:8px;border:1px solid rgba(99,210,190,0.15)">
+        <p style="margin:0 0 8px;font-size:.84rem;color:var(--teal);font-weight:700">مثال مبسّط:</p>
+        <p style="margin:0;font-size:.82rem;color:var(--text-2);font-family:var(--mono);line-height:1.8">
+          // أعطي المحرك: TRANSPORT_SIMPLE عادي 0km<br>
+          // أتوقع: السعر = 150 + ضريبة 15 = 165 MAD<br>
+          const result = await calculatePrice(input);<br>
+          <span style="color:var(--teal)">expect(result.totalTtc).toBe(165); // ✅ نجح!</span>
+        </p>
+      </div>
+      <div class="prose" style="font-size:.84rem;margin:12px 0 0">
+        <p style="margin:0">
+          <strong style="color:var(--amber)">لماذا هذا مهم؟</strong>
+          <br>لأن MediTrans نظام مالي — أي خطأ في التسعير = خسارة مالية حقيقية.
+          <br>الاختبارات تكتشف الأخطاء <em>قبل</em> أن تصل للمستخدم.
+        </p>
+      </div>
     </div>
 
-    <!-- Stack -->
+    <!-- ═══ Part 2: كيف تعمل ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">⚙️ كيف تعمل الاختبارات؟</h3>
+    <div class="card" style="border-color:rgba(96,200,245,0.2);margin-bottom:20px;padding:20px">
+      <p style="font-size:.84rem;color:var(--text-2);line-height:1.8;margin:0 0 12px">
+        كل اختبار يمر بـ <strong style="color:var(--text-1)">3 مراحل</strong> بسيطة:
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
+        <div style="padding:12px;background:rgba(99,210,190,0.06);border-radius:8px;text-align:center">
+          <div style="font-size:1.4rem;margin-bottom:4px">1️⃣</div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--teal);margin-bottom:4px">التحضير (Arrange)</div>
+          <div style="font-size:.76rem;color:var(--text-2)">أنشئ البيانات المطلوبة (مريض، خدمة، فاتورة...)</div>
+        </div>
+        <div style="padding:12px;background:rgba(96,200,245,0.06);border-radius:8px;text-align:center">
+          <div style="font-size:1.4rem;margin-bottom:4px">2️⃣</div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--sky);margin-bottom:4px">التنفيذ (Act)</div>
+          <div style="font-size:.76rem;color:var(--text-2)">شغّل الدالة المطلوب اختبارها</div>
+        </div>
+        <div style="padding:12px;background:rgba(240,168,71,0.06);border-radius:8px;text-align:center">
+          <div style="font-size:1.4rem;margin-bottom:4px">3️⃣</div>
+          <div style="font-size:.78rem;font-weight:700;color:var(--amber);margin-bottom:4px">التحقق (Assert)</div>
+          <div style="font-size:.76rem;color:var(--text-2)">تأكد أن النتيجة = ما تتوقعه</div>
+        </div>
+      </div>
+      <div class="prose" style="font-size:.82rem;margin:0">
+        <p style="margin:0">
+          بعد كل اختبار، المرحلة الرابعة <strong style="color:var(--rose)">(التنظيف / Cleanup)</strong>
+          <br>تحذف كل البيانات التي أنشأها الاختبار — حتى لا يؤثر على الاختبار التالي.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══ Part 3: الإحصائيات الكبرى ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">📊 الإحصائيات العامة</h3>
+    <div class="summary-box" style="margin-bottom:24px">
+      <div class="summary-stat"><div class="summary-num">113</div><div>اختبار كلي</div></div>
+      <div class="summary-stat"><div class="summary-num">8</div><div>ملفات اختبار</div></div>
+      <div class="summary-stat"><div class="summary-num">100%</div><div>نسبة النجاح</div></div>
+      <div class="summary-stat"><div class="summary-num">~26s</div><div>وقت التنفيذ</div></div>
+      <div class="summary-stat"><div class="summary-num">94.6%</div><div>تغطية pricing</div></div>
+    </div>
+
+    <!-- ═══ Part 4: أدوات الاختبار ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">🛠️ أدوات الاختبار المستخدمة</h3>
     <div class="card-grid card-grid-3" style="margin-bottom:24px">
       <div class="card" style="border-color:rgba(99,210,190,0.25)">
         <div style="font-family:var(--mono);font-size:.8rem;color:var(--teal);font-weight:700;margin-bottom:6px">⚡ Vitest</div>
-        <div style="font-size:.82rem;color:var(--text-2)">أسرع من Jest — دعم TypeScript أصلي — لا babel مطلوب</div>
+        <div style="font-size:.82rem;color:var(--text-2);line-height:2">
+          <strong>ما هو؟</strong> أداة تشغيل الاختبارات — أسرع من Jest.
+          <br>يدعم TypeScript مباشرة بدون إعداد إضافي.
+          <br><strong>يكتب لك:</strong> <code>✓ passed</code> أو <code>✗ failed</code> لكل اختبار.
+        </div>
       </div>
       <div class="card" style="border-color:rgba(96,200,245,0.25)">
-        <div style="font-family:var(--mono);font-size:.8rem;color:var(--sky);font-weight:700;margin-bottom:6px">🗄️ Real DB</div>
-        <div style="font-size:.82rem;color:var(--text-2)">ضد PostgreSQL الحقيقي — لا mocks — نفس بيئة الإنتاج</div>
+        <div style="font-family:var(--mono);font-size:.8rem;color:var(--sky);font-weight:700;margin-bottom:6px">🗄️ Real PostgreSQL</div>
+        <div style="font-size:.82rem;color:var(--text-2);line-height:2">
+          <strong>ما هو؟</strong> لا نستخدم قاعدة بيانات وهمية.
+          <br>كل اختبار يتصل بنفس PostgreSQL الحقيقي.
+          <br><strong>الفائدة:</strong> نفس السلوك في الاختبار = نفس السلوك في الإنتاج.
+        </div>
       </div>
       <div class="card" style="border-color:rgba(240,168,71,0.25)">
-        <div style="font-family:var(--mono);font-size:.8rem;color:var(--amber);font-weight:700;margin-bottom:6px">🔒 Isolation</div>
-        <div style="font-size:.82rem;color:var(--text-2)">كل اختبار ينظف بياناته بعد الانتهاء — لا تلوث بين الاختبارات</div>
+        <div style="font-family:var(--mono);font-size:.8rem;color:var(--amber);font-weight:700;margin-bottom:6px">🔒 العزل (Isolation)</div>
+        <div style="font-size:.82rem;color:var(--text-2);line-height:2">
+          <strong>ما هو؟</strong> كل اختبار مستقل بذاته.
+          <br>ينشئ بياناته ← يشتغل ← ينظف بياناته.
+          <br><strong>الفائدة:</strong> لا تأثير متبادل بين الاختبارات — نتائج موثوقة دائماً.
+        </div>
       </div>
     </div>
 
-    <!-- Structure -->
-    <h3 style="margin-bottom:12px">📁 هيكل ملفات الاختبار</h3>
+    <!-- ═══ Part 5: هيكل الملفات ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">📁 هيكل ملفات الاختبار</h3>
     <div class="code-block" style="margin-bottom:24px">
 <span class="comment">tests/</span>
-├── <span class="key">setup.ts</span>                  <span class="comment">← beforeAll/afterAll (DB connect/disconnect)</span>
+├── <span class="key">setup.ts</span>                     <span class="comment">← اتصال/قطع اتصال بقاعدة البيانات</span>
 ├── <span class="key">helpers/</span>
-│   └── <span class="key">factories.ts</span>          <span class="comment">← createTestUser, createBaseContext…</span>
-├── <span class="key">pricing/</span>
-│   ├── <span class="key">engine.test.ts</span>        <span class="comment">← calculatePrice() — 28 اختبار</span>
-│   └── <span class="key">snapshot.test.ts</span>      <span class="comment">← سلامة الـ snapshot — 6 اختبارات</span>
-├── <span class="key">invoices/</span>
-│   └── <span class="key">invoice.test.ts</span>       <span class="comment">← CR-07, CR-08, CR-09, CR-12</span>
-└── <span class="key">payments/</span>
-    └── <span class="key">payment.test.ts</span>       <span class="comment">← جزئي / كامل / تجاوز / CR-12</span></div>
+│   └── <span class="key">factories.ts</span>             <span class="comment">← مصانع بيانات الاختبار (مستخدم، عميل، مريض...)</span>
+├── <span class="key">pricing/</span>                     <span class="comment">── 35 اختبار ──</span>
+│   ├── <span class="key">engine.test.ts</span>           <span class="comment">← محرك التسعير calculatePrice() — 29 اختبار</span>
+│   └── <span class="key">snapshot.test.ts</span>         <span class="comment">← سلامة لقطات الأسعار — 6 اختبارات</span>
+├── <span class="key">invoices/</span>                    <span class="comment">── 5 اختبارات ──</span>
+│   └── <span class="key">invoice.test.ts</span>          <span class="comment">← قواعد الفوترة: CR-07, CR-08, CR-09, CR-12</span>
+├── <span class="key">payments/</span>                    <span class="comment">── 9 اختبارات ──</span>
+│   └── <span class="key">payment.test.ts</span>          <span class="comment">← دفع جزئي / كامل / تجاوز / عزل</span>
+└── <span class="key">hardening/</span>                   <span class="comment">── 64 اختبار تقوية ──</span>
+    ├── <span class="key">stress.test.ts</span>           <span class="comment">← قيم متطرفة ومدخلات خاطئة — 25 اختبار</span>
+    ├── <span class="key">concurrency.test.ts</span>      <span class="comment">← عمليات متزامنة — 4 اختبارات</span>
+    ├── <span class="key">integration.test.ts</span>      <span class="comment">← تدفقات كاملة من الخدمة للدفع — 13 اختبار</span>
+    └── <span class="key">security.test.ts</span>         <span class="comment">← حقن SQL, XSS, قيم null — 22 اختبار</span></div>
 
-    <!-- Test Matrix -->
-    <h3 style="margin-bottom:12px">📊 مصفوفة الاختبارات الحرجة — محرك التسعير</h3>
+    <!-- ═══ Part 6: فئات الاختبارات ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">📋 فئات الاختبارات — ماذا يختبر كل ملف؟</h3>
+
+    <!-- Category cards -->
+    <div style="display:grid;gap:16px;margin-bottom:24px">
+
+      <!-- Pricing Engine -->
+      <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:1.1rem">💰</span>
+          <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--teal)">engine.test.ts — محرك التسعير (29 اختبار)</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--text-2);margin:0 0 8px;line-height:1.7">
+          <strong>ماذا يختبر؟</strong> الدالة الأهم في النظام: <code>calculatePrice()</code>. كل سيناريو تسعير ممكن:
+        </p>
+        <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+          ✅ السعر الأساسي لكل كتالوج (transport simple, ECG, suture...)<br>
+          ✅ رسوم المسافة (10km, 20km, 0km, بدون مسافة)<br>
+          ✅ المعدِّلات (NIGHT_SURCHARGE نشط، VIP غير نشط، معدِّل غير موجود)<br>
+          ✅ حساب الضريبة TVA = 10%<br>
+          ✅ التجاوز اليدوي (admin فقط، سبب ≥ 10 أحرف)<br>
+          ✅ حالات الخطأ (كتالوج غير موجود، قاعدة تسعير غير موجودة)<br>
+          ✅ حفظ اللقطة في DB (persist=true/false)
+        </div>
+      </div>
+
+      <!-- Snapshots -->
+      <div class="card" style="border-color:rgba(96,200,245,0.25);padding:18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:1.1rem">📸</span>
+          <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--sky)">snapshot.test.ts — سلامة اللقطات (6 اختبارات)</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--text-2);margin:0 0 8px;line-height:1.7">
+          <strong>ماذا يختبر؟</strong> أن كل خدمة لها <em>لقطة واحدة فعّالة فقط</em> (isCurrent=true) في أي لحظة.
+          وأن الإصدارات تتزايد بشكل صحيح (1→2→3).
+        </p>
+        <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+          ✅ أول لقطة: version=1, isCurrent=true<br>
+          ✅ بعد تجاوز: القديمة تصبح false، الجديدة version=2<br>
+          ✅ <strong style="color:var(--amber)">INVARIANT:</strong> دائماً لقطة واحدة فقط isCurrent=true لكل خدمة
+        </div>
+      </div>
+
+      <!-- Invoices -->
+      <div class="card" style="border-color:rgba(240,168,71,0.25);padding:18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:1.1rem">🧾</span>
+          <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--amber)">invoice.test.ts — قواعد الفوترة (5 اختبارات)</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--text-2);margin:0 0 8px;line-height:1.7">
+          <strong>ماذا يختبر؟</strong> القواعد الحرجة للفوترة:
+        </p>
+        <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+          ✅ <strong>CR-07:</strong> خدمة ملغاة لا يمكن فوترتها<br>
+          ✅ <strong>CR-08:</strong> نفس الخدمة لا تظهر في فاتورتين (unique constraint)<br>
+          ✅ <strong>CR-09:</strong> مجموع الفاتورة = مجموع سطور اللقطات<br>
+          ✅ <strong>CR-12:</strong> فاتورة بها دفعات لا يمكن إلغاؤها
+        </div>
+      </div>
+
+      <!-- Payments -->
+      <div class="card" style="border-color:rgba(232,93,117,0.25);padding:18px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="font-size:1.1rem">💳</span>
+          <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--rose)">payment.test.ts — قيود الدفع (9 اختبارات)</span>
+        </div>
+        <p style="font-size:.82rem;color:var(--text-2);margin:0;line-height:2.2">
+          ✅ دفعة جزئية → الحالة تصبح <code>partial</code><br>
+          ✅ دفعة كاملة → الحالة تصبح <code>paid</code><br>
+          ✅ تجاوز المبلغ → مرفوض<br>
+          ✅ دفعة على فاتورة ≠ لا تؤثر على فاتورة أخرى (عزل)
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══ Part 7: HARDENING++ ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--rose)">🛡️ اختبارات التقوية (HARDENING++) — 64 اختبار إضافي</h3>
+    <p style="font-size:.84rem;color:var(--text-2);margin-bottom:16px;line-height:1.7">
+      هذه اختبارات متقدمة تحمي النظام من الحالات النادرة والخطيرة — كأنك تختبر سيارة في أسوأ الظروف:
+    </p>
+
+    <div class="hardening-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px">
+      <!-- Stress -->
+      <div class="card" style="border-color:rgba(232,93,117,0.2);padding:16px">
+        <div style="font-size:.84rem;font-weight:700;color:var(--rose);margin-bottom:8px">💣 اختبارات الضغط — 25 اختبار</div>
+        <div style="font-size:.78rem;color:var(--text-2);line-height:2.2">
+          ماذا لو أعطيناه مسافة <strong>سالبة</strong>؟<br>
+          ماذا لو المسافة <strong>مليون كيلومتر</strong>؟<br>
+          ماذا لو سعر التجاوز = <strong>0</strong> أو <strong>سالب</strong>؟<br>
+          ماذا لو كود الكتالوج <strong>500 حرف</strong>؟<br>
+          ماذا لو <strong>100 معدِّل وهمي</strong> دفعة واحدة؟<br>
+          <span style="color:var(--teal)">← النظام إما يرفض بوضوح أو يحسب بدون crash</span>
+        </div>
+      </div>
+      <!-- Concurrency -->
+      <div class="card" style="border-color:rgba(240,168,71,0.2);padding:16px">
+        <div style="font-size:.84rem;font-weight:700;color:var(--amber);margin-bottom:8px">⚡ اختبارات التزامن — 4 اختبارات</div>
+        <div style="font-size:.78rem;color:var(--text-2);line-height:2.2">
+          ماذا لو <strong>شخصان</strong> حسبا السعر في نفس اللحظة؟<br>
+          ماذا لو <strong>تجاوزان</strong> حصلا بالتزامن؟<br>
+          <span style="color:var(--teal)">← دائماً لقطة واحدة فقط isCurrent=true</span><br>
+          <span style="color:var(--teal)">← لا تكرار في أرقام الإصدارات</span><br>
+          <span style="color:var(--teal)">← لا NaN أو Infinity في الأسعار</span>
+        </div>
+      </div>
+      <!-- Integration -->
+      <div class="card" style="border-color:rgba(99,210,190,0.2);padding:16px">
+        <div style="font-size:.84rem;font-weight:700;color:var(--teal);margin-bottom:8px">🔗 اختبارات التكامل — 13 اختبار</div>
+        <div style="font-size:.78rem;color:var(--text-2);line-height:2.2">
+          التدفق الكامل من البداية للنهاية:<br>
+          <strong>إنشاء خدمة</strong> → تسعير تلقائي → لقطة محفوظة<br>
+          <strong>إنشاء فاتورة</strong> → خدمتان → المبلغ صحيح<br>
+          <strong>تسجيل دفعة</strong> → الحالة تتحدث تلقائياً<br>
+          <strong>محاولة إلغاء</strong> فاتورة مدفوعة → مرفوض
+        </div>
+      </div>
+      <!-- Security -->
+      <div class="card" style="border-color:rgba(96,200,245,0.2);padding:16px">
+        <div style="font-size:.84rem;font-weight:700;color:var(--sky);margin-bottom:8px">🔐 اختبارات الأمان — 22 اختبار</div>
+        <div style="font-size:.78rem;color:var(--text-2);line-height:2.2">
+          <strong>حقن SQL:</strong> <code>'; DROP TABLE --</code> → آمن<br>
+          <strong>XSS:</strong> <code>&lt;script&gt;alert()&lt;/script&gt;</code> → آمن<br>
+          <strong>قيم null/undefined/NaN/Infinity</strong> → Zod يرفضها<br>
+          <strong>أنواع خاطئة</strong> (رقم بدل نص) → Zod يرفضها<br>
+          <strong>Type guards</strong> → كل الأدوار والحالات مُتحقق منها
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Part 8: كيف تقرأ نتائج الاختبار ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">👀 كيف تقرأ نتائج الاختبار؟</h3>
+    <div class="card" style="border-color:rgba(96,200,245,0.2);margin-bottom:20px;padding:20px">
+      <p style="font-size:.84rem;color:var(--text-2);line-height:1.7;margin:0 0 12px">
+        عندما تشغّل <code>npm test</code>، سترى شيئاً مثل هذا:
+      </p>
+      <div class="code-block" style="margin-bottom:14px;font-size:.78rem">
+<span style="color:var(--teal)">✓</span> tests/pricing/engine.test.ts > calculatePrice — core pricing > normal transport simple  <span style="color:var(--text-2)">14ms</span>
+<span style="color:var(--teal)">✓</span> tests/pricing/engine.test.ts > calculatePrice — core pricing > urgent transport simple  <span style="color:var(--text-2)">3ms</span>
+<span style="color:var(--rose)">✗</span> tests/pricing/engine.test.ts > error test > (مثال فشل وهمي)  <span style="color:var(--text-2)">← لو ظهر هذا</span>
+
+<span style="color:var(--text-2)">Test Files</span>  <span style="color:var(--teal)">8 passed</span> (8)
+<span style="color:var(--text-2)">     Tests</span>  <span style="color:var(--teal)">113 passed</span> (113)
+<span style="color:var(--text-2)">  Duration</span>  26s</div>
+      <div style="font-size:.82rem;color:var(--text-2);line-height:2.3">
+        <strong style="color:var(--teal)">✓ (أخضر)</strong> = الاختبار نجح — النتيجة طابقت المتوقع<br>
+        <strong style="color:var(--rose)">✗ (أحمر)</strong> = الاختبار فشل — يجب إصلاح الكود!<br>
+        <strong>ms</strong> = المدة بالميلي ثانية — كلما كان أقل كان أفضل<br>
+        <strong>Test Files 8 passed</strong> = كل الملفات الـ 8 نجحت<br>
+        <strong>Tests 113 passed</strong> = كل الـ 113 اختبار نجحوا
+      </div>
+    </div>
+
+    <!-- ═══ Part 9: تقرير التغطية ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">📈 كيف تقرأ تقرير التغطية (Coverage)؟</h3>
+    <div class="card" style="border-color:rgba(96,200,245,0.2);margin-bottom:20px;padding:20px">
+      <div class="prose" style="font-size:.84rem;margin:0 0 12px">
+        <p style="margin:0 0 6px">
+          <strong style="color:var(--text-1)">التغطية</strong> تعني: كم من كودك تمر عليه الاختبارات فعلاً؟
+        </p>
+        <p style="margin:0">
+          عندما تشغّل <code>npm run test:coverage</code>:
+        </p>
+      </div>
+      <div class="code-block" style="margin-bottom:14px;font-size:.75rem">
+<span style="color:var(--text-2)">File                    | % Lines | المعنى</span>
+<span style="color:var(--text-2)">───────────────────────────────────────────────</span>
+<span style="color:var(--teal)">pricing.engine.ts       |  94.64% | ← ممتاز! تقريباً كل سطر مختبر</span>
+<span style="color:var(--teal)">pricing.utils.ts        | 100.00% | ← مثالي!</span>
+<span style="color:var(--amber)">invoice.service.ts      |  84.21% | ← جيد، بعض الأسطر غير مغطاة</span>
+<span style="color:var(--rose)">client.repository.ts    |   0.00% | ← لا اختبارات بعد (مرحلة قادمة)</span></div>
+      <div style="font-size:.82rem;color:var(--text-2);line-height:2.3">
+        <strong style="color:var(--teal)">90%+</strong> = ممتاز — الملف محمي جيداً<br>
+        <strong style="color:var(--amber)">70-89%</strong> = جيد — بعض الحالات النادرة غير مغطاة<br>
+        <strong style="color:var(--rose)">أقل من 50%</strong> = يحتاج اختبارات إضافية<br>
+        <strong>0%</strong> = الملف لم يُختبر بعد (عادي لوحدات لم تُبنى بعد)
+      </div>
+    </div>
+
+    <!-- ═══ Part 10: الاختبارات الحرجة ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">📊 مصفوفة الاختبارات الحرجة — محرك التسعير</h3>
     <div class="table-wrap" style="margin-bottom:24px">
       <table>
         <thead><tr><th>#</th><th>السيناريو</th><th>المتوقع</th></tr></thead>
@@ -1520,33 +1862,59 @@
           <tr><td class="mono">07</td><td>كتالوج بدون قاعدة تسعير</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">PricingRuleNotFoundError</td></tr>
           <tr><td class="mono">08</td><td>تجاوز admin بسبب صالح</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">isOverridden=true, total=500</td></tr>
           <tr><td class="mono">09</td><td>تجاوز بدون صلاحية admin</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">PricingValidationError</td></tr>
-          <tr><td class="mono">10</td><td>سبب التجاوز أقل من 10 أحرف</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">PricingValidationError</td></tr>
-          <tr><td class="mono">11</td><td>persist=true</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">snapshot في DB ، version=1، isCurrent=true</td></tr>
-          <tr><td class="mono">12</td><td>تجاوزان متتاليان</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">versions: 1→2→3، isCurrent فقط على الأحدث</td></tr>
+          <tr><td class="mono">10</td><td>مسافة سالبة (-10km)</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">Zod يرفض ← distanceKm.min(0)</td></tr>
+          <tr><td class="mono">11</td><td>مسافة مليون كم</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">يحسب 8,250,165 MAD بدون crash</td></tr>
+          <tr><td class="mono">12</td><td>حقن SQL في الكتالوج</td><td style="color:var(--rose);font-family:var(--mono);font-size:.8rem">PricingCatalogNotFoundError (آمن)</td></tr>
+          <tr><td class="mono">13</td><td>عمليتان متزامنتان</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">لقطة واحدة فقط isCurrent=true</td></tr>
+          <tr><td class="mono">14</td><td>إنشاء خدمة + تسعير تلقائي</td><td style="color:var(--teal);font-family:var(--mono);font-size:.8rem">service + snapshot محفوظ في DB</td></tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Run commands -->
-    <h3 style="margin-bottom:12px">🚀 كيف تشغّل الاختبارات</h3>
+    <!-- ═══ Part 11: تغطية حسب الوحدة ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">📈 التغطية حسب الوحدة</h3>
+    <div class="table-wrap" style="margin-bottom:24px">
+      <table>
+        <thead><tr><th>الوحدة</th><th>Lines</th><th>Stmts</th><th>Branch</th><th>الحالة</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">pricing.engine.ts</td><td style="color:var(--teal);font-weight:700">94.64%</td><td>94.73%</td><td>77.58%</td><td style="color:var(--teal)">✅ ممتاز</td></tr>
+          <tr><td class="mono">pricing.errors.ts</td><td style="color:var(--teal);font-weight:700">100%</td><td>100%</td><td>50%</td><td style="color:var(--teal)">✅ كامل</td></tr>
+          <tr><td class="mono">pricing.utils.ts</td><td style="color:var(--teal);font-weight:700">100%</td><td>88.23%</td><td>83.33%</td><td style="color:var(--teal)">✅ كامل</td></tr>
+          <tr><td class="mono">invoice.service.ts</td><td style="color:var(--amber);font-weight:700">84.21%</td><td>80.48%</td><td>66.66%</td><td style="color:var(--amber)">⚡ جيد</td></tr>
+          <tr><td class="mono">payment.service.ts</td><td style="color:var(--amber);font-weight:700">88.23%</td><td>83.33%</td><td>80%</td><td style="color:var(--amber)">⚡ جيد</td></tr>
+          <tr><td class="mono">service.utils.ts</td><td style="color:var(--teal);font-weight:700">100%</td><td>100%</td><td>100%</td><td style="color:var(--teal)">✅ كامل</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ═══ Part 12: أوامر التشغيل ═══ -->
+    <h3 style="margin-bottom:12px;color:var(--sky)">🚀 كيف تشغّل الاختبارات</h3>
     <div class="code-block" style="margin-bottom:16px">
-<span class="comment"># تشغيل كامل</span>
+<span class="comment"># تشغيل كامل (113 اختبار)</span>
 <span class="key">npm test</span>
 
-<span class="comment"># وضع المراقبة (يعيد التشغيل عند التعديل)</span>
+<span class="comment"># وضع المراقبة (يعيد التشغيل تلقائياً عند حفظ أي ملف)</span>
 <span class="key">npm run test:watch</span>
 
-<span class="comment"># تقرير التغطية (يولّد coverage/)</span>
+<span class="comment"># تقرير التغطية (يولّد تقرير HTML في coverage/)</span>
 <span class="key">npm run test:coverage</span>
 
-<span class="comment"># اختبار وحدة محددة</span>
-<span class="key">npm run test:pricing</span>
-<span class="key">npm run test:invoices</span>
-<span class="key">npm run test:payments</span></div>
+<span class="comment"># اختبار وحدة محددة فقط</span>
+<span class="key">npm run test:pricing</span>    <span class="comment">← فقط محرك التسعير + اللقطات</span>
+<span class="key">npm run test:invoices</span>   <span class="comment">← فقط الفوترة</span>
+<span class="key">npm run test:payments</span>   <span class="comment">← فقط الدفع</span></div>
 
-    <div class="warning-box">
+    <div class="warning-box" style="margin-bottom:16px">
       <span class="warning-icon">⚠️</span>
       <div>الاختبارات تعمل ضد قاعدة البيانات الحقيقية — تأكد من تشغيل <code>npm run db:seed</code> أولاً.</div>
+    </div>
+
+    <div class="card" style="border-color:rgba(99,210,190,0.2);padding:16px">
+      <p style="font-size:.84rem;color:var(--text-2);line-height:1.7;margin:0">
+        <strong style="color:var(--teal)">💡 نصيحة:</strong>
+        عند تعديل أي كود في <code>src/modules/pricing/</code>، شغّل <code>npm run test:pricing</code>
+        للتأكد أنك لم تكسر شيئاً. لو ظهر ✗ أحمر — ارجع لتعديلك وأصلحه قبل عمل commit.
+      </p>
     </div>
   </section>
 
@@ -1687,9 +2055,9 @@ npm run dev    <span class="comment">→ http://localhost:3000</span></div>
 <footer>
   <div class="container">
     <p>
-      <span>MediTrans</span> — توثيق المرحلة 0 · الأساسيات
+      <span>MediTrans</span> — التوثيق التقني الكامل
       &nbsp;·&nbsp; أبريل 2026
-      &nbsp;·&nbsp; جاهزة للمرحلة 02 <span>→ Design System</span>
+      &nbsp;·&nbsp; يُحدَّث مع كل مرحلة جديدة
     </p>
   </div>
 </footer>
