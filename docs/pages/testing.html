@@ -110,23 +110,23 @@
 
   <!-- Part 5 -->
   <h3 style="margin-bottom:12px;color:var(--sky)">📁 هيكل ملفات الاختبار</h3>
-  <div class="code-block" style="margin-bottom:24px">
-<span class="comment">tests/</span>
-├── <span class="key">setup.ts</span>                     <span class="comment">← اتصال/قطع اتصال بقاعدة البيانات</span>
-├── <span class="key">helpers/</span>
-│   └── <span class="key">factories.ts</span>             <span class="comment">← مصانع بيانات الاختبار (مستخدم، عميل، مريض...)</span>
-├── <span class="key">pricing/</span>                     <span class="comment">── 35 اختبار ──</span>
-│   ├── <span class="key">engine.test.ts</span>           <span class="comment">← محرك التسعير calculatePrice() — 29 اختبار</span>
-│   └── <span class="key">snapshot.test.ts</span>         <span class="comment">← سلامة لقطات الأسعار — 6 اختبارات</span>
-├── <span class="key">invoices/</span>                    <span class="comment">── 5 اختبارات ──</span>
-│   └── <span class="key">invoice.test.ts</span>          <span class="comment">← قواعد الفوترة: CR-07, CR-08, CR-09, CR-12</span>
-├── <span class="key">payments/</span>                    <span class="comment">── 9 اختبارات ──</span>
-│   └── <span class="key">payment.test.ts</span>          <span class="comment">← دفع جزئي / كامل / تجاوز / عزل</span>
-└── <span class="key">hardening/</span>                   <span class="comment">── 64 اختبار تقوية ──</span>
-    ├── <span class="key">stress.test.ts</span>           <span class="comment">← قيم متطرفة ومدخلات خاطئة — 25 اختبار</span>
-    ├── <span class="key">concurrency.test.ts</span>      <span class="comment">← عمليات متزامنة — 4 اختبارات</span>
-    ├── <span class="key">integration.test.ts</span>      <span class="comment">← تدفقات كاملة من الخدمة للدفع — 13 اختبار</span>
-    └── <span class="key">security.test.ts</span>         <span class="comment">← حقن SQL, XSS, قيم null — 22 اختبار</span></div>
+  <div class="filetree" style="margin-bottom:24px">
+<span class="ft-dir">tests/</span>
+├── <span class="ft-file">setup.ts</span>                     <span class="ft-comment">← اتصال/قطع اتصال بقاعدة البيانات</span>
+├── <span class="ft-dir">helpers/</span>
+│   └── <span class="ft-file">factories.ts</span>             <span class="ft-comment">← مصانع بيانات الاختبار (مستخدم، عميل، مريض...)</span>
+├── <span class="ft-dir">pricing/</span>                     <span class="ft-comment">── 35 اختبار ──</span>
+│   ├── <span class="ft-important">engine.test.ts</span>           <span class="ft-comment">← محرك التسعير calculatePrice() — 29 اختبار</span>
+│   └── <span class="ft-file">snapshot.test.ts</span>         <span class="ft-comment">← سلامة لقطات الأسعار — 6 اختبارات</span>
+├── <span class="ft-dir">invoices/</span>                    <span class="ft-comment">── 5 اختبارات ──</span>
+│   └── <span class="ft-important">invoice.test.ts</span>          <span class="ft-comment">← قواعد الفوترة: CR-07, CR-08, CR-09, CR-12</span>
+├── <span class="ft-dir">payments/</span>                    <span class="ft-comment">── 9 اختبارات ──</span>
+│   └── <span class="ft-important">payment.test.ts</span>          <span class="ft-comment">← دفع جزئي / كامل / تجاوز / عزل</span>
+└── <span class="ft-dir">hardening/</span>                   <span class="ft-comment">── 64 اختبار تقوية ──</span>
+    ├── <span class="ft-important">stress.test.ts</span>           <span class="ft-comment">← قيم متطرفة ومدخلات خاطئة — 25 اختبار</span>
+    ├── <span class="ft-file">concurrency.test.ts</span>      <span class="ft-comment">← عمليات متزامنة — 4 اختبارات</span>
+    ├── <span class="ft-important">integration.test.ts</span>      <span class="ft-comment">← تدفقات كاملة من الخدمة للدفع — 13 اختبار</span>
+    └── <span class="ft-important">security.test.ts</span>         <span class="ft-comment">← حقن SQL, XSS, قيم null — 22 اختبار</span></div>
 
   <!-- Part 6 -->
   <h3 style="margin-bottom:12px;color:var(--sky)">📋 فئات الاختبارات — ماذا يختبر كل ملف؟</h3>

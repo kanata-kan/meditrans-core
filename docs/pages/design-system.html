@@ -19,30 +19,30 @@
 
   <!-- ═══ Architecture ═══ -->
   <h3 style="margin-bottom:12px;color:var(--teal)">📁 هيكل الملفات</h3>
-  <div class="code-block" style="margin-bottom:24px">
-<span class="comment">src/</span>
-├── <span class="key">components/</span>
-│   ├── <span class="key">ui/</span>                         <span class="comment">← المكونات الأساسية</span>
-│   │   ├── <span class="key">Button.tsx</span>               <span class="comment">← 4 variants · 3 sizes · loading/disabled</span>
-│   │   ├── <span class="key">Input.tsx</span>                <span class="comment">← label · error · icons · forwardRef</span>
-│   │   ├── <span class="key">Textarea.tsx</span>             <span class="comment">← label · error · rows</span>
-│   │   ├── <span class="key">Select.tsx</span>               <span class="comment">← options[] · placeholder · error</span>
-│   │   ├── <span class="key">Badge.tsx</span>                <span class="comment">← 5 variants + statusToBadgeVariant()</span>
-│   │   ├── <span class="key">Card.tsx</span>                 <span class="comment">← Card + CardHeader + CardBody + CardFooter</span>
-│   │   ├── <span class="key">Modal.tsx</span>                <span class="comment">← controlled · Portal · Escape · 3 sizes</span>
-│   │   ├── <span class="key">Table.tsx</span>                <span class="comment">← typed columns · pagination · loading · empty</span>
-│   │   ├── <span class="key">Spinner.tsx</span>              <span class="comment">← sm/md</span>
-│   │   └── <span class="key">index.ts</span>                 <span class="comment">← barrel export</span>
-│   ├── <span class="key">forms/</span>
-│   │   └── <span class="key">FormField.tsx</span>            <span class="comment">← label + children + error wrapper</span>
-│   └── <span class="key">layout/</span>
-│       ├── <span class="key">Sidebar.tsx</span>              <span class="comment">← navigation · Lucide icons · active state</span>
-│       ├── <span class="key">Header.tsx</span>               <span class="comment">← sticky · title · mobile toggle</span>
-│       └── <span class="key">DashboardLayout.tsx</span>      <span class="comment">← Sidebar + Header + content</span>
-├── <span class="key">styles/</span>
-│   └── <span class="key">tokens.css</span>                   <span class="comment">← z-index · sidebar width · transitions</span>
-└── <span class="key">app/</span>
-    └── <span class="key">design-system/page.tsx</span>       <span class="comment">← صفحة توثيق تفاعلية (mini Storybook)</span></div>
+  <div class="filetree" style="margin-bottom:24px">
+<span class="ft-dir">src/</span>
+├── <span class="ft-dir">components/</span>
+│   ├── <span class="ft-dir">ui/</span>                         <span class="ft-comment">← المكونات الأساسية</span>
+│   │   ├── <span class="ft-important">Button.tsx</span>               <span class="ft-comment">← 4 variants · 3 sizes · loading/disabled</span>
+│   │   ├── <span class="ft-important">Input.tsx</span>                <span class="ft-comment">← label · error · icons · forwardRef</span>
+│   │   ├── <span class="ft-file">Textarea.tsx</span>             <span class="ft-comment">← label · error · rows</span>
+│   │   ├── <span class="ft-file">Select.tsx</span>               <span class="ft-comment">← options[] · placeholder · error</span>
+│   │   ├── <span class="ft-important">Badge.tsx</span>                <span class="ft-comment">← 5 variants + statusToBadgeVariant()</span>
+│   │   ├── <span class="ft-file">Card.tsx</span>                 <span class="ft-comment">← Card + CardHeader + CardBody + CardFooter</span>
+│   │   ├── <span class="ft-important">Modal.tsx</span>                <span class="ft-comment">← controlled · Portal · Escape · 3 sizes</span>
+│   │   ├── <span class="ft-important">Table.tsx</span>                <span class="ft-comment">← typed columns · pagination · loading · empty</span>
+│   │   ├── <span class="ft-file">Spinner.tsx</span>              <span class="ft-comment">← sm/md</span>
+│   │   └── <span class="ft-file">index.ts</span>                 <span class="ft-comment">← barrel export</span>
+│   ├── <span class="ft-dir">forms/</span>
+│   │   └── <span class="ft-file">FormField.tsx</span>            <span class="ft-comment">← label + children + error wrapper</span>
+│   └── <span class="ft-dir">layout/</span>
+│       ├── <span class="ft-important">Sidebar.tsx</span>              <span class="ft-comment">← navigation · Lucide icons · active state</span>
+│       ├── <span class="ft-file">Header.tsx</span>               <span class="ft-comment">← sticky · title · mobile toggle</span>
+│       └── <span class="ft-important">DashboardLayout.tsx</span>      <span class="ft-comment">← Sidebar + Header + content</span>
+├── <span class="ft-dir">styles/</span>
+│   └── <span class="ft-file">tokens.css</span>                   <span class="ft-comment">← z-index · sidebar width · transitions</span>
+└── <span class="ft-dir">app/</span>
+    └── <span class="ft-important">design-system/page.tsx</span>       <span class="ft-comment">← صفحة توثيق تفاعلية (mini Storybook)</span></div>
 
   <!-- ═══ Tokens ═══ -->
   <h3 style="margin-bottom:12px;color:var(--teal)">🎯 التوكنات المركزية (Design Tokens)</h3>

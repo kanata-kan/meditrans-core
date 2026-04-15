@@ -329,6 +329,9 @@ td strong { color: var(--text-1); font-weight: 600; }
   line-height: 2.2;
   overflow-x: auto;
   position: relative;
+  white-space: pre;
+  direction: ltr;
+  text-align: left;
 }
 .code-block .comment { color: #64748b; }
 .code-block .key { color: var(--sky); }
@@ -355,6 +358,8 @@ td strong { color: var(--text-1); font-weight: 600; }
   line-height: 2.6;
   overflow-x: auto;
   direction: ltr;
+  text-align: left;
+  white-space: pre;
   letter-spacing: 0.01em;
 }
 .ft-dir  { color: var(--sky); font-weight: 600; }
