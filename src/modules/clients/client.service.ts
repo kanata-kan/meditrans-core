@@ -1,8 +1,9 @@
 import * as clientRepo from "./client.repository";
+import type { FindAllClientsParams } from "./client.repository";
 import type { CreateClientInput, UpdateClientInput } from "./client.types";
 
-export async function listClients(search?: string) {
-  return clientRepo.findAllClients(search);
+export async function listClients(params?: FindAllClientsParams) {
+  return clientRepo.findAllClients(params);
 }
 
 export async function getClient(id: number) {
@@ -17,4 +18,12 @@ export async function createClient(input: CreateClientInput) {
 
 export async function updateClient(id: number, input: UpdateClientInput) {
   return clientRepo.updateClient(id, input);
+}
+
+export async function deleteClient(id: number) {
+  return clientRepo.deleteClient(id);
+}
+
+export async function countClients() {
+  return clientRepo.countClients();
 }

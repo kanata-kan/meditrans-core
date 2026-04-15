@@ -1,7 +1,9 @@
-export default function ClientsPage() {
-  return (
-    <div className="p-6">
-      <h1 className="text-4xl text-text-primary">Clients</h1>
-    </div>
-  );
+import { listClientsAction } from "@/modules/clients/client.actions";
+import { ClientsPageClient } from "./_components/ClientsPageClient";
+
+export default async function ClientsPage() {
+  const result = await listClientsAction();
+  const clients = result.success ? result.data : [];
+
+  return <ClientsPageClient initialClients={clients} />;
 }

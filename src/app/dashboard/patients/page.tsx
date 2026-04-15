@@ -1,7 +1,9 @@
-export default function PatientsPage() {
-  return (
-    <div className="p-6">
-      <h1 className="text-4xl text-text-primary">Patients</h1>
-    </div>
-  );
+import { listPatientsAction } from "@/modules/patients/patient.actions";
+import { PatientsPageClient } from "./_components/PatientsPageClient";
+
+export default async function PatientsPage() {
+  const result = await listPatientsAction();
+  const patients = result.success ? result.data : [];
+
+  return <PatientsPageClient initialPatients={patients} />;
 }

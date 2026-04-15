@@ -6,14 +6,18 @@ export async function findAllPatients(search?: string) {
     where: search
       ? { fullName: { contains: search, mode: "insensitive" } }
       : undefined,
-    include: { client: true },
-    orderBy: { fullName: "asc" },
+    include: {
+      client: { select: { id: true, name: true, type: true } },
+      _count: { select: { services: true } },
+    },
+    orderBy: { createdAt: "desc" },
   });
 }
 
 export async function findPatientsByClient(clientId: number) {
   return db.patient.findMany({
     where: { clientId },
+    include: { _count: { select: { services: true } } },
     orderBy: { fullName: "asc" },
   });
 }
@@ -21,7 +25,10 @@ export async function findPatientsByClient(clientId: number) {
 export async function findPatientById(id: number) {
   return db.patient.findUnique({
     where: { id },
-    include: { client: true },
+    include: {
+      client: { select: { id: true, name: true, type: true, phone: true } },
+      _count: { select: { services: true } },
+    },
   });
 }
 
@@ -42,4 +49,12 @@ export async function updatePatient(id: number, data: UpdatePatientInput) {
       dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
     },
   });
+}
+
+export async function deletePatient(id: number) {
+  return db.patient.delete({ where: { id } });
+}
+
+export async function countPatients() {
+  return db.patient.count();
 }

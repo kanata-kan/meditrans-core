@@ -22,3 +22,11 @@ export async function createPatient(input: CreatePatientInput) {
 export async function updatePatient(id: number, input: UpdatePatientInput) {
   return patientRepo.updatePatient(id, input);
 }
+
+export async function deletePatient(id: number) {
+  return patientRepo.deletePatient(id);
+}
+
+export async function countPatients() {
+  return patientRepo.countPatients();
+}

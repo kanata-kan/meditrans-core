@@ -19,19 +19,21 @@ export function Card({ children, className, ...props }: CardProps) {
   );
 }
 
-interface CardHeaderProps {
-  title: string;
+export interface CardHeaderProps {
+  title?: string;
   description?: string;
   action?: ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 
-export function CardHeader({ title, description, action, className }: CardHeaderProps) {
+export function CardHeader({ title, description, action, children, className }: CardHeaderProps) {
   return (
     <div className={cn("flex items-start justify-between gap-4 px-5 py-4 border-b border-border", className)}>
       <div>
-        <h3 className="text-lg text-text-primary">{title}</h3>
+        {title && <h3 className="text-lg text-text-primary">{title}</h3>}
         {description && <p className="text-sm text-text-secondary mt-0.5">{description}</p>}
+        {children}
       </div>
       {action}
     </div>
