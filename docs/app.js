@@ -13,6 +13,7 @@ const PAGES = [
   { id: 'rules',          icon: '📏', label: 'قواعد العمل',       file: 'pages/rules.html'          },
   { id: 'testing',        icon: '🧪', label: 'الاختبارات',        file: 'pages/testing.html'        },
   { id: 'design-system',  icon: '🎨', label: 'نظام التصميم',     file: 'pages/design-system.html'  },
+  { id: 'clients-patients', icon: '👥', label: 'العملاء والمرضى', file: 'pages/clients-patients.html' },
   { id: 'roadmap',        icon: '🗺️', label: 'الخارطة',          file: 'pages/roadmap.html'        },
   { id: 'quickstart',     icon: '🚀', label: 'البداية السريعة',   file: 'pages/quickstart.html'     },
 ];

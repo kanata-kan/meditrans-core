@@ -1,0 +1,155 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Clients & Patients | Section: 03 -->
+
+<div class="section">
+  <div class="section-label">03 — العملاء والمرضى</div>
+  <h2>👥 Clients & Patients — CRUD كامل</h2>
+  <p class="section-intro">
+    واجهات مستخدم تفاعلية لإدارة العملاء والمرضى.
+    CRUD كامل (إنشاء، عرض، تعديل، حذف) مبني بالكامل على مكونات Design System.
+  </p>
+
+  <!-- Summary -->
+  <div class="summary-box" style="margin-bottom:24px">
+    <div class="summary-stat"><div class="summary-num">10</div><div>صفحة جديدة</div></div>
+    <div class="summary-stat"><div class="summary-num">22</div><div>ملف معدّل/جديد</div></div>
+    <div class="summary-stat"><div class="summary-num">0</div><div>مكون UI خارجي</div></div>
+    <div class="summary-stat"><div class="summary-num">0</div><div>أخطاء Build</div></div>
+  </div>
+
+  <!-- Architecture -->
+  <h3 style="margin-bottom:12px;color:var(--teal)">📁 هيكل الملفات الجديدة</h3>
+  <div class="filetree" style="margin-bottom:24px">
+<span class="ft-dir">src/app/dashboard/</span>
+├── <span class="ft-important">page.tsx</span>                          <span class="ft-comment">← Dashboard مع إحصائيات من DB</span>
+├── <span class="ft-dir">clients/</span>
+│   ├── <span class="ft-important">page.tsx</span>                      <span class="ft-comment">← قائمة العملاء (server component)</span>
+│   ├── <span class="ft-dir">new/</span>
+│   │   └── <span class="ft-file">page.tsx</span>                  <span class="ft-comment">← فورم إنشاء عميل جديد</span>
+│   ├── <span class="ft-dir">[id]/</span>
+│   │   ├── <span class="ft-important">page.tsx</span>              <span class="ft-comment">← تفاصيل العميل + مرضاه</span>
+│   │   └── <span class="ft-dir">edit/</span>
+│   │       └── <span class="ft-file">page.tsx</span>          <span class="ft-comment">← فورم تعديل العميل</span>
+│   └── <span class="ft-dir">_components/</span>
+│       ├── <span class="ft-important">ClientsPageClient.tsx</span>    <span class="ft-comment">← جدول تفاعلي + بحث + فلتر</span>
+│       ├── <span class="ft-file">ClientForm.tsx</span>           <span class="ft-comment">← فورم إنشاء/تعديل مشترك</span>
+│       └── <span class="ft-file">ClientDeleteButton.tsx</span>   <span class="ft-comment">← زر حذف + Modal تأكيد</span>
+└── <span class="ft-dir">patients/</span>
+    ├── <span class="ft-important">page.tsx</span>                      <span class="ft-comment">← قائمة المرضى (server component)</span>
+    ├── <span class="ft-dir">new/</span>
+    │   └── <span class="ft-file">page.tsx</span>                  <span class="ft-comment">← فورم إنشاء مريض (+ ?clientId)</span>
+    ├── <span class="ft-dir">[id]/</span>
+    │   ├── <span class="ft-important">page.tsx</span>              <span class="ft-comment">← تفاصيل المريض + ربط بالعميل</span>
+    │   └── <span class="ft-dir">edit/</span>
+    │       └── <span class="ft-file">page.tsx</span>          <span class="ft-comment">← فورم تعديل المريض</span>
+    └── <span class="ft-dir">_components/</span>
+        ├── <span class="ft-important">PatientsPageClient.tsx</span>   <span class="ft-comment">← جدول تفاعلي + بحث</span>
+        ├── <span class="ft-file">PatientForm.tsx</span>          <span class="ft-comment">← فورم إنشاء/تعديل مشترك</span>
+        └── <span class="ft-file">PatientDeleteButton.tsx</span>  <span class="ft-comment">← زر حذف + Modal تأكيد</span></div>
+
+  <!-- Clients Features -->
+  <h3 style="margin-bottom:12px;color:var(--teal)">🏢 صفحات العملاء (Clients)</h3>
+  <div style="display:grid;gap:14px;margin-bottom:24px">
+    <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📋</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--teal)">/dashboard/clients</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Table تفاعلي:</strong> عرض كل العملاء مع عدد المرضى والخدمات والفواتير<br>
+        <strong>بحث:</strong> بالاسم أو الهاتف أو البريد الإلكتروني<br>
+        <strong>فلتر:</strong> أزرار لتصفية حسب النوع (Particulier · Entreprise · Assureur)<br>
+        <strong>Pagination:</strong> 10 عناصر بالصفحة مع أزرار التنقل<br>
+        <strong>نقر على الصف:</strong> ينقلك لصفحة التفاصيل
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(96,200,245,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📄</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--sky)">/dashboard/clients/[id]</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Card معلومات:</strong> هاتف · بريد · عنوان · ملاحظات · تاريخ الإنشاء<br>
+        <strong>إحصائيات:</strong> عدد المرضى · الخدمات · الفواتير<br>
+        <strong>قائمة المرضى:</strong> كل المرضى المرتبطين مع رابط لتفاصيل كل واحد<br>
+        <strong>أزرار:</strong> تعديل · حذف (مع Modal تأكيد)
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(240,168,71,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">✏️</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--amber)">/dashboard/clients/new + /[id]/edit</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>فورم مشترك:</strong> <code>ClientForm</code> يُستخدم للإنشاء والتعديل<br>
+        <strong>حقول:</strong> اسم · نوع (Select) · هاتف · بريد · عنوان · ملاحظات<br>
+        <strong>Validation:</strong> Zod — أخطاء تظهر تحت كل حقل<br>
+        <strong>Server Action:</strong> <code>createClientAction</code> / <code>updateClientAction</code> + <code>revalidatePath</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Patients Features -->
+  <h3 style="margin-bottom:12px;color:var(--sky)">🏥 صفحات المرضى (Patients)</h3>
+  <div style="display:grid;gap:14px;margin-bottom:24px">
+    <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📋</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--teal)">/dashboard/patients</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Table تفاعلي:</strong> اسم المريض · هاتف · تاريخ الميلاد · العميل المرتبط · عدد الخدمات<br>
+        <strong>بحث:</strong> بالاسم أو الهاتف أو اسم العميل<br>
+        <strong>Pagination:</strong> 10 عناصر بالصفحة<br>
+        <strong>نقر على الصف:</strong> ينقلك لصفحة التفاصيل
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(96,200,245,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📄</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--sky)">/dashboard/patients/[id]</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Card معلومات:</strong> تاريخ الميلاد · هاتف · عنوان · ملاحظات طبية<br>
+        <strong>ربط بالعميل:</strong> رابط مباشر لصفحة العميل مع Badge نوعه<br>
+        <strong>إحصائيات:</strong> عدد الخدمات · هاتف العميل<br>
+        <strong>أزرار:</strong> تعديل · حذف (مع Modal تأكيد)
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(240,168,71,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">✏️</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--amber)">/dashboard/patients/new + /[id]/edit</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>فورم مشترك:</strong> <code>PatientForm</code> يُستخدم للإنشاء والتعديل<br>
+        <strong>حقول:</strong> عميل (Select dropdown) · اسم كامل · تاريخ الميلاد · هاتف · عنوان · ملاحظات طبية<br>
+        <strong>ذكي:</strong> <code>?clientId=5</code> في URL يملأ العميل تلقائياً<br>
+        <strong>Server Action:</strong> <code>createPatientAction</code> / <code>updatePatientAction</code> + <code>revalidatePath</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <h3 style="margin-bottom:12px;color:var(--amber)">📊 لوحة التحكم (Dashboard)</h3>
+  <div class="card" style="border-color:rgba(240,168,71,0.2);padding:18px;margin-bottom:24px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      ✅ <strong>5 بطاقات إحصائيات</strong> — عدد العملاء · المرضى · الخدمات · الفواتير · الدفعات (مباشرة من DB)<br>
+      ✅ <strong>أزرار سريعة</strong> — "Nouveau client" و "Nouveau patient" للوصول السريع<br>
+      ✅ <strong>Server Component</strong> — البيانات تُجلب من قاعدة البيانات عند كل زيارة
+    </div>
+  </div>
+
+  <!-- Architecture Pattern -->
+  <h3 style="margin-bottom:12px;color:var(--rose)">🏗️ النمط المعماري</h3>
+  <div class="card" style="border-color:rgba(232,93,117,0.2);padding:18px;margin-bottom:16px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      📌 <strong>Server Components</strong> — كل <code>page.tsx</code> هو server component يجلب البيانات<br>
+      📌 <strong>Client Components</strong> — الجداول التفاعلية والفورمات في <code>_components/</code><br>
+      📌 <strong>Server Actions</strong> — <code>"use server"</code> + <code>revalidatePath</code> لكل عملية CRUD<br>
+      📌 <strong>Zod Validation</strong> — كل فورم يمر عبر schema validation قبل الحفظ<br>
+      📌 <strong>Design System فقط</strong> — لا مكون واحد خارج النظام (Button, Input, Select, Table, Card, Badge, Modal)<br>
+      📌 <strong>فورم مشترك</strong> — نفس الفورم للإنشاء والتعديل (<code>mode: "create" | "edit"</code>)
+    </div>
+  </div>
+</div>

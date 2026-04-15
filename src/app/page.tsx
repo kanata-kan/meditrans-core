@@ -12,7 +12,7 @@ const modules = [
 const stages = [
   { label: "01 — Fondations",          done: true  },
   { label: "02 — Design System",       done: true  },
-  { label: "03 — Clients & Patients",  done: false },
+  { label: "03 — Clients & Patients",  done: true  },
   { label: "04 — Moteur de tarifs",    done: false },
   { label: "05 — Services",            done: false },
   { label: "06 — Factures",            done: false },
@@ -45,9 +45,9 @@ export default function HomePage() {
         <div className="bg-green-50 border border-green-200 rounded-xl px-6 py-4 flex items-center gap-4">
           <span className="text-2xl">✅</span>
           <div>
-            <p className="font-semibold text-green-800">Stage 02 — Design System terminé</p>
+            <p className="font-semibold text-green-800">Stage 03 — Clients & Patients terminé</p>
             <p className="text-green-700 text-sm">
-              10 composants UI · Sidebar + Header · Tokens centralisés · Page documentation · Layout Dashboard
+              CRUD complet · Recherche & filtres · Détails · Formulaires · Dashboard avec stats
             </p>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="border-t border-gray-200 mt-10 py-4 text-center text-xs text-gray-400">
-        MediTrans Core · Blueprint v5.0 · Stage 02 / 09
+        MediTrans Core · Blueprint v5.0 · Stage 03 / 09
       </footer>
     </main>
   );
