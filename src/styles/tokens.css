@@ -1,7 +1,23 @@
-/* MediTrans Design Tokens — all values managed via tailwind.config.ts */
-/* This file is reserved for CSS custom properties that cannot be expressed as Tailwind tokens */
+/* MediTrans Design Tokens — CSS custom properties for values outside Tailwind */
 
 :root {
+  /* Typography */
   --font-inter: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+
+  /* Layout */
+  --sidebar-width: 260px;
+  --header-height: 56px;
+
+  /* Z-index layers */
+  --z-sidebar: 40;
+  --z-header: 30;
+  --z-overlay: 50;
+  --z-modal: 60;
+  --z-toast: 70;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
 }

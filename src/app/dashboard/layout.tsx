@@ -1,11 +1,9 @@
-export default function DashboardLayout({
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex h-screen bg-surface-light">
-      <main className="flex-1 overflow-auto">{children}</main>
-    </div>
-  );
+  return <DashboardLayout>{children}</DashboardLayout>;
 }
