@@ -4,16 +4,17 @@
    ═══════════════════════════════════════════════════════════ */
 
 const PAGES = [
-  { id: 'overview',   icon: '📌', label: 'النظرة العامة',    file: 'pages/overview.html'   },
-  { id: 'setup',      icon: '🔧', label: 'الإعداد التقني',    file: 'pages/setup.html'      },
-  { id: 'database',   icon: '🗄️', label: 'قاعدة البيانات',   file: 'pages/database.html'   },
-  { id: 'models',     icon: '🔗', label: 'النماذج والعلاقات', file: 'pages/models.html'     },
-  { id: 'structure',  icon: '📁', label: 'هيكل المشروع',     file: 'pages/structure.html'  },
-  { id: 'engine',     icon: '⚙️', label: 'محرك التسعير',      file: 'pages/engine.html'     },
-  { id: 'rules',      icon: '📏', label: 'قواعد العمل',       file: 'pages/rules.html'      },
-  { id: 'testing',    icon: '🧪', label: 'الاختبارات',        file: 'pages/testing.html'    },
-  { id: 'roadmap',    icon: '🗺️', label: 'الخارطة',          file: 'pages/roadmap.html'    },
-  { id: 'quickstart', icon: '🚀', label: 'البداية السريعة',   file: 'pages/quickstart.html' },
+  { id: 'overview',       icon: '📌', label: 'النظرة العامة',    file: 'pages/overview.html'       },
+  { id: 'setup',          icon: '🔧', label: 'الإعداد التقني',    file: 'pages/setup.html'          },
+  { id: 'database',       icon: '🗄️', label: 'قاعدة البيانات',   file: 'pages/database.html'       },
+  { id: 'models',         icon: '🔗', label: 'النماذج والعلاقات', file: 'pages/models.html'         },
+  { id: 'structure',      icon: '📁', label: 'هيكل المشروع',     file: 'pages/structure.html'      },
+  { id: 'engine',         icon: '⚙️', label: 'محرك التسعير',      file: 'pages/engine.html'         },
+  { id: 'rules',          icon: '📏', label: 'قواعد العمل',       file: 'pages/rules.html'          },
+  { id: 'testing',        icon: '🧪', label: 'الاختبارات',        file: 'pages/testing.html'        },
+  { id: 'design-system',  icon: '🎨', label: 'نظام التصميم',     file: 'pages/design-system.html'  },
+  { id: 'roadmap',        icon: '🗺️', label: 'الخارطة',          file: 'pages/roadmap.html'        },
+  { id: 'quickstart',     icon: '🚀', label: 'البداية السريعة',   file: 'pages/quickstart.html'     },
 ];
 
 /* ─── State ─── */

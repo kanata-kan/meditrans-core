@@ -1,0 +1,236 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Design System | Section: 02 -->
+
+<div class="section">
+  <div class="section-label">02 — نظام التصميم</div>
+  <h2>🎨 Design System — المكونات والقواعد البصرية</h2>
+  <p class="section-intro">
+    نظام تصميم مركزي قابل لإعادة الاستخدام. كل القيم (ألوان، أحجام، ظلال) مُعرَّفة في مكان واحد.
+    لا ألوان hardcoded — لا تكرار — لا منطق أعمال داخل UI.
+  </p>
+
+  <!-- ═══ Summary Stats ═══ -->
+  <div class="summary-box" style="margin-bottom:24px">
+    <div class="summary-stat"><div class="summary-num">10</div><div>مكون UI</div></div>
+    <div class="summary-stat"><div class="summary-num">3</div><div>مكونات Layout</div></div>
+    <div class="summary-stat"><div class="summary-num">5</div><div>فئات ألوان</div></div>
+    <div class="summary-stat"><div class="summary-num">0</div><div>قيمة hardcoded</div></div>
+  </div>
+
+  <!-- ═══ Architecture ═══ -->
+  <h3 style="margin-bottom:12px;color:var(--teal)">📁 هيكل الملفات</h3>
+  <div class="code-block" style="margin-bottom:24px">
+<span class="comment">src/</span>
+├── <span class="key">components/</span>
+│   ├── <span class="key">ui/</span>                         <span class="comment">← المكونات الأساسية</span>
+│   │   ├── <span class="key">Button.tsx</span>               <span class="comment">← 4 variants · 3 sizes · loading/disabled</span>
+│   │   ├── <span class="key">Input.tsx</span>                <span class="comment">← label · error · icons · forwardRef</span>
+│   │   ├── <span class="key">Textarea.tsx</span>             <span class="comment">← label · error · rows</span>
+│   │   ├── <span class="key">Select.tsx</span>               <span class="comment">← options[] · placeholder · error</span>
+│   │   ├── <span class="key">Badge.tsx</span>                <span class="comment">← 5 variants + statusToBadgeVariant()</span>
+│   │   ├── <span class="key">Card.tsx</span>                 <span class="comment">← Card + CardHeader + CardBody + CardFooter</span>
+│   │   ├── <span class="key">Modal.tsx</span>                <span class="comment">← controlled · Portal · Escape · 3 sizes</span>
+│   │   ├── <span class="key">Table.tsx</span>                <span class="comment">← typed columns · pagination · loading · empty</span>
+│   │   ├── <span class="key">Spinner.tsx</span>              <span class="comment">← sm/md</span>
+│   │   └── <span class="key">index.ts</span>                 <span class="comment">← barrel export</span>
+│   ├── <span class="key">forms/</span>
+│   │   └── <span class="key">FormField.tsx</span>            <span class="comment">← label + children + error wrapper</span>
+│   └── <span class="key">layout/</span>
+│       ├── <span class="key">Sidebar.tsx</span>              <span class="comment">← navigation · Lucide icons · active state</span>
+│       ├── <span class="key">Header.tsx</span>               <span class="comment">← sticky · title · mobile toggle</span>
+│       └── <span class="key">DashboardLayout.tsx</span>      <span class="comment">← Sidebar + Header + content</span>
+├── <span class="key">styles/</span>
+│   └── <span class="key">tokens.css</span>                   <span class="comment">← z-index · sidebar width · transitions</span>
+└── <span class="key">app/</span>
+    └── <span class="key">design-system/page.tsx</span>       <span class="comment">← صفحة توثيق تفاعلية (mini Storybook)</span></div>
+
+  <!-- ═══ Tokens ═══ -->
+  <h3 style="margin-bottom:12px;color:var(--teal)">🎯 التوكنات المركزية (Design Tokens)</h3>
+  <div class="card" style="border-color:rgba(99,210,190,0.2);margin-bottom:20px;padding:20px">
+    <div class="prose" style="font-size:.84rem;margin:0 0 12px">
+      <p style="margin:0 0 6px">
+        <strong style="color:var(--text-1)">ما هي التوكنات؟</strong> قيم مركزية (ألوان، مسافات، ظلال) تُعرَّف مرة واحدة وتُستخدم في كل مكان.
+      </p>
+      <p style="margin:0">
+        بدلاً من كتابة <code>#DC2626</code> في كل ملف، نكتب <code>brand-primary</code> ونغيرها من مكان واحد.
+      </p>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px">
+    <!-- Colors -->
+    <div class="card" style="border-color:rgba(232,93,117,0.2);padding:16px">
+      <div style="font-size:.84rem;font-weight:700;color:var(--rose);margin-bottom:10px">🔴 ألوان Brand</div>
+      <div class="code-block" style="font-size:.75rem;margin:0">
+<span class="key">brand-primary</span>:  <span class="comment">#DC2626  ← الأحمر الأساسي</span>
+<span class="key">brand-hover</span>:    <span class="comment">#B91C1C  ← عند التمرير</span>
+<span class="key">brand-soft</span>:     <span class="comment">#FEE2E2  ← خلفية ناعمة</span></div>
+    </div>
+    <div class="card" style="border-color:rgba(99,210,190,0.2);padding:16px">
+      <div style="font-size:.84rem;font-weight:700;color:var(--teal);margin-bottom:10px">🟢 ألوان Status</div>
+      <div class="code-block" style="font-size:.75rem;margin:0">
+<span class="key">status-success</span>: <span class="comment">#16A34A  ← نجاح / مدفوع</span>
+<span class="key">status-warning</span>: <span class="comment">#D97706  ← تحذير / معلّق</span>
+<span class="key">status-danger</span>:  <span class="comment">#DC2626  ← خطر / ملغى</span>
+<span class="key">status-info</span>:    <span class="comment">#2563EB  ← معلومات / جزئي</span></div>
+    </div>
+    <div class="card" style="border-color:rgba(96,200,245,0.2);padding:16px">
+      <div style="font-size:.84rem;font-weight:700;color:var(--sky);margin-bottom:10px">🔵 ألوان Surface</div>
+      <div class="code-block" style="font-size:.75rem;margin:0">
+<span class="key">surface-dark</span>:   <span class="comment">#111827  ← Sidebar</span>
+<span class="key">surface</span>:        <span class="comment">#FFFFFF  ← الأساسي</span>
+<span class="key">surface-light</span>:  <span class="comment">#F9FAFB  ← خلفية الصفحة</span>
+<span class="key">surface-muted</span>:  <span class="comment">#F3F4F6  ← عناصر خامدة</span></div>
+    </div>
+    <div class="card" style="border-color:rgba(240,168,71,0.2);padding:16px">
+      <div style="font-size:.84rem;font-weight:700;color:var(--amber);margin-bottom:10px">🟡 ألوان Text</div>
+      <div class="code-block" style="font-size:.75rem;margin:0">
+<span class="key">text-primary</span>:   <span class="comment">#111827  ← النص الأساسي</span>
+<span class="key">text-secondary</span>: <span class="comment">#4B5563  ← النص الثانوي</span>
+<span class="key">text-muted</span>:     <span class="comment">#9CA3AF  ← تلميحات</span>
+<span class="key">text-inverse</span>:   <span class="comment">#FFFFFF  ← نص على خلفية داكنة</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ Components ═══ -->
+  <h3 style="margin-bottom:12px;color:var(--teal)">🧱 المكونات الأساسية</h3>
+  <p style="font-size:.84rem;color:var(--text-2);margin-bottom:16px;line-height:1.7">
+    كل مكون مكتوب بـ <strong>TypeScript strict</strong>، يستخدم <code>forwardRef</code>، ويقبل <code>className</code> إضافي.
+    لا يحتوي أي مكون على منطق أعمال — UI فقط.
+  </p>
+
+  <div style="display:grid;gap:14px;margin-bottom:24px">
+    <!-- Button -->
+    <div class="card" style="border-color:rgba(232,93,117,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">🔘</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--rose)">Button.tsx</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Variants:</strong> <code>primary</code> · <code>secondary</code> · <code>danger</code> · <code>ghost</code><br>
+        <strong>Sizes:</strong> <code>sm</code> (h-8) · <code>md</code> (h-9) · <code>lg</code> (h-10)<br>
+        <strong>States:</strong> <code>loading</code> (يعرض Spinner) · <code>disabled</code> (شفافية 50%)
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="card" style="border-color:rgba(96,200,245,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📝</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--sky)">Input.tsx</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Props:</strong> <code>label</code> · <code>error</code> · <code>helperText</code> · <code>startIcon</code> · <code>endIcon</code><br>
+        <strong>خاصية:</strong> focus ring أحمر (brand) · ring أحمر خطأ عند error<br>
+        <strong>يدعم:</strong> كل أنواع HTML input (text, email, password, number)
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📊</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--teal)">Table.tsx</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Typed:</strong> <code>Column&lt;T&gt;</code> مع <code>render</code> function اختيارية<br>
+        <strong>Pagination:</strong> أزرار previous/next مع عدد الصفحات<br>
+        <strong>States:</strong> <code>loading</code> (skeleton rows) · <code>empty</code> (رسالة مخصصة)<br>
+        <strong>قابل للنقر:</strong> <code>onRowClick</code> مع hover state
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="card" style="border-color:rgba(240,168,71,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">💬</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--amber)">Modal.tsx</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Controlled:</strong> <code>isOpen</code> + <code>onClose</code><br>
+        <strong>Portal:</strong> يُرسم في <code>document.body</code> (لا z-index conflicts)<br>
+        <strong>Accessibility:</strong> Escape key · overlay click · <code>aria-modal</code><br>
+        <strong>Sizes:</strong> <code>sm</code> (max-w-sm) · <code>md</code> (max-w-lg) · <code>lg</code> (max-w-2xl)
+      </div>
+    </div>
+
+    <!-- Badge -->
+    <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">🏷️</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--teal)">Badge.tsx + statusToBadgeVariant()</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Variants:</strong> <code>default</code> · <code>success</code> · <code>warning</code> · <code>danger</code> · <code>info</code><br>
+        <strong>Helper:</strong> <code>statusToBadgeVariant("paid", "invoice")</code> → <code>"success"</code><br>
+        <strong>يدعم:</strong> InvoiceStatus + ServiceStatus من <code>constants.ts</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Layout ═══ -->
+  <h3 style="margin-bottom:12px;color:var(--teal)">🏗️ نظام التخطيط (Layout)</h3>
+  <div class="card-grid card-grid-3" style="margin-bottom:24px">
+    <div class="card" style="border-color:rgba(99,210,190,0.25)">
+      <div style="font-family:var(--mono);font-size:.8rem;color:var(--teal);font-weight:700;margin-bottom:6px">📌 Sidebar.tsx</div>
+      <div style="font-size:.82rem;color:var(--text-2);line-height:2">
+        7 روابط navigation مع أيقونات Lucide.
+        <br>Active state بلون brand-primary.
+        <br>قابل للطي على الهاتف (overlay + toggle).
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(96,200,245,0.25)">
+      <div style="font-family:var(--mono);font-size:.8rem;color:var(--sky);font-weight:700;margin-bottom:6px">📌 Header.tsx</div>
+      <div style="font-size:.82rem;color:var(--text-2);line-height:2">
+        Sticky مع backdrop-blur.
+        <br>عنوان الصفحة يتغير تلقائياً.
+        <br>زر mobile menu toggle.
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(240,168,71,0.25)">
+      <div style="font-family:var(--mono);font-size:.8rem;color:var(--amber);font-weight:700;margin-bottom:6px">📌 DashboardLayout.tsx</div>
+      <div style="font-size:.82rem;color:var(--text-2);line-height:2">
+        يجمع Sidebar + Header.
+        <br>Main content area مع padding.
+        <br>يُستخدم في dashboard/layout.tsx.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Rules ═══ -->
+  <h3 style="margin-bottom:12px;color:var(--rose)">🚫 قواعد صارمة</h3>
+  <div class="card" style="border-color:rgba(232,93,117,0.2);padding:18px;margin-bottom:24px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      ❌ <strong>لا ألوان hardcoded</strong> — كل شيء عبر Tailwind tokens<br>
+      ❌ <strong>لا منطق أعمال</strong> — المكونات تستقبل بيانات فقط<br>
+      ❌ <strong>لا تكرار</strong> — مكون واحد لكل غرض<br>
+      ❌ <strong>لا <code>any</code></strong> — TypeScript strict بالكامل<br>
+      ✅ <strong>كل مكون يقبل <code>className</code></strong> — للتخصيص من الخارج<br>
+      ✅ <strong><code>forwardRef</code></strong> على كل عنصر input<br>
+      ✅ <strong><code>cn()</code></strong> لدمج الأصناف (clsx + tailwind-merge)
+    </div>
+  </div>
+
+  <!-- ═══ Documentation ═══ -->
+  <h3 style="margin-bottom:12px;color:var(--sky)">📄 صفحة التوثيق التفاعلية</h3>
+  <div class="card" style="border-color:rgba(96,200,245,0.2);padding:18px;margin-bottom:16px">
+    <div class="prose" style="font-size:.84rem;margin:0">
+      <p style="margin:0 0 8px">
+        صفحة <code>/design-system</code> داخل تطبيق Next.js — تشبه mini Storybook.
+      </p>
+      <p style="margin:0">تعرض كل مكون مع:</p>
+    </div>
+    <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px;margin-top:8px">
+      ✅ معاينة مباشرة (Live Preview) لكل variant و size<br>
+      ✅ جدول Props مع الأنواع والقيم الافتراضية<br>
+      ✅ عرض بصري للتوكنات (ألوان، radius، ظلال)<br>
+      ✅ أمثلة حالات MediTrans الحقيقية (statuses، badges)<br>
+      ✅ التنقل بين الأقسام من شريط علوي
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <span class="warning-icon">💡</span>
+    <div>لمعاينة صفحة التوثيق: شغّل <code>npm run dev</code> ثم افتح <code>http://localhost:3000/design-system</code></div>
+  </div>
+</div>
