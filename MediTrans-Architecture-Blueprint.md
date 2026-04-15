@@ -8,6 +8,16 @@
 
 ---
 
+> ## ⚠️ This file has been modularized
+>
+> The Blueprint is now split into **14 focused files** in [`docs/blueprint/`](./docs/blueprint/README.md).
+>
+> Each section is a standalone markdown file. See the [README](./docs/blueprint/README.md) for the table of contents.
+>
+> **This file is preserved as the original reference.** For day-to-day work, use the modular files.
+
+---
+
 ## Table of Contents
 
 1. [Executive Summary](#1-executive-summary)
