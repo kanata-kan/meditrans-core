@@ -28,6 +28,8 @@ const NAV_GROUPS = [
     pages: [
       { id: 'engine',           icon: '⚙️', label: 'محرك التسعير',    file: 'pages/engine.html'           },
       { id: 'clients-patients', icon: '👥', label: 'العملاء والمرضى', file: 'pages/clients-patients.html' },
+      { id: 'services',         icon: '🚑', label: 'الخدمات',         file: 'pages/services.html'         },
+      { id: 'invoices',         icon: '🧾', label: 'الفواتير و PDF',  file: 'pages/invoices.html'         },
       { id: 'design-system',    icon: '🎨', label: 'نظام التصميم',    file: 'pages/design-system.html'    },
     ]
   },

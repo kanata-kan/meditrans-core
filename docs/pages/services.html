@@ -1,0 +1,180 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Services | Section: 06 -->
+
+<div class="section" data-updated="2026-04-16">
+  <div class="section-label">06 — الخدمات</div>
+  <h2>🚑 Services — إدخال الخدمات + معاينة السعر لحظياً</h2>
+  <p class="section-intro">
+    واجهات إدارة الخدمات الطبية (Transport, ECG, إلخ). فورم ذكي متصل بمحرك التسعير مع
+    معاينة فورية للسعر أثناء الإدخال، وكشف تلقائي للوقت الليلي مع تفعيل المعدِّلات.
+  </p>
+
+  <!-- Summary -->
+  <div class="summary-box" style="margin-bottom:24px">
+    <div class="summary-stat"><div class="summary-num">6</div><div>صفحة</div></div>
+    <div class="summary-stat"><div class="summary-num">18</div><div>ملف معدّل/جديد</div></div>
+    <div class="summary-stat"><div class="summary-num">2</div><div>مكون رئيسي</div></div>
+    <div class="summary-stat"><div class="summary-num">0</div><div>أخطاء TypeScript</div></div>
+  </div>
+
+  <!-- ═══ File Structure ═══ -->
+  <h3 id="file-structure" style="margin-bottom:12px;color:var(--teal)">📁 هيكل الملفات</h3>
+  <div class="filetree" style="margin-bottom:24px">
+<span class="ft-dir">src/app/dashboard/services/</span>
+├── <span class="ft-important">page.tsx</span>                          <span class="ft-comment">← قائمة الخدمات (server component)</span>
+├── <span class="ft-dir">new/</span>
+│   └── <span class="ft-file">page.tsx</span>                      <span class="ft-comment">← صفحة إنشاء خدمة جديدة</span>
+├── <span class="ft-dir">[id]/</span>
+│   └── <span class="ft-file">page.tsx</span>                      <span class="ft-comment">← تفاصيل الخدمة</span>
+└── <span class="ft-dir">_components/</span>
+    ├── <span class="ft-important">ServicesPageClient.tsx</span>        <span class="ft-comment">← جدول + بحث + فلتر حسب الحالة</span>
+    ├── <span class="ft-important">ServiceForm.tsx</span>              <span class="ft-comment">← ⭐ فورم ذكي — 400+ سطر</span>
+    └── <span class="ft-important">PricingPreview.tsx</span>           <span class="ft-comment">← ⭐ معاينة السعر الحية</span>
+
+<span class="ft-dir">src/modules/services/</span>
+├── <span class="ft-file">service.schema.ts</span>                <span class="ft-comment">← Zod: createServiceSchema + previewPriceSchema</span>
+├── <span class="ft-file">service.actions.ts</span>               <span class="ft-comment">← Server actions + loadFormData + previewPrice</span>
+├── <span class="ft-file">service.service.ts</span>               <span class="ft-comment">← منطق الأعمال</span>
+└── <span class="ft-file">service.repository.ts</span>            <span class="ft-comment">← استعلامات Prisma</span></div>
+
+  <!-- ═══ Services List ═══ -->
+  <h3 id="services-list" style="margin-bottom:12px;color:var(--teal)">📋 قائمة الخدمات</h3>
+  <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="font-size:1.1rem">📋</span>
+      <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--teal)">/dashboard/services</span>
+    </div>
+    <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+      <strong>Table تفاعلي:</strong> اسم الخدمة · المريض · العميل · الاستعجال · الحالة · Total TTC · التاريخ<br>
+      <strong>بحث:</strong> بالاسم أو المريض أو العميل أو نقطة الانطلاق/الوصول<br>
+      <strong>فلتر:</strong> أزرار حسب الحالة (الكل · en attente · en cours · complétés · annulés)<br>
+      <strong>Pagination:</strong> 10 عناصر بالصفحة<br>
+      <strong>نقر على الصف:</strong> ينقلك لصفحة التفاصيل
+    </div>
+  </div>
+
+  <!-- ═══ ServiceForm ═══ -->
+  <h3 id="service-form" style="margin-bottom:12px;color:var(--sky)">✏️ ServiceForm — الفورم الذكي</h3>
+  <p style="font-size:.82rem;color:var(--text-2);margin-bottom:14px">
+    فورم إنشاء الخدمة هو أعقد مكون في المشروع — يربط بين العميل والمريض والكتالوج ومحرك التسعير في تجربة سلسة.
+  </p>
+
+  <div style="display:grid;gap:14px;margin-bottom:24px">
+    <div class="card" style="border-color:rgba(96,200,245,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">🔗</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--sky)">الحقول المترابطة</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>العميل → المريض:</strong> اختيار العميل يُحدّث تلقائياً قائمة المرضى المرتبطين به<br>
+        <strong>الكتالوج:</strong> نوع الخدمة (Transport simple, Transport médicalisé, ECG...)<br>
+        <strong>الاستعجال:</strong> Normal أو Urgent — يؤثر على قاعدة التسعير المُطبَّقة<br>
+        <strong>نوع الطاقم:</strong> Infirmier · Médecin · Réanimateur — يؤثر على السعر<br>
+        <strong>نقاط A→B:</strong> من أين وإلى أين + المسافة بالكيلومتر<br>
+        <strong>التاريخ والوقت:</strong> <code>datetime-local</code> مع حل مشكلة timezone
+      </div>
+    </div>
+
+    <div class="card" style="border-color:rgba(240,168,71,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">🌙</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--amber)">كشف الوقت الليلي التلقائي</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>isNightTime():</strong> دالة تكتشف هل الوقت ليلي حسب إعدادات النظام (<code>NIGHT_START_HOUR</code> / <code>NIGHT_END_HOUR</code>)<br>
+        <strong>تفعيل تلقائي:</strong> عند اختيار وقت ليلي، المعدِّل <code>NIGHT_SURCHARGE</code> يتفعل تلقائياً مع علامة <code>(auto)</code><br>
+        <strong>Badge مرئي:</strong> 🌙 ليلي / ☀️ نهاري يظهر بجانب حقل التاريخ<br>
+        <strong>قابل للتعطيل:</strong> المستخدم يمكنه إلغاء تفعيل المعدِّل الليلي يدوياً
+      </div>
+    </div>
+
+    <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">🔧</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--teal)">المعدِّلات (Modifiers)</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>تحميل ديناميكي:</strong> كل المعدِّلات النشطة تُجلب من <code>system_config</code><br>
+        <strong>checkbox لكل معدِّل:</strong> المستخدم يختار ما يريد تطبيقه<br>
+        <strong>عرض النوع:</strong> <code>flat_add +100 MAD</code> أو <code>multiplier ×1.5</code><br>
+        <strong>NIGHT_SURCHARGE:</strong> يُعلَّم بـ <span style="color:var(--amber)">(auto)</span> إذا فُعِّل تلقائياً
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PricingPreview ═══ -->
+  <h3 id="pricing-preview" style="margin-bottom:12px;color:var(--rose)">💰 PricingPreview — معاينة السعر الحية</h3>
+  <div class="card" style="border-color:rgba(232,93,117,0.2);padding:18px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span style="font-size:1.1rem">⚡</span>
+      <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--rose)">PricingPreview.tsx</span>
+    </div>
+    <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+      <strong>تفاعلي 100%:</strong> كل تغيير في الفورم يُعيد حساب السعر فوراً عبر <code>previewPriceAction</code><br>
+      <strong>مقاوم للـ Race Conditions:</strong> عدّاد طلبات (<code>requestCounter</code>) — الاستجابة القديمة تُهمَل<br>
+      <strong>Debounce بـ JSON:</strong> <code>JSON.stringify</code> لمقارنة مستقرة للتبعيات — لا إعادة حساب بلا تغيير فعلي<br>
+      <strong>تجربة سلسة:</strong> النتيجة السابقة تبقى مرئية (شفافية 50%) أثناء تحميل النتيجة الجديدة<br>
+      <strong>تفصيل كامل:</strong> السعر الأساسي + رسوم المسافة + المعدِّلات + TVA + Total TTC
+    </div>
+  </div>
+
+  <!-- ═══ previewPriceSchema ═══ -->
+  <h3 id="preview-schema" style="margin-bottom:12px;color:var(--amber)">📐 previewPriceSchema — مخطط خفيف للمعاينة</h3>
+  <div class="card" style="border-color:rgba(240,168,71,0.2);padding:18px;margin-bottom:24px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      📌 <strong>مستقل عن createServiceSchema</strong> — لا يتطلب مريض أو عميل أو موقع<br>
+      📌 <strong>حقول أخف:</strong> <code>catalogCode</code> · <code>urgency</code> · <code>staffType</code> · <code>distanceKm</code> · <code>selectedModifierIds</code><br>
+      📌 <strong>scheduledAt اختياري:</strong> لأن المعاينة ممكنة قبل تحديد الوقت<br>
+      📌 <strong>الهدف:</strong> إرسال أقل بيانات ممكنة لحساب السعر — بدون validation غير ضرورية
+    </div>
+  </div>
+
+  <!-- ═══ Timezone Fix ═══ -->
+  <h3 id="timezone-fix" style="margin-bottom:12px;color:var(--sky)">🕐 حل مشكلة Timezone</h3>
+  <div class="card" style="border-color:rgba(96,200,245,0.2);padding:18px;margin-bottom:24px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      🐛 <strong style="color:var(--rose)">المشكل:</strong> <code>datetime-local</code> يرجع <code>"2026-04-16T22:00"</code> بدون timezone
+      — عند تحويله بـ <code>new Date()</code> يتحول للتوقيت المحلي ويتغير اليوم/الساعة<br>
+      ✅ <strong style="color:var(--teal)">الحل:</strong> نحفظ القيمة كما هي (string محلي) ونحولها لـ ISO فقط عند الإرسال:<br>
+      <code style="font-size:.78rem">const scheduledAtISO = scheduledAt ? new Date(scheduledAt).toISOString() : undefined</code><br>
+      ✅ <strong>كشف الليل:</strong> يتم على القيمة المحلية مباشرة — <code>isNightTime(hour, nightStart, nightEnd)</code>
+    </div>
+  </div>
+
+  <!-- ═══ Data Flow ═══ -->
+  <h3 id="data-flow" style="margin-bottom:12px;color:var(--teal)">🔄 تدفق البيانات</h3>
+  <div class="card" style="border-color:rgba(99,210,190,0.2);padding:18px;margin-bottom:24px">
+    <div class="code-block" style="direction:ltr;font-size:.78rem">
+<span class="comment">// 1. Server loads form data</span>
+<span class="kw">loadFormDataAction()</span> → { clients, catalogs, modifiers, <span class="val">nightConfig</span> }
+
+<span class="comment">// 2. User fills form → ServiceForm builds preview data</span>
+<span class="kw">ServiceForm</span> → { catalogCode, urgency, staffType, distanceKm, modifierIds }
+
+<span class="comment">// 3. PricingPreview calls server on every change</span>
+<span class="kw">previewPriceAction(previewData)</span>
+  → <span class="val">previewPriceSchema.safeParse()</span>
+  → <span class="val">calculatePrice()</span>  <span class="comment">// pricing engine — no snapshot</span>
+  → { basePrice, distanceFee, modifiers[], subtotalHt, tva, totalTtc }
+
+<span class="comment">// 4. User submits → full validation + snapshot</span>
+<span class="kw">createServiceAction(fullData)</span>
+  → <span class="val">createServiceSchema.safeParse()</span>
+  → <span class="val">createService()</span>
+  → <span class="val">calculateAndSavePrice()</span>  <span class="comment">// pricing engine + snapshot</span>
+  → redirect to /dashboard/services/[id]</div>
+  </div>
+
+  <!-- ═══ Architecture Pattern ═══ -->
+  <h3 id="architecture" style="margin-bottom:12px;color:var(--rose)">🏗️ النمط المعماري</h3>
+  <div class="card" style="border-color:rgba(232,93,117,0.2);padding:18px;margin-bottom:16px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      📌 <strong>Server Component + Client Component:</strong> الصفحة تجلب البيانات، المكون التفاعلي يعرضها<br>
+      📌 <strong>فورم واحد → عرضين:</strong> <code>ServiceForm</code> يُنتِج بيانات المعاينة + بيانات الإنشاء<br>
+      📌 <strong>Schema مزدوج:</strong> <code>previewPriceSchema</code> (خفيف) + <code>createServiceSchema</code> (كامل)<br>
+      📌 <strong>Race-condition safe:</strong> عدّاد + JSON comparison = لا بيانات قديمة تظهر<br>
+      📌 <strong>Timezone safe:</strong> التخزين المحلي + التحويل عند الإرسال فقط<br>
+      📌 <strong>Night auto-detect:</strong> من إعدادات النظام — <code>nightConfig</code> يُمرَّر من server لـ client
+    </div>
+  </div>
+</div>

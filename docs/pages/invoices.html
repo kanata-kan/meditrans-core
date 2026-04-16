@@ -1,0 +1,252 @@
+<!-- AI-OPTIMIZED: This file is independent and modular -->
+<!-- Page: Invoices & PDF Engine | Section: 07 -->
+
+<div class="section" data-updated="2026-04-16">
+  <div class="section-label">07 — الفواتير ومحرك PDF</div>
+  <h2>🧾 Invoices — محرك PDF احترافي + واجهات CRUD</h2>
+  <p class="section-intro">
+    نظام فوترة متكامل: إنشاء فواتير من الخدمات، عرض التفاصيل، وتصدير PDF احترافي
+    بمعمارية قابلة لإعادة الاستخدام في أي مشروع — بدون أي ارتباط بـ MediTrans.
+  </p>
+
+  <!-- Summary -->
+  <div class="summary-box" style="margin-bottom:24px">
+    <div class="summary-stat"><div class="summary-num">11</div><div>ملف PDF Engine</div></div>
+    <div class="summary-stat"><div class="summary-num">8</div><div>صفحة / مكون UI</div></div>
+    <div class="summary-stat"><div class="summary-num">1</div><div>API Route</div></div>
+    <div class="summary-stat"><div class="summary-num">0</div><div>أخطاء TypeScript</div></div>
+  </div>
+
+  <!-- ═══ Part A: PDF Engine ═══ -->
+  <h3 id="pdf-engine" style="margin-bottom:12px;color:var(--rose)">🔴 الجزء A — محرك PDF (قابل لإعادة الاستخدام)</h3>
+  <p style="font-size:.82rem;color:var(--text-2);margin-bottom:14px">
+    محرك مستقل تماماً مبني بـ <code>@react-pdf/renderer</code>. يقبل بيانات عامة (<code>InvoicePdfData</code>)
+    وتكوين (<code>InvoicePdfConfig</code>) — لا يعرف شيئاً عن Prisma أو MediTrans.
+  </p>
+
+  <div class="filetree" style="margin-bottom:24px">
+<span class="ft-dir">src/modules/invoices/pdf/</span>
+├── <span class="ft-important">invoicePdf.types.ts</span>              <span class="ft-comment">← أنواع عامة: Config + Data + Line + Client</span>
+├── <span class="ft-important">invoicePdf.config.ts</span>             <span class="ft-comment">← تكوين MediTrans الافتراضي + mergeConfig()</span>
+├── <span class="ft-file">InvoiceDocument.tsx</span>              <span class="ft-comment">← Document root + metadata (title, author)</span>
+├── <span class="ft-file">InvoiceTemplate.tsx</span>              <span class="ft-comment">← A4 layout يجمع كل المكونات + ترقيم</span>
+├── <span class="ft-file">InvoiceHeader.tsx</span>                <span class="ft-comment">← اسم الشركة + هاتف + إيميل + ICE</span>
+├── <span class="ft-file">InvoiceClientSection.tsx</span>         <span class="ft-comment">← رقم الفاتورة + تاريخ + معلومات العميل</span>
+├── <span class="ft-important">InvoiceTable.tsx</span>                 <span class="ft-comment">← ⭐ جدول multi-page آمن (wrap + fixed header)</span>
+├── <span class="ft-file">InvoiceTotals.tsx</span>                <span class="ft-comment">← HT + TVA + TTC + المبلغ المدفوع/المتبقي</span>
+├── <span class="ft-file">InvoiceFooter.tsx</span>                <span class="ft-comment">← ملاحظات + نص قانوني (fixed position)</span>
+└── <span class="ft-important">generateInvoicePdf.tsx</span>           <span class="ft-comment">← ⭐ renderToStream → Buffer (Vercel safe)</span></div>
+
+  <!-- Config -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px">
+    <div class="card" style="border-color:rgba(232,93,117,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">⚙️</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--rose)">InvoicePdfConfig</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>companyName:</strong> اسم الشركة<br>
+        <strong>companyAddress/Phone/Email:</strong> بيانات الاتصال<br>
+        <strong>companyTaxId:</strong> الرقم الضريبي (ICE)<br>
+        <strong>primaryColor / secondaryColor:</strong> ألوان العلامة التجارية<br>
+        <strong>currency:</strong> <code>MAD</code> | <code>EUR</code> | <code>USD</code><br>
+        <strong>locale:</strong> <code>fr-MA</code> لتنسيق الأرقام<br>
+        <strong>labels:</strong> كل التسميات قابلة للتخصيص<br>
+        <strong>footerText:</strong> نص قانوني اختياري
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(96,200,245,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📊</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--sky)">InvoicePdfData</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>invoiceNumber:</strong> رقم الفاتورة<br>
+        <strong>issueDate / dueDate:</strong> تاريخ الإصدار والاستحقاق<br>
+        <strong>client:</strong> { name, phone, email, address }<br>
+        <strong>patientName:</strong> اسم المريض (اختياري)<br>
+        <strong>lines[]:</strong> { label, quantity, unitPriceHt, totalHt, tvaRate, totalTtc }<br>
+        <strong>subtotalHt / totalTva / totalTtc:</strong> المجاميع<br>
+        <strong>amountPaid:</strong> المبلغ المدفوع (لفواتير جزئية)
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF Components -->
+  <h3 id="pdf-components" style="margin-bottom:12px;color:var(--teal)">🧩 مكونات PDF</h3>
+  <div class="card-grid card-grid-3" style="margin-bottom:24px">
+    <div class="card" style="border-color:rgba(99,210,190,0.2);padding:14px">
+      <div style="font-family:var(--mono);font-size:.78rem;color:var(--teal);margin-bottom:6px">InvoiceHeader</div>
+      <div style="font-size:.75rem;color:var(--text-2)">اسم الشركة بخط كبير + بيانات الاتصال + حد أزرق سفلي</div>
+    </div>
+    <div class="card" style="border-color:rgba(99,210,190,0.2);padding:14px">
+      <div style="font-family:var(--mono);font-size:.78rem;color:var(--teal);margin-bottom:6px">InvoiceClientSection</div>
+      <div style="font-size:.75rem;color:var(--text-2)">عمودان: يسار = رقم الفاتورة والتواريخ · يمين = بيانات العميل</div>
+    </div>
+    <div class="card" style="border-color:rgba(99,210,190,0.2);padding:14px">
+      <div style="font-family:var(--mono);font-size:.78rem;color:var(--teal);margin-bottom:6px">InvoiceTable</div>
+      <div style="font-size:.75rem;color:var(--text-2)">جدول بـ <code>wrap</code> + header <code>fixed</code> + zebra rows — متعدد الصفحات بأمان</div>
+    </div>
+    <div class="card" style="border-color:rgba(99,210,190,0.2);padding:14px">
+      <div style="font-family:var(--mono);font-size:.78rem;color:var(--teal);margin-bottom:6px">InvoiceTotals</div>
+      <div style="font-size:.75rem;color:var(--text-2)">صندوق المجاميع: HT + TVA + TTC + المدفوع + المتبقي (مع ألوان)</div>
+    </div>
+    <div class="card" style="border-color:rgba(99,210,190,0.2);padding:14px">
+      <div style="font-family:var(--mono);font-size:.78rem;color:var(--teal);margin-bottom:6px">InvoiceFooter</div>
+      <div style="font-size:.75rem;color:var(--text-2)">ملاحظات + نص قانوني + توقيع الشركة — <code>position: absolute</code> أسفل كل صفحة</div>
+    </div>
+    <div class="card" style="border-color:rgba(99,210,190,0.2);padding:14px">
+      <div style="font-family:var(--mono);font-size:.78rem;color:var(--teal);margin-bottom:6px">InvoiceTemplate</div>
+      <div style="font-size:.75rem;color:var(--text-2)">صفحة A4 تجمع كل المكونات + ترقيم تلقائي (Page X / Y)</div>
+    </div>
+  </div>
+
+  <!-- Generator -->
+  <h3 id="generator" style="margin-bottom:12px;color:var(--amber)">⚡ generateInvoicePdf — المولد</h3>
+  <div class="card" style="border-color:rgba(240,168,71,0.2);padding:18px;margin-bottom:24px">
+    <div class="code-block" style="direction:ltr;font-size:.78rem">
+<span class="comment">// الاستخدام — بسيط وواضح</span>
+<span class="kw">import</span> { generateInvoicePdf } <span class="kw">from</span> <span class="str">"@/modules/invoices/pdf/generateInvoicePdf"</span>;
+
+<span class="comment">// 1. بالتكوين الافتراضي (MediTrans)</span>
+<span class="kw">const</span> buffer = <span class="kw">await</span> generateInvoicePdf(data);
+
+<span class="comment">// 2. بتكوين مخصص</span>
+<span class="kw">const</span> buffer = <span class="kw">await</span> generateInvoicePdf(data, {
+  companyName: <span class="str">"My Company"</span>,
+  currency: <span class="str">"EUR"</span>,
+  primaryColor: <span class="str">"#e74c3c"</span>,
+});
+
+<span class="comment">// المولد يستخدم renderToStream → Buffer</span>
+<span class="comment">// متوافق مع Vercel serverless (لا puppeteer، لا ملفات مؤقتة)</span></div>
+  </div>
+
+  <!-- API Route -->
+  <h3 id="api-route" style="margin-bottom:12px;color:var(--rose)">🌐 API Route — تحميل PDF</h3>
+  <div class="card" style="border-color:rgba(232,93,117,0.2);padding:18px;margin-bottom:24px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      📌 <strong>المسار:</strong> <code>GET /api/invoices/[id]/pdf</code><br>
+      📌 <strong>الآلية:</strong> يجلب الفاتورة → يحول Prisma → InvoicePdfData → يولد PDF → يرجع binary<br>
+      📌 <strong>Content-Type:</strong> <code>application/pdf</code><br>
+      📌 <strong>Content-Disposition:</strong> <code>inline</code> (عرض في المتصفح مباشرة)<br>
+      📌 <strong>اسم الملف:</strong> <code>INV-2025-0001.pdf</code> تلقائياً<br>
+      📌 <strong>Cache:</strong> <code>no-store</code> — كل طلب يولد PDF جديد
+    </div>
+  </div>
+
+  <!-- ═══ Part B: Invoice UI ═══ -->
+  <h3 id="invoice-ui" style="margin-bottom:12px;color:var(--sky)">🔵 الجزء B — واجهات الفواتير (Dashboard)</h3>
+
+  <div class="filetree" style="margin-bottom:24px">
+<span class="ft-dir">src/app/dashboard/invoices/</span>
+├── <span class="ft-important">page.tsx</span>                          <span class="ft-comment">← قائمة الفواتير (server component)</span>
+├── <span class="ft-dir">new/</span>
+│   └── <span class="ft-file">page.tsx</span>                      <span class="ft-comment">← إنشاء فاتورة جديدة</span>
+├── <span class="ft-dir">[id]/</span>
+│   ├── <span class="ft-important">page.tsx</span>                      <span class="ft-comment">← تفاصيل الفاتورة + خطوط + دفعات</span>
+│   └── <span class="ft-dir">_components/</span>
+│       └── <span class="ft-file">InvoiceActions.tsx</span>        <span class="ft-comment">← زر الإلغاء (client component)</span>
+└── <span class="ft-dir">_components/</span>
+    ├── <span class="ft-important">InvoicesPageClient.tsx</span>        <span class="ft-comment">← جدول + بحث + فلتر حسب الحالة</span>
+    └── <span class="ft-important">InvoiceForm.tsx</span>               <span class="ft-comment">← ⭐ اختيار عميل → خدمات → إنشاء</span></div>
+
+  <div style="display:grid;gap:14px;margin-bottom:24px">
+    <!-- List page -->
+    <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📋</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--teal)">/dashboard/invoices</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Table:</strong> رقم الفاتورة · العميل · عدد الخطوط · الحالة (Badge) · Total TTC · الاستحقاق · التاريخ<br>
+        <strong>بحث:</strong> بالرقم أو اسم العميل<br>
+        <strong>فلتر:</strong> الكل · Impayées · Partielles · Payées · Annulées<br>
+        <strong>نقر على الصف:</strong> ينقلك لصفحة التفاصيل
+      </div>
+    </div>
+
+    <!-- Detail page -->
+    <div class="card" style="border-color:rgba(96,200,245,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">📄</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--sky)">/dashboard/invoices/[id]</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>Card معلومات:</strong> العميل (رابط) · تاريخ الإنشاء · الاستحقاق · HT · TVA · TTC<br>
+        <strong>المالية:</strong> المبلغ المدفوع · <span style="color:var(--rose)">المتبقي</span> (أحمر إذا > 0، أخضر إذا = 0)<br>
+        <strong>جدول الخطوط:</strong> رقم · وصف (رابط للخدمة) · HT · TVA · TTC + إجمالي بالأسفل<br>
+        <strong>الدفعات:</strong> قائمة بالمبلغ · الطريقة · المرجع · التاريخ (أو "لا دفعات")<br>
+        <strong>أزرار:</strong> <span style="color:var(--teal)">تحميل PDF ↗</span> · إلغاء (إذا لم يكن مدفوعاً)
+      </div>
+    </div>
+
+    <!-- Create page -->
+    <div class="card" style="border-color:rgba(240,168,71,0.25);padding:18px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:1.1rem">✏️</span>
+        <span style="font-family:var(--mono);font-size:.85rem;font-weight:700;color:var(--amber)">/dashboard/invoices/new</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--text-2);line-height:2.2;padding-right:12px">
+        <strong>اختيار العميل:</strong> Select dropdown → يُحمّل الخدمات غير المفوترة لهذا العميل<br>
+        <strong>اختيار الخدمات:</strong> Checkbox لكل خدمة مع السعر · "تحديد الكل"<br>
+        <strong>معاينة فورية:</strong> عدد الخدمات المحددة + Total TTC في بطاقة جانبية ثابتة<br>
+        <strong>حقول إضافية:</strong> تاريخ الاستحقاق (اختياري) + ملاحظات<br>
+        <strong>ذكي:</strong> <code>?clientId=5</code> في URL يملأ العميل تلقائياً<br>
+        <strong>Server Action:</strong> <code>createInvoiceAction</code> → redirect لصفحة التفاصيل
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Actions ═══ -->
+  <h3 id="actions" style="margin-bottom:12px;color:var(--amber)">⚡ Server Actions</h3>
+  <div class="card" style="border-color:rgba(240,168,71,0.2);padding:18px;margin-bottom:24px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      📌 <code style="color:var(--teal)">createInvoiceAction(rawInput)</code> — إنشاء فاتورة من مجموعة خدمات + <code>revalidatePath</code><br>
+      📌 <code style="color:var(--teal)">cancelInvoiceAction(id)</code> — إلغاء (مرفوض إذا فيها دفعات)<br>
+      📌 <code style="color:var(--teal)">listInvoicesAction(filters?)</code> — جلب الكل مع العميل والخطوط والدفعات<br>
+      📌 <code style="color:var(--teal)">getInvoiceAction(id)</code> — فاتورة واحدة بكل التفاصيل<br>
+      📌 <code style="color:var(--sky)">getInvoicePdfDataAction(id)</code> — <strong>الجسر:</strong> Prisma → InvoicePdfData (Decimal→number)<br>
+      📌 <code style="color:var(--sky)">loadInvoiceFormDataAction()</code> — قائمة العملاء لفورم الإنشاء<br>
+      📌 <code style="color:var(--sky)">loadUninvoicedServicesAction(clientId)</code> — خدمات غير مفوترة مع snapshots
+    </div>
+  </div>
+
+  <!-- ═══ Architecture Decisions ═══ -->
+  <h3 id="architecture" style="margin-bottom:12px;color:var(--rose)">🏗️ القرارات المعمارية</h3>
+  <div class="card" style="border-color:rgba(232,93,117,0.2);padding:18px;margin-bottom:24px">
+    <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
+      📌 <strong>فصل كامل PDF ↔ UI:</strong> مكونات PDF لا تستورد أي شيء من React UI والعكس<br>
+      📌 <strong>محرك عام 100%:</strong> لا <code>import</code> من Prisma ولا MediTrans — فقط types عامة<br>
+      📌 <strong>API Route وليس Server Action:</strong> PDF يحتاج <code>Response</code> مخصص (binary + content-type)<br>
+      📌 <strong>Buffer وليس Stream:</strong> متوافق مع Vercel serverless<br>
+      📌 <strong>جسر واحد:</strong> <code>getInvoicePdfDataAction</code> هو المكان الوحيد الذي يحول Decimal→number<br>
+      📌 <strong>mergeConfig():</strong> deep merge يسمح بتخصيص جزئي بدون فقدان الافتراضيات<br>
+      📌 <strong>wrap + fixed:</strong> الجدول يتقسم تلقائياً على عدة صفحات بدون تداخل<br>
+      📌 <strong>قابل للتوسيع:</strong> QR code · توقيع رقمي · badge حالة الدفع · متعدد اللغات — كلها ممكنة بدون إعادة كتابة
+    </div>
+  </div>
+
+  <!-- ═══ Example: Full Flow ═══ -->
+  <h3 id="full-flow" style="margin-bottom:12px;color:var(--teal)">🔄 المسار الكامل: من الخدمة → إلى PDF</h3>
+  <div class="card" style="border-color:rgba(99,210,190,0.2);padding:18px;margin-bottom:16px">
+    <div class="code-block" style="direction:ltr;font-size:.78rem">
+<span class="comment">// 1. User creates invoice from /dashboard/invoices/new</span>
+<span class="kw">createInvoiceAction</span>({ clientId: 5, serviceIds: [10, 11], dueDate: "2026-05-15" })
+  → validates via <span class="val">createInvoiceSchema</span>
+  → creates Invoice + InvoiceLines (links to Services + Snapshots)
+  → redirect to <span class="str">/dashboard/invoices/42</span>
+
+<span class="comment">// 2. User views invoice detail page</span>
+<span class="kw">getInvoiceAction(42)</span>
+  → returns invoice + client + lines + payments
+  → renders detail page with table + totals + PDF button
+
+<span class="comment">// 3. User clicks "Télécharger PDF"</span>
+<span class="kw">GET /api/invoices/42/pdf</span>
+  → <span class="val">getInvoicePdfDataAction(42)</span>  <span class="comment">// Prisma → InvoicePdfData</span>
+  → <span class="val">generateInvoicePdf(data)</span>      <span class="comment">// React PDF → Buffer</span>
+  → Response(buffer, { <span class="str">"Content-Type": "application/pdf"</span> })
+  → 📄 PDF opens in browser: <span class="val">INV-2025-0001.pdf</span></div>
+  </div>
+</div>
