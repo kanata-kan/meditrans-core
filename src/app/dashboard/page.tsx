@@ -25,6 +25,7 @@ const STAT_CARDS = [
 const QUICK_LINKS = [
   { label: "Nouveau client",  href: "/dashboard/clients/new" },
   { label: "Nouveau patient", href: "/dashboard/patients/new" },
+  { label: "Nouveau service", href: "/dashboard/services/new" },
 ];
 
 export default async function DashboardPage() {
