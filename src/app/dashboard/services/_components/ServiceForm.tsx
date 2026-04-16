@@ -2,12 +2,15 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
+import { Badge } from "@/components/ui/Badge";
 import { Card, CardHeader, CardBody } from "@/components/ui/Card";
 import { URGENCY_LABELS, STAFF_TYPE_LABELS, type StaffType } from "@/lib/constants";
+import { isNightTime } from "@/modules/pricing/pricing.utils";
 import {
   createServiceAction,
   loadPatientsByClientAction,
@@ -42,10 +45,16 @@ interface PatientOption {
   phone: string;
 }
 
+interface NightConfig {
+  NIGHT_START_HOUR: number;
+  NIGHT_END_HOUR: number;
+}
+
 interface Props {
   clients: ClientOption[];
   catalogs: CatalogOption[];
   modifiers: ModifierOption[];
+  nightConfig: NightConfig;
   preselectedClientId?: number;
 }
 
@@ -57,7 +66,7 @@ const STAFF_OPTIONS = (Object.entries(STAFF_TYPE_LABELS) as [StaffType, string][
   ([value, label]) => ({ value, label }),
 );
 
-export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId }: Props) {
+export function ServiceForm({ clients, catalogs, modifiers, nightConfig, preselectedClientId }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -73,9 +82,24 @@ export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId 
   const [distanceKm, setDistanceKm] = useState<string>("0");
   const [staffType, setStaffType] = useState<string>("");
   const [durationHours, setDurationHours] = useState<string>("");
-  const [scheduledAt, setScheduledAt] = useState<string>(getDefaultSchedule());
+  const [scheduledAtLocal, setScheduledAtLocal] = useState<string>(getDefaultScheduleLocal());
   const [notes, setNotes] = useState("");
   const [selectedModifiers, setSelectedModifiers] = useState<string[]>([]);
+
+  /* ── Night time auto-detection ── */
+  const isNight = useMemo(() => {
+    if (!scheduledAtLocal) return false;
+    return isNightTime(new Date(scheduledAtLocal), nightConfig);
+  }, [scheduledAtLocal, nightConfig]);
+
+  useEffect(() => {
+    setSelectedModifiers((prev) => {
+      const has = prev.includes("NIGHT_SURCHARGE");
+      if (isNight && !has) return [...prev, "NIGHT_SURCHARGE"];
+      if (!isNight && has) return prev.filter((c) => c !== "NIGHT_SURCHARGE");
+      return prev;
+    });
+  }, [isNight]);
 
   /* ── Patient loading ── */
   const [patients, setPatients] = useState<PatientOption[]>([]);
@@ -109,9 +133,19 @@ export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId 
     [catalogs],
   );
 
+  /* ── Stable ISO string for scheduledAt ── */
+  const scheduledAtISO = useMemo(() => {
+    if (!scheduledAtLocal) return "";
+    try {
+      return new Date(scheduledAtLocal).toISOString();
+    } catch {
+      return "";
+    }
+  }, [scheduledAtLocal]);
+
   /* ── Pricing preview data ── */
   const pricingData = useMemo(() => {
-    if (!catalogCode || !scheduledAt) return null;
+    if (!catalogCode || !scheduledAtISO) return null;
     return {
       catalogCode,
       urgency: urgency as "normal" | "urgent",
@@ -119,9 +153,9 @@ export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId 
       staffType: staffType || undefined,
       durationHours: durationHours ? Number(durationHours) : undefined,
       selectedModifiers,
-      scheduledAt,
+      scheduledAt: scheduledAtISO,
     };
-  }, [catalogCode, urgency, distanceKm, staffType, durationHours, selectedModifiers, scheduledAt]);
+  }, [catalogCode, urgency, distanceKm, staffType, durationHours, selectedModifiers, scheduledAtISO]);
 
   /* ── Toggle modifier ── */
   const toggleModifier = useCallback((code: string) => {
@@ -147,7 +181,7 @@ export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId 
       distanceKm: Number(distanceKm) || 0,
       staffType: staffType || undefined,
       durationHours: durationHours ? Number(durationHours) : undefined,
-      scheduledAt,
+      scheduledAt: scheduledAtISO,
       notes: notes || undefined,
       selectedModifiers,
     };
@@ -282,15 +316,29 @@ export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId 
                 </div>
               )}
 
-              {/* ── Schedule ── */}
-              <Input
-                label="Date & heure planifiée"
-                type="datetime-local"
-                value={scheduledAt.slice(0, 16)}
-                onChange={(e) => setScheduledAt(e.target.value ? new Date(e.target.value).toISOString() : "")}
-                error={fieldErrors.scheduledAt?.[0]}
-                required
-              />
+              {/* ── Schedule + Night indicator ── */}
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <label className="text-sm font-medium text-text-primary">
+                    Date & heure planifiée
+                  </label>
+                  {scheduledAtLocal && (
+                    <Badge variant={isNight ? "warning" : "info"}>
+                      {isNight ? <Moon size={12} className="mr-1" /> : <Sun size={12} className="mr-1" />}
+                      {isNight
+                        ? `Nuit (${nightConfig.NIGHT_START_HOUR}h–${nightConfig.NIGHT_END_HOUR}h)`
+                        : "Jour"}
+                    </Badge>
+                  )}
+                </div>
+                <Input
+                  type="datetime-local"
+                  value={scheduledAtLocal}
+                  onChange={(e) => setScheduledAtLocal(e.target.value)}
+                  error={fieldErrors.scheduledAt?.[0]}
+                  required
+                />
+              </div>
 
               {/* ── Modifiers ── */}
               {modifiers.length > 0 && (
@@ -301,6 +349,7 @@ export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId 
                   <div className="flex flex-wrap gap-2">
                     {modifiers.map((m) => {
                       const active = selectedModifiers.includes(m.code);
+                      const isAutoNight = m.code === "NIGHT_SURCHARGE" && isNight;
                       return (
                         <button
                           key={m.code}
@@ -322,6 +371,9 @@ export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId 
                           <span className="font-mono text-text-muted">
                             ({m.type === "flat_add" ? `+${m.value}` : `×${m.value}`})
                           </span>
+                          {isAutoNight && (
+                            <span className="text-[10px] text-status-warning ml-1">(auto)</span>
+                          )}
                         </button>
                       );
                     })}
@@ -366,9 +418,10 @@ export function ServiceForm({ clients, catalogs, modifiers, preselectedClientId 
   );
 }
 
-/* ── Helper: default schedule = now + 1 hour ── */
-function getDefaultSchedule(): string {
+/* ── Helper: default schedule = now + 1h, formatted for datetime-local ── */
+function getDefaultScheduleLocal(): string {
   const d = new Date();
   d.setHours(d.getHours() + 1, 0, 0, 0);
-  return d.toISOString();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }

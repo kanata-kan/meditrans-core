@@ -25,5 +25,22 @@ export const updateServiceStatusSchema = z.object({
   status: z.enum(["pending", "in_progress", "completed", "cancelled"]),
 });
 
+export const previewPriceSchema = z.object({
+  catalogCode: z.string().min(1),
+  urgency: z.enum(["normal", "urgent"]),
+  distanceKm: z.coerce.number().min(0),
+  staffType: z.enum(["nurse", "doctor", "reanimator"]).optional(),
+  durationHours: z.coerce.number().int().positive().optional(),
+  scheduledAt: z.string().min(1),
+  selectedModifiers: z.array(z.string()),
+  manualOverride: z
+    .object({
+      total: z.number().positive(),
+      reason: z.string().min(10),
+    })
+    .optional(),
+});
+
 export type CreateServiceSchema = z.infer<typeof createServiceSchema>;
 export type UpdateServiceStatusSchema = z.infer<typeof updateServiceStatusSchema>;
+export type PreviewPriceSchema = z.infer<typeof previewPriceSchema>;

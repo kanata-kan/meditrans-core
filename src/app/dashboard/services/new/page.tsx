@@ -19,7 +19,7 @@ export default async function NewServicePage({
     );
   }
 
-  const { clients, catalogs, modifiers } = result.data;
+  const { clients, catalogs, modifiers, nightConfig } = result.data;
   const preselectedClientId = searchParams.clientId ? Number(searchParams.clientId) : undefined;
 
   return (
@@ -38,6 +38,7 @@ export default async function NewServicePage({
         clients={clients}
         catalogs={catalogs}
         modifiers={modifiers}
+        nightConfig={nightConfig}
         preselectedClientId={preselectedClientId}
       />
     </div>

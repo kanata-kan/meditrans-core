@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { calculatePrice } from "@/modules/pricing/pricing.engine";
-import { createServiceSchema, updateServiceStatusSchema } from "./service.schema";
+import { getSystemConfig } from "@/lib/config";
+import { createServiceSchema, previewPriceSchema, updateServiceStatusSchema } from "./service.schema";
 import * as serviceService from "./service.service";
 import type { PricingResult } from "@/modules/pricing/pricing.types";
 
@@ -77,7 +78,7 @@ export async function listUninvoicedServicesAction(clientId: number) {
 
 export async function loadFormDataAction() {
   try {
-    const [clients, catalogs, modifiers] = await Promise.all([
+    const [clients, catalogs, modifiers, config] = await Promise.all([
       db.client.findMany({
         select: { id: true, name: true, type: true },
         orderBy: { name: "asc" },
@@ -91,6 +92,7 @@ export async function loadFormDataAction() {
         where: { isActive: true },
         select: { code: true, nameFr: true, type: true, value: true },
       }),
+      getSystemConfig(),
     ]);
     return {
       success: true as const,
@@ -109,6 +111,10 @@ export async function loadFormDataAction() {
           type: m.type,
           value: Number(m.value),
         })),
+        nightConfig: {
+          NIGHT_START_HOUR: config.NIGHT_START_HOUR,
+          NIGHT_END_HOUR: config.NIGHT_END_HOUR,
+        },
       },
     };
   } catch {
@@ -134,8 +140,10 @@ export async function previewPriceAction(rawInput: unknown): Promise<{
   data?: PricingResult;
   error?: string;
 }> {
-  const parsed = createServiceSchema.safeParse(rawInput);
-  if (!parsed.success) return { success: false, error: "Données invalides." };
+  const parsed = previewPriceSchema.safeParse(rawInput);
+  if (!parsed.success) {
+    return { success: false, error: "Données invalides pour le calcul." };
+  }
 
   try {
     const result = await calculatePrice(
