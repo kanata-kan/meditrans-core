@@ -1,16 +1,16 @@
 <!-- AI-OPTIMIZED: This file is independent and modular -->
 <!-- Page: Testing Suite | Section: 06.5 -->
 
-<div class="section">
+<div class="section" data-updated="2026-04-15">
   <div class="section-label">06.5 — منظومة الاختبارات</div>
-  <h2>🧪 Testing Suite — 113 اختبار إنتاجي مُقوّى</h2>
+  <h2>🧪 Testing Suite — 146 اختبار إنتاجي مُقوّى</h2>
   <p class="section-intro">
     اختبارات تكاملية حقيقية ضد PostgreSQL. لا mocks، لا اختبارات وهمية.
     كل اختبار يحمي قاعدة عمل محددة. مُعزَّزة باختبارات ضغط وتزامن وأمان.
   </p>
 
   <!-- Part 1 -->
-  <h3 style="margin-top:32px;margin-bottom:12px;color:var(--sky)">📖 أولاً: ما هي الاختبارات ولماذا نحتاجها؟</h3>
+  <h3 id="what-are-tests" style="margin-top:32px;margin-bottom:12px;color:var(--sky)">📖 أولاً: ما هي الاختبارات ولماذا نحتاجها؟</h3>
   <div class="card" style="border-color:rgba(96,200,245,0.2);margin-bottom:20px;padding:20px">
     <div class="prose" style="font-size:.88rem;margin:0">
       <p style="margin:0 0 6px">
@@ -39,7 +39,7 @@
   </div>
 
   <!-- Part 2 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">⚙️ كيف تعمل الاختبارات؟</h3>
+  <h3 id="how-tests-work" style="margin-bottom:12px;color:var(--sky)">⚙️ كيف تعمل الاختبارات؟</h3>
   <div class="card" style="border-color:rgba(96,200,245,0.2);margin-bottom:20px;padding:20px">
     <p style="font-size:.84rem;color:var(--text-2);line-height:1.8;margin:0 0 12px">
       كل اختبار يمر بـ <strong style="color:var(--text-1)">3 مراحل</strong> بسيطة:
@@ -70,17 +70,17 @@
   </div>
 
   <!-- Part 3 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">📊 الإحصائيات العامة</h3>
+  <h3 id="stats" style="margin-bottom:12px;color:var(--sky)">📊 الإحصائيات العامة</h3>
   <div class="summary-box" style="margin-bottom:24px">
-    <div class="summary-stat"><div class="summary-num">113</div><div>اختبار كلي</div></div>
-    <div class="summary-stat"><div class="summary-num">8</div><div>ملفات اختبار</div></div>
+    <div class="summary-stat"><div class="summary-num">146</div><div>اختبار كلي</div></div>
+    <div class="summary-stat"><div class="summary-num">9</div><div>ملفات اختبار</div></div>
     <div class="summary-stat"><div class="summary-num">100%</div><div>نسبة النجاح</div></div>
     <div class="summary-stat"><div class="summary-num">~26s</div><div>وقت التنفيذ</div></div>
     <div class="summary-stat"><div class="summary-num">94.6%</div><div>تغطية pricing</div></div>
   </div>
 
   <!-- Part 4 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">🛠️ أدوات الاختبار المستخدمة</h3>
+  <h3 id="tools" style="margin-bottom:12px;color:var(--sky)">🛠️ أدوات الاختبار المستخدمة</h3>
   <div class="card-grid card-grid-3" style="margin-bottom:24px">
     <div class="card" style="border-color:rgba(99,210,190,0.25)">
       <div style="font-family:var(--mono);font-size:.8rem;color:var(--teal);font-weight:700;margin-bottom:6px">⚡ Vitest</div>
@@ -109,7 +109,7 @@
   </div>
 
   <!-- Part 5 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">📁 هيكل ملفات الاختبار</h3>
+  <h3 id="file-structure" style="margin-bottom:12px;color:var(--sky)">📁 هيكل ملفات الاختبار</h3>
   <div class="filetree" style="margin-bottom:24px">
 <span class="ft-dir">tests/</span>
 ├── <span class="ft-file">setup.ts</span>                     <span class="ft-comment">← اتصال/قطع اتصال بقاعدة البيانات</span>
@@ -129,7 +129,7 @@
     └── <span class="ft-important">security.test.ts</span>         <span class="ft-comment">← حقن SQL, XSS, قيم null — 22 اختبار</span></div>
 
   <!-- Part 6 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">📋 فئات الاختبارات — ماذا يختبر كل ملف؟</h3>
+  <h3 id="categories" style="margin-bottom:12px;color:var(--sky)">📋 فئات الاختبارات — ماذا يختبر كل ملف؟</h3>
   <div style="display:grid;gap:16px;margin-bottom:24px">
     <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -197,7 +197,7 @@
   </div>
 
   <!-- Part 7 -->
-  <h3 style="margin-bottom:12px;color:var(--rose)">🛡️ اختبارات التقوية (HARDENING++) — 64 اختبار إضافي</h3>
+  <h3 id="hardening" style="margin-bottom:12px;color:var(--rose)">🛡️ اختبارات التقوية (HARDENING++) — 64 اختبار إضافي</h3>
   <p style="font-size:.84rem;color:var(--text-2);margin-bottom:16px;line-height:1.7">
     هذه اختبارات متقدمة تحمي النظام من الحالات النادرة والخطيرة — كأنك تختبر سيارة في أسوأ الظروف:
   </p>
@@ -246,7 +246,7 @@
   </div>
 
   <!-- Part 8 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">👀 كيف تقرأ نتائج الاختبار؟</h3>
+  <h3 id="reading-results" style="margin-bottom:12px;color:var(--sky)">👀 كيف تقرأ نتائج الاختبار؟</h3>
   <div class="card" style="border-color:rgba(96,200,245,0.2);margin-bottom:20px;padding:20px">
     <p style="font-size:.84rem;color:var(--text-2);line-height:1.7;margin:0 0 12px">
       عندما تشغّل <code>npm test</code>، سترى شيئاً مثل هذا:
@@ -257,7 +257,7 @@
 <span style="color:var(--rose)">✗</span> tests/pricing/engine.test.ts > error test > (مثال فشل وهمي)  <span style="color:var(--text-2)">← لو ظهر هذا</span>
 
 <span style="color:var(--text-2)">Test Files</span>  <span style="color:var(--teal)">8 passed</span> (8)
-<span style="color:var(--text-2)">     Tests</span>  <span style="color:var(--teal)">113 passed</span> (113)
+<span style="color:var(--text-2)">     Tests</span>  <span style="color:var(--teal)">146 passed</span> (146)
 <span style="color:var(--text-2)">  Duration</span>  26s</div>
     <div style="font-size:.82rem;color:var(--text-2);line-height:2.3">
       <strong style="color:var(--teal)">✓ (أخضر)</strong> = الاختبار نجح — النتيجة طابقت المتوقع<br>
@@ -269,7 +269,7 @@
   </div>
 
   <!-- Part 9 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">📈 كيف تقرأ تقرير التغطية (Coverage)؟</h3>
+  <h3 id="coverage" style="margin-bottom:12px;color:var(--sky)">📈 كيف تقرأ تقرير التغطية (Coverage)؟</h3>
   <div class="card" style="border-color:rgba(96,200,245,0.2);margin-bottom:20px;padding:20px">
     <div class="prose" style="font-size:.84rem;margin:0 0 12px">
       <p style="margin:0 0 6px">
@@ -293,7 +293,7 @@
   </div>
 
   <!-- Part 10 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">📊 مصفوفة الاختبارات الحرجة — محرك التسعير</h3>
+  <h3 id="pricing-matrix" style="margin-bottom:12px;color:var(--sky)">📊 مصفوفة الاختبارات الحرجة — محرك التسعير</h3>
   <div class="table-wrap" style="margin-bottom:24px">
     <table>
       <thead><tr><th>#</th><th>السيناريو</th><th>المتوقع</th></tr></thead>
@@ -317,7 +317,7 @@
   </div>
 
   <!-- Part 11 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">📈 التغطية حسب الوحدة</h3>
+  <h3 id="coverage-by-module" style="margin-bottom:12px;color:var(--sky)">📈 التغطية حسب الوحدة</h3>
   <div class="table-wrap" style="margin-bottom:24px">
     <table>
       <thead><tr><th>الوحدة</th><th>Lines</th><th>Stmts</th><th>Branch</th><th>الحالة</th></tr></thead>
@@ -333,7 +333,7 @@
   </div>
 
   <!-- Part 12 -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">🚀 كيف تشغّل الاختبارات</h3>
+  <h3 id="run-tests" style="margin-bottom:12px;color:var(--sky)">🚀 كيف تشغّل الاختبارات</h3>
   <div class="code-block" style="margin-bottom:16px">
 <span class="comment"># تشغيل كامل (113 اختبار)</span>
 <span class="key">npm test</span>

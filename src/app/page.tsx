@@ -13,7 +13,7 @@ const stages = [
   { label: "01 — Fondations",          done: true  },
   { label: "02 — Design System",       done: true  },
   { label: "03 — Clients & Patients",  done: true  },
-  { label: "04 — Moteur de tarifs",    done: false },
+  { label: "04 — Tests Pricing Engine", done: true  },
   { label: "05 — Services",            done: false },
   { label: "06 — Factures",            done: false },
   { label: "07 — Paiements",           done: false },
@@ -45,9 +45,9 @@ export default function HomePage() {
         <div className="bg-green-50 border border-green-200 rounded-xl px-6 py-4 flex items-center gap-4">
           <span className="text-2xl">✅</span>
           <div>
-            <p className="font-semibold text-green-800">Stage 03 — Clients & Patients terminé</p>
+            <p className="font-semibold text-green-800">Stage 04 — Pricing Engine Tests terminé</p>
             <p className="text-green-700 text-sm">
-              CRUD complet · Recherche & filtres · Détails · Formulaires · Dashboard avec stats
+              146 tests · 9 fichiers · Engine + Snapshot + Hardening + Utils · Couverture complète
             </p>
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="border-t border-gray-200 mt-10 py-4 text-center text-xs text-gray-400">
-        MediTrans Core · Blueprint v5.0 · Stage 03 / 09
+        MediTrans Core · Blueprint v5.0 · Stage 04 / 09
       </footer>
     </main>
   );

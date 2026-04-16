@@ -17,7 +17,8 @@
     "test:coverage": "vitest run --coverage",
     "test:pricing": "vitest run tests/pricing",
     "test:invoices": "vitest run tests/invoices",
-    "test:payments": "vitest run tests/payments"
+    "test:payments": "vitest run tests/payments",
+    "docs": "npx -y http-server docs -p 3333 -c-1 --cors -o"
   },
   "prisma": {
     "seed": "ts-node --project tsconfig.seed.json prisma/seed.ts"

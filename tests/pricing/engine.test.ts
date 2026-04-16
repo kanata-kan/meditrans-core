@@ -269,6 +269,195 @@ describe("calculatePrice — TVA", () => {
   });
 });
 
+describe("calculatePrice — TVA exempt catalog", () => {
+  it("TVA exempt catalog: tvaRate=0, tvaAmount=0, totalTtc=subtotalHt", async () => {
+    const testCode = `TEST_TVA_EXEMPT_${Date.now()}`;
+    await db.serviceCatalog.create({
+      data: {
+        code: testCode,
+        nameFr: "Test TVA Exempt",
+        category: "soins",
+        requiresDistance: false,
+        requiresStaffType: false,
+        tvaExempt: true,
+        isActive: true,
+      },
+    });
+    await db.pricingRule.create({
+      data: {
+        catalogCode: testCode,
+        isUrgent: null,
+        basePrice: 200,
+        currency: "MAD",
+      },
+    });
+
+    try {
+      const result = await calculatePrice(
+        makeInput({ catalogCode: testCode }),
+        1,
+        "admin",
+        NO_PERSIST,
+      );
+
+      expectPrice(result.basePrice, 200);
+      expectPrice(result.tvaRate, 0);
+      expectPrice(result.tvaAmount, 0);
+      expectPrice(result.subtotalHt, 200);
+      expectPrice(result.totalTtc, 200); // no TVA added
+    } finally {
+      await db.pricingRule.deleteMany({ where: { catalogCode: testCode } });
+      await db.serviceCatalog.delete({ where: { code: testCode } });
+    }
+  });
+
+  it("TVA exempt with distance: distanceFee added but no TVA", async () => {
+    const testCode = `TEST_TVA_EXEMPT_DIST_${Date.now()}`;
+    await db.serviceCatalog.create({
+      data: {
+        code: testCode,
+        nameFr: "Test TVA Exempt Transport",
+        category: "transport",
+        requiresDistance: true,
+        requiresStaffType: false,
+        tvaExempt: true,
+        isActive: true,
+      },
+    });
+    await db.pricingRule.create({
+      data: {
+        catalogCode: testCode,
+        isUrgent: null,
+        basePrice: 100,
+        currency: "MAD",
+      },
+    });
+
+    try {
+      const result = await calculatePrice(
+        makeInput({ catalogCode: testCode, distanceKm: 10 }),
+        1,
+        "admin",
+        NO_PERSIST,
+      );
+
+      expectPrice(result.basePrice, 100);
+      expectPrice(result.distanceFee, 75); // 10 × 7.50
+      expectPrice(result.subtotalHt, 175);
+      expectPrice(result.tvaRate, 0);
+      expectPrice(result.tvaAmount, 0);
+      expectPrice(result.totalTtc, 175); // no TVA
+    } finally {
+      await db.pricingRule.deleteMany({ where: { catalogCode: testCode } });
+      await db.serviceCatalog.delete({ where: { code: testCode } });
+    }
+  });
+
+  it("TVA exempt with modifier: modifier applied but no TVA", async () => {
+    const testCode = `TEST_TVA_EXEMPT_MOD_${Date.now()}`;
+    await db.serviceCatalog.create({
+      data: {
+        code: testCode,
+        nameFr: "Test TVA Exempt Soins",
+        category: "soins",
+        requiresDistance: false,
+        requiresStaffType: false,
+        tvaExempt: true,
+        isActive: true,
+      },
+    });
+    await db.pricingRule.create({
+      data: {
+        catalogCode: testCode,
+        isUrgent: null,
+        basePrice: 150,
+        currency: "MAD",
+      },
+    });
+
+    try {
+      const result = await calculatePrice(
+        makeInput({ catalogCode: testCode, selectedModifiers: ["NIGHT_SURCHARGE"] }),
+        1,
+        "admin",
+        NO_PERSIST,
+      );
+
+      expectPrice(result.basePrice, 150);
+      expectPrice(result.subtotalHt, 250); // 150 + 100 night
+      expectPrice(result.tvaRate, 0);
+      expectPrice(result.tvaAmount, 0);
+      expectPrice(result.totalTtc, 250); // no TVA
+      expect(result.modifiersApplied).toHaveLength(1);
+    } finally {
+      await db.pricingRule.deleteMany({ where: { catalogCode: testCode } });
+      await db.serviceCatalog.delete({ where: { code: testCode } });
+    }
+  });
+});
+
+describe("calculatePrice — staffType rule matching", () => {
+  it("TRANSPORT_MEDICAL nurse non-urgent: base=350", async () => {
+    const result = await calculatePrice(
+      makeInput({
+        catalogCode: "TRANSPORT_MEDICAL",
+        isUrgent: false,
+        staffType: "nurse",
+      }),
+      1,
+      "admin",
+      NO_PERSIST,
+    );
+
+    expectPrice(result.basePrice, 350);
+  });
+
+  it("TRANSPORT_MEDICAL doctor urgent: base=700", async () => {
+    const result = await calculatePrice(
+      makeInput({
+        catalogCode: "TRANSPORT_MEDICAL",
+        isUrgent: true,
+        staffType: "doctor",
+      }),
+      1,
+      "admin",
+      NO_PERSIST,
+    );
+
+    expectPrice(result.basePrice, 700);
+  });
+
+  it("DISPO_INFIRMIER_12H nurse 12h: base=500", async () => {
+    const result = await calculatePrice(
+      makeInput({
+        catalogCode: "DISPO_INFIRMIER_12H",
+        staffType: "nurse",
+        durationHours: 12,
+      }),
+      1,
+      "admin",
+      NO_PERSIST,
+    );
+
+    expectPrice(result.basePrice, 500);
+  });
+
+  it("DISPO_MEDECIN_24H doctor 24h: base=1800", async () => {
+    const result = await calculatePrice(
+      makeInput({
+        catalogCode: "DISPO_MEDECIN_24H",
+        staffType: "doctor",
+        durationHours: 24,
+      }),
+      1,
+      "admin",
+      NO_PERSIST,
+    );
+
+    expectPrice(result.basePrice, 1800);
+  });
+});
+
 describe("calculatePrice — error cases", () => {
   it("unknown catalog code → throws PricingCatalogNotFoundError", async () => {
     await expect(

@@ -1,7 +1,7 @@
 <!-- AI-OPTIMIZED: This file is independent and modular -->
 <!-- Page: Design System | Section: 02 -->
 
-<div class="section">
+<div class="section" data-updated="2026-04-15">
   <div class="section-label">02 — نظام التصميم</div>
   <h2>🎨 Design System — المكونات والقواعد البصرية</h2>
   <p class="section-intro">
@@ -18,7 +18,7 @@
   </div>
 
   <!-- ═══ Architecture ═══ -->
-  <h3 style="margin-bottom:12px;color:var(--teal)">📁 هيكل الملفات</h3>
+  <h3 id="file-structure" style="margin-bottom:12px;color:var(--teal)">📁 هيكل الملفات</h3>
   <div class="filetree" style="margin-bottom:24px">
 <span class="ft-dir">src/</span>
 ├── <span class="ft-dir">components/</span>
@@ -45,7 +45,7 @@
     └── <span class="ft-important">design-system/page.tsx</span>       <span class="ft-comment">← صفحة توثيق تفاعلية (mini Storybook)</span></div>
 
   <!-- ═══ Tokens ═══ -->
-  <h3 style="margin-bottom:12px;color:var(--teal)">🎯 التوكنات المركزية (Design Tokens)</h3>
+  <h3 id="tokens" style="margin-bottom:12px;color:var(--teal)">🎯 التوكنات المركزية (Design Tokens)</h3>
   <div class="card" style="border-color:rgba(99,210,190,0.2);margin-bottom:20px;padding:20px">
     <div class="prose" style="font-size:.84rem;margin:0 0 12px">
       <p style="margin:0 0 6px">
@@ -93,7 +93,7 @@
   </div>
 
   <!-- ═══ Components ═══ -->
-  <h3 style="margin-bottom:12px;color:var(--teal)">🧱 المكونات الأساسية</h3>
+  <h3 id="components" style="margin-bottom:12px;color:var(--teal)">🧱 المكونات الأساسية</h3>
   <p style="font-size:.84rem;color:var(--text-2);margin-bottom:16px;line-height:1.7">
     كل مكون مكتوب بـ <strong>TypeScript strict</strong>، يستخدم <code>forwardRef</code>، ويقبل <code>className</code> إضافي.
     لا يحتوي أي مكون على منطق أعمال — UI فقط.
@@ -169,7 +169,7 @@
   </div>
 
   <!-- ═══ Layout ═══ -->
-  <h3 style="margin-bottom:12px;color:var(--teal)">🏗️ نظام التخطيط (Layout)</h3>
+  <h3 id="layout" style="margin-bottom:12px;color:var(--teal)">🏗️ نظام التخطيط (Layout)</h3>
   <div class="card-grid card-grid-3" style="margin-bottom:24px">
     <div class="card" style="border-color:rgba(99,210,190,0.25)">
       <div style="font-family:var(--mono);font-size:.8rem;color:var(--teal);font-weight:700;margin-bottom:6px">📌 Sidebar.tsx</div>
@@ -198,7 +198,7 @@
   </div>
 
   <!-- ═══ Rules ═══ -->
-  <h3 style="margin-bottom:12px;color:var(--rose)">🚫 قواعد صارمة</h3>
+  <h3 id="rules" style="margin-bottom:12px;color:var(--rose)">🚫 قواعد صارمة</h3>
   <div class="card" style="border-color:rgba(232,93,117,0.2);padding:18px;margin-bottom:24px">
     <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
       ❌ <strong>لا ألوان hardcoded</strong> — كل شيء عبر Tailwind tokens<br>
@@ -212,7 +212,7 @@
   </div>
 
   <!-- ═══ Documentation ═══ -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">📄 صفحة التوثيق التفاعلية</h3>
+  <h3 id="live-docs" style="margin-bottom:12px;color:var(--sky)">📄 صفحة التوثيق التفاعلية</h3>
   <div class="card" style="border-color:rgba(96,200,245,0.2);padding:18px;margin-bottom:16px">
     <div class="prose" style="font-size:.84rem;margin:0">
       <p style="margin:0 0 8px">

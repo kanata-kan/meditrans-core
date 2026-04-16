@@ -1,7 +1,7 @@
 <!-- AI-OPTIMIZED: This file is independent and modular -->
 <!-- Page: Clients & Patients | Section: 03 -->
 
-<div class="section">
+<div class="section" data-updated="2026-04-15">
   <div class="section-label">03 — العملاء والمرضى</div>
   <h2>👥 Clients & Patients — CRUD كامل</h2>
   <p class="section-intro">
@@ -18,7 +18,7 @@
   </div>
 
   <!-- Architecture -->
-  <h3 style="margin-bottom:12px;color:var(--teal)">📁 هيكل الملفات الجديدة</h3>
+  <h3 id="file-structure" style="margin-bottom:12px;color:var(--teal)">📁 هيكل الملفات الجديدة</h3>
   <div class="filetree" style="margin-bottom:24px">
 <span class="ft-dir">src/app/dashboard/</span>
 ├── <span class="ft-important">page.tsx</span>                          <span class="ft-comment">← Dashboard مع إحصائيات من DB</span>
@@ -48,7 +48,7 @@
         └── <span class="ft-file">PatientDeleteButton.tsx</span>  <span class="ft-comment">← زر حذف + Modal تأكيد</span></div>
 
   <!-- Clients Features -->
-  <h3 style="margin-bottom:12px;color:var(--teal)">🏢 صفحات العملاء (Clients)</h3>
+  <h3 id="clients" style="margin-bottom:12px;color:var(--teal)">🏢 صفحات العملاء (Clients)</h3>
   <div style="display:grid;gap:14px;margin-bottom:24px">
     <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -90,7 +90,7 @@
   </div>
 
   <!-- Patients Features -->
-  <h3 style="margin-bottom:12px;color:var(--sky)">🏥 صفحات المرضى (Patients)</h3>
+  <h3 id="patients" style="margin-bottom:12px;color:var(--sky)">🏥 صفحات المرضى (Patients)</h3>
   <div style="display:grid;gap:14px;margin-bottom:24px">
     <div class="card" style="border-color:rgba(99,210,190,0.25);padding:18px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -131,7 +131,7 @@
   </div>
 
   <!-- Dashboard -->
-  <h3 style="margin-bottom:12px;color:var(--amber)">📊 لوحة التحكم (Dashboard)</h3>
+  <h3 id="dashboard" style="margin-bottom:12px;color:var(--amber)">📊 لوحة التحكم (Dashboard)</h3>
   <div class="card" style="border-color:rgba(240,168,71,0.2);padding:18px;margin-bottom:24px">
     <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
       ✅ <strong>5 بطاقات إحصائيات</strong> — عدد العملاء · المرضى · الخدمات · الفواتير · الدفعات (مباشرة من DB)<br>
@@ -141,7 +141,7 @@
   </div>
 
   <!-- Architecture Pattern -->
-  <h3 style="margin-bottom:12px;color:var(--rose)">🏗️ النمط المعماري</h3>
+  <h3 id="architecture" style="margin-bottom:12px;color:var(--rose)">🏗️ النمط المعماري</h3>
   <div class="card" style="border-color:rgba(232,93,117,0.2);padding:18px;margin-bottom:16px">
     <div style="font-size:.82rem;color:var(--text-2);line-height:2.4">
       📌 <strong>Server Components</strong> — كل <code>page.tsx</code> هو server component يجلب البيانات<br>

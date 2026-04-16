@@ -29,14 +29,23 @@
 - Dashboard: 5 stat cards from DB + quick actions
 - All built with Design System components only
 
-## Stage 04 — Pricing Engine
+## Stage 04 — Pricing Engine Tests ✅
 
 - `pricing.types.ts`, `pricing.errors.ts`, `pricing.schema.ts`
 - `pricing.repository.ts`: rules, modifiers, distance rates, snapshots, config loading
 - `pricing.utils.ts`: `isNightTime`, `computeSpecificity`, `getTvaRate`, `buildBreakdown`
 - `pricing.engine.ts`: full 9-step algorithm
 - `pricing.actions.ts`: `previewPriceAction` + `applyOverrideAction`
-- **Unit tests:** minimum one test per scenario + edge cases
+- **146 tests across 9 files — ALL GREEN:**
+  - `tests/pricing/engine.test.ts` — 36 tests (core pricing, distance, modifiers, TVA, TVA exempt, staffType, errors, overrides, persistence)
+  - `tests/pricing/snapshot.test.ts` — 6 tests (versioning, isCurrent invariant, override chain)
+  - `tests/pricing/utils.test.ts` — 26 tests (isNightTime boundaries, getTvaRate, computeSpecificity, buildBreakdown)
+  - `tests/invoices/invoice.test.ts` — 5 tests (CR-07, CR-08, CR-09, CR-12)
+  - `tests/payments/payment.test.ts` — 9 tests (partial, full, overpayment, CR-12)
+  - `tests/hardening/integration.test.ts` — 12 tests (createService, createInvoice, cancelInvoice, recordPayment)
+  - `tests/hardening/concurrency.test.ts` — 4 tests (parallel persist, override race)
+  - `tests/hardening/security.test.ts` — 21 tests (SQL injection, XSS, Zod, type guards)
+  - `tests/hardening/stress.test.ts` — 27 tests (distance/override/catalog/modifier/schema edge cases)
 
 ## Stage 05 — Services Module
 
